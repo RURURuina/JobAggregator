@@ -12,8 +12,9 @@
         <item name="colorOnSecondary">@color/white_universal</item>
 
         <item name="android:statusBarColor">@color/black_universal</item>
-        
+
     </style>
+
     <style name="BottomNavigationTheme" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
         <item name="android:background">?attr/android:windowBackground</item>
         <item name="itemBackground">?attr/android:windowBackground</item>
