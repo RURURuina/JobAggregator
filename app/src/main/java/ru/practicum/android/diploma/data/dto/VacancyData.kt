@@ -1,4 +1,5 @@
 package ru.practicum.android.diploma.data.dto
+
 import com.google.gson.annotations.SerializedName
 import ru.practicum.android.diploma.domain.api.DriverLicense
 import ru.practicum.android.diploma.domain.api.Employer
@@ -9,29 +10,29 @@ import ru.practicum.android.diploma.domain.api.Language
 import ru.practicum.android.diploma.domain.api.Salary
 
 data class VacancyData(
-    //Для JobItem
+    // Для JobItem
     val name: String, // название вакансии
     val employer: Employer, // работодатель
-    val salary: Salary,//зарплата
+    val salary: Salary, // зарплата
 
-    //Для Описания вакансии
+    // Для Описания вакансии
     val experience: Experience, // опыт
     val employment: Employment, // тип занятости
-    val key_skills: List<KeySkill>?, // ключевые навыки
+    val keySkills: List<KeySkill>?, // ключевые навыки
     val languages: List<Language>?, // языки
-    val driver_license_types: List<DriverLicense> // категория прав водителя
+    val driverLicenseTypes: List<DriverLicense> // категория прав водителя
 )
 
 data class Employer(
     val name: String, // название работодателя
-    val logo_urls: LogoUrls // Иконки работодателя
+    val logoUrls: LogoUrls // Иконки работодателя
 )
 
 data class Salary(
     val currency: String?, // валюта
     val from: Int?, // сумма от
     val gross: Boolean?, // до или после вычета
-    val to: Int? //сумма до
+    val to: Int? // сумма до
 )
 
 data class LogoUrls(
@@ -49,7 +50,7 @@ data class Employment(
 )
 
 data class KeySkill(
-     val name: String // Описание(Обязанности)
+    val name: String // Описание(Обязанности)
 )
 
 data class Language(
