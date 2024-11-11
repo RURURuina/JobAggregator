@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Practicum-Android-Diploma</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_but">Главная</string>
+    <string name="favorite_but">Избранное</string>
+    <string name="team_but">Команда</string>
+    <string name="search_jobs">Поиск вакансий</string>
+    <string name="enter_request">Введите запрос</string>
+    <string name="no_internet">Нет интернета</string>
+    <string name="couldnt_get_job_list">Не удалось получить список вакансий</string>
+    <string name="filter">фильтр</string>
+    <string name="team_screen_title">Над приложением работали</string>
+    <string name="first_team_mate">Ильхам Хабибулин</string>
+    <string name="second_team_mate">Рустем</string>
+    <string name="third_team_mate">Рома Гарбуз</string>
+    <string name="fourth_team_mate">Егор Макеев</string>
+    <string name="fifth_team_mate">Антон Сикора</string>
 </resources>
