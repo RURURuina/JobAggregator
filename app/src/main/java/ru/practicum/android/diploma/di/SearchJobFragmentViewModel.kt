@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.di
 
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -50,8 +52,19 @@ var searchJobViewModule = module {
 
     single<HhApiService> {
         println("HhApiService")
+        val baseUrl = "https://api.hh.ru/"
+
+        val interceptorHttp = HttpLoggingInterceptor().apply {
+            this.level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(interceptorHttp)
+            .build()
+
         Retrofit.Builder()
-            .baseUrl("https://api.hh.ru/")
+            .client(okHttpClient)
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(HhApiService::class.java)

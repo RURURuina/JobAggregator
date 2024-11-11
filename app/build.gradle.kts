@@ -79,6 +79,7 @@ dependencies {
     // retrofit2
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
 
     // serialization/deserialization library
     implementation(libs.gson)
