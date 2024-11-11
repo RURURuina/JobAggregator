@@ -1,13 +1,20 @@
 package ru.practicum.android.diploma.data.convertors
 
-import ru.practicum.android.diploma.data.dto.vacancyDto.VacancyDto
+import ru.practicum.android.diploma.data.dto.vacancyDto.VacancyData
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 
 class VacancyDtoConvertor {
-    fun map(vacancy: VacancyDto): Vacancy {
+    fun map(vacancy: VacancyData): Vacancy {
         return Vacancy(
             vacancy.id,
-            vacancy.name
+            vacancy.name,
+            vacancy.employer,
+            vacancy.salary,
+            vacancy.experience,
+            vacancy.employment,
+            vacancy.keySkills,
+            vacancy.languages,
+            vacancy.driverLicenseTypes,
         )
     }
 }

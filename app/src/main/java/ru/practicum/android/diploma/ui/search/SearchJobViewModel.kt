@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.search
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -10,7 +11,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     fun start() {
         viewModelScope.launch {
             hhInteractor.getVacancies(hashMapOf()).collect {
-                println(it.data?.map { println(it) })
+                it.data?.map { Log.d("SearchJobViewModel", "vacancy: $it") }
             }
         }
     }

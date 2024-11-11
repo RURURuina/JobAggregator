@@ -3,9 +3,9 @@ package ru.practicum.android.diploma.data.repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.convertors.VacancyDtoConvertor
+import ru.practicum.android.diploma.data.dto.vacancyDto.VacancyData
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.response.VacanciesResponse
-import ru.practicum.android.diploma.data.dto.vacancyDto.VacancyDto
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.HhRepository
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
@@ -27,8 +27,8 @@ class HhRepositoryImpl(
             200 -> {
                 emit(
                     Resource.Success(
-                        (response as VacanciesResponse).vacancies!!.map { vacancyDto: VacancyDto ->
-                            vacancyDtoConvertor.map(vacancyDto)
+                        (response as VacanciesResponse).vacancies!!.map { vacancyData: VacancyData ->
+                            vacancyDtoConvertor.map(vacancyData)
                         }
                     ))
             }
