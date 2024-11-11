@@ -7,7 +7,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ActivityRootBinding
 
@@ -23,8 +22,6 @@ class RootActivity : AppCompatActivity() {
         prepareNavHostFragment()
         prepareNavHostController()
         prepareBottomNavView()
-        // Пример использования access token для HeadHunter API
-        networkRequestExample(accessToken = BuildConfig.HH_ACCESS_TOKEN)
     }
 
     private fun prepareBinding() {
@@ -33,6 +30,7 @@ class RootActivity : AppCompatActivity() {
             setContentView(it.root)
         }
     }
+
     private fun prepareNavHostFragment() {
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
@@ -43,6 +41,7 @@ class RootActivity : AppCompatActivity() {
             navController = it.navController
         }
     }
+
     private fun prepareBottomNavView() {
         binding?.let {
             bottomNavigationView = it.bottomNavigation
@@ -53,9 +52,6 @@ class RootActivity : AppCompatActivity() {
         }
     }
 
-    private fun networkRequestExample(accessToken: String) {
-        // ...
-    }
     fun bottomNavigationVisibility(isVisibile: Boolean) {
         binding?.bottomNavigation?.isVisible = isVisibile
     }
