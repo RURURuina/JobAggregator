@@ -18,15 +18,15 @@ class RetrofitNetworkClient(
         } else {
             return withContext(Dispatchers.IO) {
                 try {
-                    val response = connectService.searchVacancies(dto.expression)
+                    val response = connectService.searchVacancies(
+                       dto.expression
+                    )
                     response.apply { resultCode = 200 }
                 }
                 catch (e: Throwable) {
-                    println("response error")
                     println(e)
-                    Response().apply { resultCode = 555 }
+                    Response().apply { resultCode = 500 }
                 }
-
             }
         }
     }

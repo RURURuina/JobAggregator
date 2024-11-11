@@ -19,31 +19,25 @@ import ru.practicum.android.diploma.ui.search.SearchJobViewModel
 
 var searchJobViewModule = module {
     viewModel<SearchJobViewModel> {
-        println("SearchJobViewModel")
         SearchJobViewModel(hhInteractor = get())
     }
     single<HhInteractor> {
-        println("HhInteractor")
         HhInteractorImpl(
             hhRepository = get()
         )
     }
 
     single<HhRepository> {
-        println("HhRepository")
         HhRepositoryImpl(
             networkClient = get(),
             vacancyDtoConvertor = get()
         )
     }
     single<VacancyDtoConvertor> {
-        println("VacancyDtoConvertor")
         VacancyDtoConvertor()
     }
 
     single<NetworkClient> {
-        println("NetworkClient")
-
         RetrofitNetworkClient(
             connectService = get(),
             context = androidContext()
@@ -51,9 +45,7 @@ var searchJobViewModule = module {
     }
 
     single<HhApiService> {
-        println("HhApiService")
         val baseUrl = "https://api.hh.ru/"
-
         val interceptorHttp = HttpLoggingInterceptor().apply {
             this.level = HttpLoggingInterceptor.Level.BODY
         }

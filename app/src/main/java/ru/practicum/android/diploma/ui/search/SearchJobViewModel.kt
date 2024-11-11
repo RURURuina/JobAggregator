@@ -7,10 +7,10 @@ import ru.practicum.android.diploma.domain.api.HhInteractor
 
 class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
 
-    fun start(){
+    fun start() {
         viewModelScope.launch {
             hhInteractor.getVacancies(hashMapOf()).collect {
-                println(it.message)
+                println(it.data?.map { println(it) })
             }
         }
     }
