@@ -27,7 +27,7 @@ class HhRepositoryImpl(
             200 -> {
                 emit(
                     Resource.Success(
-                        (response as VacanciesResponse).results.map { vacancyDto: VacancyDto ->
+                        (response as VacanciesResponse).vacancies!!.map { vacancyDto: VacancyDto ->
                             vacancyDtoConvertor.map(vacancyDto)
                         }
                     ))

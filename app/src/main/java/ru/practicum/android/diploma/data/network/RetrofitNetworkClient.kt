@@ -20,8 +20,11 @@ class RetrofitNetworkClient(
                 try {
                     val response = connectService.searchVacancies(dto.expression)
                     response.apply { resultCode = 200 }
-                } catch (e: Throwable) {
-                    Response().apply { resultCode = 500 }
+                }
+                catch (e: Throwable) {
+                    println("response error")
+                    println(e)
+                    Response().apply { resultCode = 555 }
                 }
 
             }
