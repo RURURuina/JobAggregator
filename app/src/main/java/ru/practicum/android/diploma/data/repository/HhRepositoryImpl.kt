@@ -1,15 +1,16 @@
 package ru.practicum.android.diploma.data.repository
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+
 import ru.practicum.android.diploma.data.convertors.VacancyDtoConvertor
-import ru.practicum.android.diploma.data.dto.vacancyDto.VacancyData
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.response.VacanciesResponse
+import ru.practicum.android.diploma.data.dto.vacancy.VacancyData
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.HhRepository
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class HhRepositoryImpl(
     private val networkClient: NetworkClient,
@@ -30,7 +31,8 @@ class HhRepositoryImpl(
                         (response as VacanciesResponse).vacancies!!.map { vacancyData: VacancyData ->
                             vacancyDtoConvertor.map(vacancyData)
                         }
-                    ))
+                    )
+                )
             }
 
             else -> {

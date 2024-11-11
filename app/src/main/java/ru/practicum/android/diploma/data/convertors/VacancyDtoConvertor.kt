@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.data.convertors
 
-import ru.practicum.android.diploma.data.dto.vacancyDto.VacancyData
+import ru.practicum.android.diploma.data.dto.vacancy.VacancyData
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 
 class VacancyDtoConvertor {

@@ -52,7 +52,6 @@ class RootActivity : AppCompatActivity() {
         }
     }
 
-
     fun bottomNavigationVisibility(isVisibile: Boolean) {
         binding?.bottomNavigation?.isVisible = isVisibile
     }

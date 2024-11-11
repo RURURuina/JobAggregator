@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.data.dto.vacancyDto
+package ru.practicum.android.diploma.data.dto.vacancy
 
 import com.google.gson.annotations.SerializedName
 import ru.practicum.android.diploma.domain.api.DriverLicense
@@ -64,5 +64,5 @@ data class LanguageLevel(
 )
 
 data class DriverLicense(
-    val id: String?// название категории
+    val id: String? // название категории
 )

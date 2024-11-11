@@ -1,7 +1,7 @@
 package ru.practicum.android.diploma.data.dto.response
 
 import com.google.gson.annotations.SerializedName
-import ru.practicum.android.diploma.data.dto.vacancyDto.VacancyData
+import ru.practicum.android.diploma.data.dto.vacancy.VacancyData
 
 class VacanciesResponse(
     @SerializedName("items")
