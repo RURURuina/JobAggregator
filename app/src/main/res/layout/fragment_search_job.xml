@@ -22,7 +22,7 @@
         android:text="@string/search_jobs"
         android:textColor="@color/black"/>
 
-    <ImageButton
+    <ImageView
         android:id="@+id/filter_image_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
         android:background="@drawable/search_shape"
         android:layout_marginVertical="8dp"/>
 
-    <ImageButton
+    <ImageView
         android:id="@+id/clear_search_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

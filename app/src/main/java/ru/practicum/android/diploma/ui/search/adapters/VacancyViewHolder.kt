@@ -6,23 +6,29 @@ import ru.practicum.android.diploma.databinding.JobItemBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 
 class VacancyViewHolder(private val binding: JobItemBinding) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(vacancy: Vacancy){
-        binding.cardTitleText.text = vacancy.name
-        binding.cardDescriptionText.text = vacancy.employer?.name
-        var salaryString = ""
-        if (vacancy.salary?.from != null){
-            salaryString += "От ${vacancy.salary.from}${vacancy.salary.currency}"
+    fun bind(vacancy: Vacancy) {
+        binding.apply {
+            cardTitleText.text = vacancy.name
+            cardDescriptionText.text = vacancy.employer?.name
+
+            val salaryString = when {
+                vacancy.salary?.from != null && vacancy.salary.to != null ->
+                    "От ${vacancy.salary.from} до ${vacancy.salary.to} ${vacancy.salary.currency}"
+                vacancy.salary?.from != null ->
+                    "От ${vacancy.salary.from} ${vacancy.salary.currency}"
+                vacancy.salary?.to != null ->
+                    "До ${vacancy.salary.to} ${vacancy.salary.currency}"
+                else -> "Зарплата не указана"
+            }
+
+            cardSalaryText.text = salaryString
+
+            vacancy.employer?.logoUrls?.original.let { logoUrl ->
+                Glide.with(binding.root)
+                    .load(logoUrl)
+                    .centerInside()
+                    .into(cardImage)
+            }
         }
-        if (vacancy.salary?.to != null){
-            salaryString += " до ${vacancy.salary.to}${vacancy.salary.currency}"
-        }
-        if (vacancy.salary?.from == null && vacancy.salary?.to == null){
-            salaryString = "Зарплата не указана"
-        }
-        binding.cardSalaryText.text = salaryString
-        Glide.with(binding.root)
-            .load(vacancy.employer?.logoUrls?.original)
-            .centerInside()
-            .into(binding.cardImage)
     }
 }

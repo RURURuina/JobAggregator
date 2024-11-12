@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchJobBinding
@@ -50,12 +51,15 @@ class SearchJobFragment : Fragment() {
 
         binding?.clearSearchButton?.setOnClickListener {
             binding?.searchEditText?.text?.clear()
-            viewModel.searchVacancies("")
+            viewModel.clearVacancies()
         }
     }
 
     private fun initRecyclerView() {
-        binding?.vacanciesRecyclerView?.adapter = vacancyAdapter
+        binding?.vacanciesRecyclerView?.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = vacancyAdapter
+        }
     }
 
     private fun observeViewModel() {
@@ -68,17 +72,26 @@ class SearchJobFragment : Fragment() {
                     updateRecyclerView(state.vacancies)
                 }
                 is VacanciesState.Empty -> showEmptyState()
+                VacanciesState.Hidden -> clearRecyclerView()
             }
         }
     }
 
+    private fun clearRecyclerView(){
+        updateRecyclerView(emptyList())
+        showHiddenState()
+    }
+
     private fun updateSearchIcon(isEmpty: Boolean) {
-        binding?.searchEditText?.setCompoundDrawablesWithIntrinsicBounds(
-            R.drawable.search_24px,
-            0,
-            if (isEmpty) 0 else R.drawable.close_24px,
-            0
+        binding?.clearSearchButton?.setImageResource(
+            if (isEmpty) R.drawable.search_24px else R.drawable.close_24px
         )
+    }
+
+    private fun showHiddenState(){
+        binding?.searchLayout?.visibility = View.VISIBLE
+        binding?.noInternetLayout?.visibility = View.GONE
+        binding?.noJobsLayout?.visibility = View.GONE
     }
 
     private fun showLoading() {
@@ -107,6 +120,8 @@ class SearchJobFragment : Fragment() {
     private fun updateRecyclerView(vacancies: List<Vacancy>) {
         binding?.vacanciesRecyclerView?.visibility = View.VISIBLE
         binding?.noJobsLayout?.visibility = View.GONE
+        binding?.searchLayout?.visibility = View.GONE
+        binding?.noInternetLayout?.visibility = View.GONE
         vacancyAdapter.submitList(vacancies)
     }
 

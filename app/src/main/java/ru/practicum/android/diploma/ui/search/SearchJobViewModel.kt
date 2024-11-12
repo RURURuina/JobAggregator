@@ -18,6 +18,7 @@ sealed class VacanciesState {
     data class Success(val vacancies: List<Vacancy>) : VacanciesState()
     data class Error(val message: Int) : VacanciesState()
     object Empty : VacanciesState()
+    object Hidden: VacanciesState()
 }
 
 class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
@@ -31,9 +32,12 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
 
     private var searchJob: Job? = null
 
-    // в этой функции тестим поиск
-    fun start() {
-        searchVacancies("Повар")
+    init {
+        clearVacancies()
+    }
+
+    fun clearVacancies(){
+        _vacanciesState.value = VacanciesState.Hidden
     }
 
     // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
@@ -55,4 +59,3 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         }
     }
 }
-
