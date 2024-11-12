@@ -50,6 +50,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                     is Resource.Success -> {
                         _vacanciesState.value = VacanciesState.Success(result.data ?: emptyList())
                     }
+
                     is Resource.Error -> {
                         _vacanciesState.value = VacanciesState.Error(result.message ?: R.string.no_internet)
                     }
