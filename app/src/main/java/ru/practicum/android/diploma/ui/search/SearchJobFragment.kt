@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.ui.search
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,16 @@ class SearchJobFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeViewModel()
         viewModel.start()
+
+    }
+
+    // эта функция следит за переменными во ViewModel
+    fun observeViewModel() {
+        viewModel.vacancies.observe(viewLifecycleOwner) { vacancies ->
+            vacancies.map { Log.d("viewModel", "${it.name}") }
+
+        }
     }
 }
