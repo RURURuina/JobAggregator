@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="?attr/android:windowBackground"
     tools:context=".ui.search.SearchJobFragment">
 
     <TextView
@@ -20,7 +20,7 @@
         android:layout_marginTop="19dp"
         android:layout_marginStart="16dp"
         android:text="@string/search_jobs"
-        android:textColor="@color/black"/>
+        android:textColor="?attr/colorOnBackground"/>
 
     <ImageButton
         android:id="@+id/filter_image_button"
@@ -30,6 +30,7 @@
         android:src="@drawable/trailing_icon_2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:tint="?attr/colorOnBackground"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
@@ -41,7 +42,10 @@
         android:layout_height="56dp"
         android:autofillHints="@string/enter_request"
         android:hint="@string/enter_request"
-        android:inputType="text"
+        android:textColorHint="?attr/colorOnSecondary"
+        android:inputType="textCapSentences"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:fontFamily="@font/ys_display_regular"
         app:layout_constraintTop_toBottomOf="@+id/filter_image_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +53,7 @@
         android:layout_marginHorizontal="16dp"
         android:background="@drawable/search_shape"
         android:drawableEnd="@drawable/search_24px"
+        android:drawableTint="@color/black_universal"
         android:layout_marginVertical="8dp"/>
 
     <LinearLayout
@@ -59,7 +64,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -93,7 +98,7 @@
             android:text="@string/no_internet"
             android:textSize="22sp"
             android:fontFamily="@font/ys_display_medium"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnBackground"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"/>
 
@@ -123,7 +128,7 @@
             android:text="@string/couldnt_get_job_list"
             android:textSize="22sp"
             android:fontFamily="@font/ys_display_medium"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnBackground"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_marginTop="16dp"/>
@@ -136,7 +141,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:indeterminateTint="@color/blue"
+        android:indeterminateTint="?attr/colorPrimary"
         android:visibility="gone"/>
 
     <com.google.android.material.chip.Chip
@@ -147,7 +152,7 @@
         android:textSize="16sp"
         android:fontFamily="@font/ys_display_regular"
         android:textColor="@color/white"
-        android:backgroundTint="@color/blue"
+        android:backgroundTint="?attr/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_edit_text"
