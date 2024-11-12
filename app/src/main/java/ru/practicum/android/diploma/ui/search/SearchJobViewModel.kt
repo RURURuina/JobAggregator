@@ -14,7 +14,9 @@ import ru.practicum.android.diploma.util.Resource
 
 class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
 
-    private val DEBOUNCE_TIME = 2000L
+    companion object {
+        private const val DEBOUNCE_TIME = 2000L
+    }
 
     private val _vacancies = MutableLiveData<List<Vacancy>>() // Отслеживаем входящие вакансии
     val vacancies: LiveData<List<Vacancy>> = _vacancies
