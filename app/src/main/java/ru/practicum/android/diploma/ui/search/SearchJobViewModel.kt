@@ -37,7 +37,11 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                 when (result) {
                     is Resource.Success -> {
                         _vacancies.value = result.data ?: emptyList()
+                        result.data?.map {
+                            Log.d("SearchJobViewModel", "$it ")
+                        }
                     }
+
                     is Resource.Error -> {
                         // Если ошибка - прокинуть как переменную в UI
                     }
