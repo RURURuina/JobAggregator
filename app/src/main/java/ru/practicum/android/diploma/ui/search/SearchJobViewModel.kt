@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.search
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -47,6 +48,9 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
             hhInteractor.getVacancies(hashMapOf("text" to query)).collect { result ->
                 when (result) {
                     is Resource.Success -> {
+                        result.data?.map {
+                            Log.d("SearchJobViewModel", "${it}: ")
+                        }
                         _vacanciesState.value = VacanciesState.Success(result.data ?: emptyList())
                     }
 

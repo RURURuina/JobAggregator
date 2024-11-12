@@ -1,13 +1,5 @@
 package ru.practicum.android.diploma.domain.models.entity
 
-import com.google.gson.annotations.SerializedName
-import ru.practicum.android.diploma.domain.api.DriverLicense
-import ru.practicum.android.diploma.domain.api.Employer
-import ru.practicum.android.diploma.domain.api.Employment
-import ru.practicum.android.diploma.domain.api.Experience
-import ru.practicum.android.diploma.domain.api.KeySkill
-import ru.practicum.android.diploma.domain.api.Language
-import ru.practicum.android.diploma.domain.api.Salary
 
 data class Vacancy(
     // Для JobItem
@@ -37,8 +29,8 @@ data class Salary(
 )
 
 data class LogoUrls(
-    @SerializedName("90") val small: String?, // Маленькая иконка
-    @SerializedName("240") val medium: String?, // Большая иконка
+    val small: String?, // Маленькая иконка
+    val medium: String?, // Большая иконка
     val original: String?, // стандартная иконка
 )
 
