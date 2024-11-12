@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.response.Response
 
@@ -21,10 +22,10 @@ class RetrofitNetworkClient(
                     val response = connectService.searchVacancies(
                         dto.expression
                     )
-                    response.apply { resultCode = 200}
-                } catch (e: Exception) {
+                    response.apply { resultCode = 200 }
+                } catch (e: HttpException) {
                     println(e)
-                    Response().apply { resultCode = 500 }
+                    Response().apply { resultCode = e.code() }
                 }
             }
         }
