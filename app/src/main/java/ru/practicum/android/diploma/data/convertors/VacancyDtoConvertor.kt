@@ -21,8 +21,9 @@ import ru.practicum.android.diploma.domain.models.entity.LogoUrls
 import ru.practicum.android.diploma.domain.models.entity.Salary
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 
-
 class VacancyDtoConvertor {
+    // класс яростного мапинга классов из слоя дата для домейн
+    // могут возникнуть вопросы к мапперам работающим с лист
     fun map(vacancy: VacancyData): Vacancy {
         println(vacancy.employer)
         return Vacancy(
@@ -37,7 +38,6 @@ class VacancyDtoConvertor {
             driverLicenseListMap(vacancy.driverLicenseTypes),
         )
     }
-
 
     private fun EmployerData?.map(): Employer? {
         this?.let {

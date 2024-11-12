@@ -48,9 +48,6 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
             hhInteractor.getVacancies(hashMapOf("text" to query)).collect { result ->
                 when (result) {
                     is Resource.Success -> {
-                        result.data?.map {
-                            Log.d("SearchJobViewModel", "${it}: ")
-                        }
                         _vacanciesState.value = VacanciesState.Success(result.data ?: emptyList())
                     }
 
