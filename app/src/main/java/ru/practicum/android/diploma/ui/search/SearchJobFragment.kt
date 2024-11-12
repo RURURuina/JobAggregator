@@ -22,17 +22,17 @@ class SearchJobFragment : Fragment() {
         return binding?.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         viewModel.start()
 
     }
+
     // эта функция следит за переменными во ViewModel
     fun observeViewModel() {
-        viewModel.vacancies.observe(viewLifecycleOwner) {vacancies ->
-            vacancies.map {Log.d("viewModel", "${it.name}")}
+        viewModel.vacancies.observe(viewLifecycleOwner) { vacancies ->
+            vacancies.map { Log.d("viewModel", "${it.name}") }
 
         }
     }
