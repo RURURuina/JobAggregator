@@ -25,7 +25,6 @@ class VacancyDtoConvertor {
     // класс яростного мапинга классов из слоя дата для домейн
     // могут возникнуть вопросы к мапперам работающим с лист
     fun map(vacancy: VacancyData): Vacancy {
-        println(vacancy.employer)
         return Vacancy(
             vacancy.id,
             vacancy.name,
