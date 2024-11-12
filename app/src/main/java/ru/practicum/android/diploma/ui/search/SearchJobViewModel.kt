@@ -8,9 +8,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.util.Resource
+
+sealed class VacanciesState {
+    object Loading : VacanciesState()
+    data class Success(val vacancies: List<Vacancy>) : VacanciesState()
+    data class Error(val message: Int) : VacanciesState()
+    object Empty : VacanciesState()
+}
 
 class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
 
@@ -18,8 +26,8 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         private const val DEBOUNCE_TIME = 2000L
     }
 
-    private val _vacancies = MutableLiveData<List<Vacancy>>() // Отслеживаем входящие вакансии
-    val vacancies: LiveData<List<Vacancy>> = _vacancies
+    private val _vacanciesState = MutableLiveData<VacanciesState>()
+    val vacanciesState: LiveData<VacanciesState> = _vacanciesState
 
     private var searchJob: Job? = null
 
@@ -36,10 +44,10 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
             hhInteractor.getVacancies(hashMapOf("text" to query)).collect { result ->
                 when (result) {
                     is Resource.Success -> {
-                        _vacancies.value = result.data ?: emptyList()
+                        _vacanciesState.value = VacanciesState.Success(result.data ?: emptyList())
                     }
                     is Resource.Error -> {
-                        // Если ошибка - прокинуть как переменную в UI
+                        _vacanciesState.value = VacanciesState.Error(result.message ?: R.string.no_internet)
                     }
                 }
 
