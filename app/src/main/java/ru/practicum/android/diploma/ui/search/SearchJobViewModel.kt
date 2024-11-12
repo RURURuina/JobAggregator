@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.ui.search
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +17,7 @@ sealed class VacanciesState {
     data class Success(val vacancies: List<Vacancy>) : VacanciesState()
     data class Error(val message: Int) : VacanciesState()
     object Empty : VacanciesState()
-    object Hidden: VacanciesState()
+    object Hidden : VacanciesState()
 }
 
 class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
@@ -36,7 +35,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         clearVacancies()
     }
 
-    fun clearVacancies(){
+    fun clearVacancies() {
         _vacanciesState.value = VacanciesState.Hidden
     }
 
