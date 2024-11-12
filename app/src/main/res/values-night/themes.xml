@@ -1,15 +1,14 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.PracticumAndroidDiploma" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <item name="android:windowBackground">@color/white_universal</item>
-        <item name="colorOnBackground">@color/black_universal</item>
+        <item name="android:windowBackground">@color/black_universal</item>
+        <item name="colorOnBackground">@color/white_universal</item>
         <item name="colorPrimary">@color/blue</item>
         <item name="colorOnPrimary">@color/white_universal</item>
         <item name="colorOnError">@color/red</item>
-        <item name="colorSecondary">@color/light_gray</item>
-        <item name="colorOnSecondary">@color/gray</item>
-        <item name="android:statusBarColor">@color/white_universal</item>
+        <item name="colorSecondary">@color/gray</item>
+        <item name="colorOnSecondary">@color/white_universal</item>
+        <item name="android:statusBarColor">@color/black_universal</item>
     </style>
 
     <style name="BottomNavigationTheme" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
@@ -18,5 +17,4 @@
         <item name="itemIconTint">@color/navigation_item_color</item>
         <item name="itemTextColor">@color/navigation_item_color</item>
     </style>
-    <style name="Theme.PracticumAndroidDiploma" parent="Base.Theme.PracticumAndroidDiploma" />
 </resources>
