@@ -34,9 +34,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
     fun searchVacancies(query: String) {
         if (query.isNotBlank()) {
-
             searchJob?.cancel()
-
             pushVacanciesState(VacanciesState.Loading)
             searchJob = viewModelScope.launch {
                 delay(DEBOUNCE_TIME) // Реализован debounce 2 сек
@@ -52,7 +50,6 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                                     pushVacanciesState(VacanciesState.Success(data))
                                 }
                             }
-
                             is Resource.Error -> {
                                 pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))
                             }
