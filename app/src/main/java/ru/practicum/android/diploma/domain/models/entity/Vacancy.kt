@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.domain.models.entity
 
-
 data class Vacancy(
     // Для JobItem
     val id: String, // id вакансии

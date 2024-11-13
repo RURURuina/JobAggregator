@@ -34,7 +34,6 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
     fun searchVacancies(query: String) {
         if (query.isNotBlank()) {
-
             searchJob?.cancel()
 
             pushVacanciesState(VacanciesState.Loading)
