@@ -13,6 +13,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchJobBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.search.adapters.VacancyAdapter
+import ru.practicum.android.diploma.ui.search.models.VacanciesState
 
 class SearchJobFragment : Fragment() {
 
@@ -69,13 +70,22 @@ class SearchJobFragment : Fragment() {
         viewModel.vacanciesState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is VacanciesState.Loading -> showLoading()
-                is VacanciesState.Error -> showError(state.message)
+                is VacanciesState.Error -> {
+                    hideLoading()
+                    showError(state.message)
+                }
+
                 is VacanciesState.Success -> {
                     hideLoading()
                     updateRecyclerView(state.vacancies)
                 }
-                is VacanciesState.Empty -> showEmptyState()
-                VacanciesState.Hidden -> clearRecyclerView()
+
+                is VacanciesState.Empty -> {
+                    hideLoading()
+                    showEmptyState()
+                }
+
+                is VacanciesState.Hidden -> clearRecyclerView()
             }
         }
     }
@@ -108,16 +118,19 @@ class SearchJobFragment : Fragment() {
         binding?.progressBar?.visibility = View.GONE
     }
 
-    private fun showError(message: Int) {
-        binding?.noInternetLayout?.visibility = View.VISIBLE
+    private fun showError(errorMessage: Int) {
+        binding?.vacanciesRecyclerView?.visibility = View.GONE
         binding?.searchLayout?.visibility = View.GONE
         binding?.noJobsLayout?.visibility = View.GONE
+        binding?.noInternetLayout?.visibility = View.VISIBLE
     }
 
     private fun showEmptyState() {
-        binding?.noJobsLayout?.visibility = View.VISIBLE
+        binding?.vacanciesRecyclerView?.visibility = View.GONE
         binding?.searchLayout?.visibility = View.GONE
         binding?.noInternetLayout?.visibility = View.GONE
+        binding?.noJobsLayout?.visibility = View.VISIBLE
+
     }
 
     private fun updateRecyclerView(vacancies: List<Vacancy>) {

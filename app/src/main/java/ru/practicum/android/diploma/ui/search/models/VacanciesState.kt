@@ -6,6 +6,6 @@ sealed interface VacanciesState {
     object Loading : VacanciesState
     data class Success(val vacancies: List<Vacancy>) : VacanciesState
     data class Error(val message: Int) : VacanciesState
-    data class Empty(val message: Int) : VacanciesState
+    object Empty : VacanciesState
     object Hidden : VacanciesState
 }

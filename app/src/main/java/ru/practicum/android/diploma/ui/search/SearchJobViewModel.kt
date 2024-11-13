@@ -28,7 +28,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     }
 
     fun clearVacancies() {
-       pushVacanciesState(VacanciesState.Hidden)
+        pushVacanciesState(VacanciesState.Hidden)
     }
 
     // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
@@ -45,7 +45,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                         is Resource.Success -> {
                             val data = result.data ?: emptyList()
                             if (data.isEmpty()) {
-                                pushVacanciesState(VacanciesState.Empty(R.string.couldnt_get_job_list))
+                                pushVacanciesState(VacanciesState.Empty)
                             } else {
                                 pushVacanciesState(VacanciesState.Success(data))
                             }
@@ -59,7 +59,8 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                 }
         }
     }
-    private fun pushVacanciesState(state: VacanciesState){
+
+    private fun pushVacanciesState(state: VacanciesState) {
         _vacanciesState.postValue(state)
     }
 }
