@@ -10,6 +10,7 @@ java = "VERSION_1_8"
 koinAndroid = "4.0.0"
 kotlinScriptRuntime = "2.0.21"
 kotlinxCoroutinesAndroid = "1.9.0"
+loggingInterceptor = "4.2.1"
 minSdk = "26"
 compileSdk = "34"
 navigationFragmentKtx = "2.8.3"
@@ -40,6 +41,7 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndr
 kotlin-script-runtime = { module = "org.jetbrains.kotlin:kotlin-script-runtime", version.ref = "kotlinScriptRuntime" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 ksp = { module = "com.github.bumptech.glide:ksp", version.ref = "glide" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationFragmentKtx" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }

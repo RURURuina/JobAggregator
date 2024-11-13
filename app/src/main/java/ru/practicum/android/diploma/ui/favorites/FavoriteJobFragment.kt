@@ -17,6 +17,7 @@ class FavoriteJobFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        println()
         binding = FragmentFavoriteJobBinding.inflate(layoutInflater)
         return binding?.root
     }

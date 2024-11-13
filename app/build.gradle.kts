@@ -79,6 +79,7 @@ dependencies {
     // retrofit2
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
 
     // serialization/deserialization library
     implementation(libs.gson)
