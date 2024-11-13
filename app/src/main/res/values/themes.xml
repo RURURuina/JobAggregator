@@ -10,6 +10,7 @@
         <item name="colorSecondary">@color/light_gray</item>
         <item name="colorOnSecondary">@color/gray</item>
         <item name="android:statusBarColor">@color/white_universal</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="colorSurface">@color/light_gray</item>
     </style>
 
