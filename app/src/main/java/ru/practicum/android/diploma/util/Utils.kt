@@ -9,7 +9,7 @@ object Utils {
     private const val CLICK_DELAY = 2000L
     private var isClickAllowed: Boolean = true
 
-    fun clickDebounce(viewLifecycleOwner: LifecycleOwner):Boolean {
+    fun clickDebounce(viewLifecycleOwner: LifecycleOwner): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
