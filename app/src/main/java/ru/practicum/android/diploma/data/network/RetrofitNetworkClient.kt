@@ -38,6 +38,6 @@ class RetrofitNetworkClient(
         ) as ConnectivityManager
         val capabilities =
             connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        return (capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED))
+        return capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 }
