@@ -33,30 +33,35 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
 
     // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
     fun searchVacancies(query: String) {
-        searchJob?.cancel()
+        if (query.isNotBlank()) {
 
-        pushVacanciesState(VacanciesState.Loading)
-        searchJob = viewModelScope.launch {
-            delay(DEBOUNCE_TIME) // Реализован debounce 2 сек
-            hhInteractor
-                .getVacancies(hashMapOf("text" to query))
-                .collect { result ->
-                    when (result) {
-                        is Resource.Success -> {
-                            val data = result.data ?: emptyList()
-                            if (data.isEmpty()) {
-                                pushVacanciesState(VacanciesState.Empty)
-                            } else {
-                                pushVacanciesState(VacanciesState.Success(data))
+            searchJob?.cancel()
+
+            pushVacanciesState(VacanciesState.Loading)
+            searchJob = viewModelScope.launch {
+                delay(DEBOUNCE_TIME) // Реализован debounce 2 сек
+                hhInteractor
+                    .getVacancies(hashMapOf("text" to query))
+                    .collect { result ->
+                        when (result) {
+                            is Resource.Success -> {
+                                val data = result.data ?: emptyList()
+                                if (data.isEmpty()) {
+                                    pushVacanciesState(VacanciesState.Empty)
+                                } else {
+                                    pushVacanciesState(VacanciesState.Success(data))
+                                }
+                            }
+
+                            is Resource.Error -> {
+                                pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))
                             }
                         }
 
-                        is Resource.Error -> {
-                            pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))
-                        }
                     }
-
-                }
+            }
+        } else {
+            pushVacanciesState(VacanciesState.Empty)
         }
     }
 
