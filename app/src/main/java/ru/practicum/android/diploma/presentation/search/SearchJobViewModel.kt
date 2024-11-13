@@ -9,16 +9,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.api.HhInteractor
-import ru.practicum.android.diploma.domain.models.entity.Vacancy
+import ru.practicum.android.diploma.ui.search.models.VacanciesState
 import ru.practicum.android.diploma.util.Resource
-
-sealed class VacanciesState {
-    object Loading : VacanciesState()
-    data class Success(val vacancies: List<Vacancy>) : VacanciesState()
-    data class Error(val message: Int) : VacanciesState()
-    object Empty : VacanciesState()
-    object Hidden : VacanciesState()
-}
 
 class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
 
@@ -36,27 +28,44 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     }
 
     fun clearVacancies() {
-        _vacanciesState.value = VacanciesState.Hidden
+        pushVacanciesState(VacanciesState.Hidden)
     }
 
     // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
     fun searchVacancies(query: String) {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            delay(DEBOUNCE_TIME) // Реализован debounce 2 сек
-            hhInteractor.getVacancies(hashMapOf("text" to query)).collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        _vacanciesState.value = VacanciesState.Success(result.data ?: emptyList())
-                    }
+        if (query.isNotBlank()) {
 
-                    is Resource.Error -> {
-                        _vacanciesState.value =
-                            VacanciesState.Error(result.message ?: R.string.no_internet)
-                    }
-                }
+            searchJob?.cancel()
 
+            pushVacanciesState(VacanciesState.Loading)
+            searchJob = viewModelScope.launch {
+                delay(DEBOUNCE_TIME) // Реализован debounce 2 сек
+                hhInteractor
+                    .getVacancies(hashMapOf("text" to query))
+                    .collect { result ->
+                        when (result) {
+                            is Resource.Success -> {
+                                val data = result.data ?: emptyList()
+                                if (data.isEmpty()) {
+                                    pushVacanciesState(VacanciesState.Empty)
+                                } else {
+                                    pushVacanciesState(VacanciesState.Success(data))
+                                }
+                            }
+
+                            is Resource.Error -> {
+                                pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))
+                            }
+                        }
+
+                    }
             }
+        } else {
+            pushVacanciesState(VacanciesState.Empty)
         }
+    }
+
+    private fun pushVacanciesState(state: VacanciesState) {
+        _vacanciesState.postValue(state)
     }
 }
