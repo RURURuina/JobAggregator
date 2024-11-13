@@ -10,7 +10,7 @@ import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.response.Response
 
 class RetrofitNetworkClient(
-    private val connectService: HhApiService,
+    private val hhService: HhApiService,
     private val context: Context,
 ) : NetworkClient {
     override suspend fun getVacancies(dto: VacanciesSearchRequest): Response {
@@ -19,7 +19,7 @@ class RetrofitNetworkClient(
         } else {
             return withContext(Dispatchers.IO) {
                 try {
-                    val response = connectService.searchVacancies(
+                    val response = hhService.searchVacancies(
                         dto.expression
                     )
                     response.apply { resultCode = 200 }

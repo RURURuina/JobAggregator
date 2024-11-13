@@ -1,6 +1,5 @@
-package ru.practicum.android.diploma.ui.search
+package ru.practicum.android.diploma.presentation.search
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -52,7 +51,8 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                     }
 
                     is Resource.Error -> {
-                        _vacanciesState.value = VacanciesState.Error(result.message ?: R.string.no_internet)
+                        _vacanciesState.value =
+                            VacanciesState.Error(result.message ?: R.string.no_internet)
                     }
                 }
 
