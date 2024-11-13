@@ -7,7 +7,7 @@ data class VacancyData(
     val id: String, // id вакансии
     val name: String?, // название вакансии
     val employer: EmployerData?, // работодатель
-    val salaryData: SalaryData?, // зарплата
+    @SerializedName("salary") val salaryData: SalaryData?, // зарплата
 
     // Для Описания вакансии
     val experience: ExperienceData?, // опыт

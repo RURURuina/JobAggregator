@@ -15,6 +15,7 @@ class RetrofitNetworkClient(
 ) : NetworkClient {
     override suspend fun getVacancies(dto: VacanciesSearchRequest): Response {
         if (!isConnected()) {
+            // если нет интернета возврат -1
             return Response().apply { resultCode = -1 }
         } else {
             return withContext(Dispatchers.IO) {

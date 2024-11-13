@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.data.convertors
 
+import android.util.Log
 import ru.practicum.android.diploma.data.dto.vacancy.DriverLicenseData
 import ru.practicum.android.diploma.data.dto.vacancy.EmployerData
 import ru.practicum.android.diploma.data.dto.vacancy.EmploymentData
