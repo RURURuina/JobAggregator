@@ -21,6 +21,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     private val _vacanciesState = MutableLiveData<VacanciesState>()
     val vacanciesState: LiveData<VacanciesState> = _vacanciesState
 
+    private var lastSearchText: String? = null
     private var searchJob: Job? = null
 
     init {
@@ -31,13 +32,25 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         pushVacanciesState(VacanciesState.Hidden)
     }
 
+    fun searchDebounce(changedText: String) {
+        if (lastSearchText == changedText) {
+            return
+        }
+        lastSearchText = changedText
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(DEBOUNCE_TIME)   // Реализован debounce 2 сек
+            searchVacancies(changedText)
+        }
+    }
+
     // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
-    fun searchVacancies(query: String) {
-        if (query.isNotBlank()) {
-            searchJob?.cancel()
+    private fun searchVacancies(query: String) {
+        if (query.isNotEmpty()) {
             pushVacanciesState(VacanciesState.Loading)
-            searchJob = viewModelScope.launch {
-                delay(DEBOUNCE_TIME) // Реализован debounce 2 сек
+
+            viewModelScope.launch {
+
                 hhInteractor
                     .getVacancies(hashMapOf("text" to query))
                     .collect { result ->
@@ -50,6 +63,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                                     pushVacanciesState(VacanciesState.Success(data))
                                 }
                             }
+
                             is Resource.Error -> {
                                 pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))
                             }
@@ -57,8 +71,6 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
 
                     }
             }
-        } else {
-            pushVacanciesState(VacanciesState.Empty)
         }
     }
 
