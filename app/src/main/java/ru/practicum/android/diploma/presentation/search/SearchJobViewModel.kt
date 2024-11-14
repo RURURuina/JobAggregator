@@ -51,10 +51,9 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                                 }
                             }
                             is Resource.Error -> {
-                                pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))
+                                pushVacanciesState(VacanciesState.Error(result.message ?: R.string.unknown_error))
                             }
                         }
-
                     }
             }
         } else {

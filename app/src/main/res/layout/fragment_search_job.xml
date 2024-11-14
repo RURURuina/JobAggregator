@@ -86,7 +86,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/no_internet_layout"
+        android:id="@+id/error_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -98,12 +98,14 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
+            android:id="@+id/error_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/no_internet"
             android:src="@drawable/no_internet_placeholder" />
 
         <TextView
+            android:id="@+id/error_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

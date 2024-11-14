@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -104,14 +105,14 @@ class SearchJobFragment : Fragment() {
 
     private fun showHiddenState() {
         binding?.searchLayout?.visibility = View.VISIBLE
-        binding?.noInternetLayout?.visibility = View.GONE
+        binding?.errorLayout?.visibility = View.GONE
         binding?.noJobsLayout?.visibility = View.GONE
     }
 
     private fun showLoading() {
         binding?.progressBar?.visibility = View.VISIBLE
         binding?.searchLayout?.visibility = View.GONE
-        binding?.noInternetLayout?.visibility = View.GONE
+        binding?.errorLayout?.visibility = View.GONE
         binding?.noJobsLayout?.visibility = View.GONE
     }
 
@@ -119,17 +120,24 @@ class SearchJobFragment : Fragment() {
         binding?.progressBar?.visibility = View.GONE
     }
 
-    private fun showError(errorMessage: Int) {
+    private fun showError(@StringRes errorMessage: Int) {
         binding?.vacanciesRecyclerView?.visibility = View.GONE
         binding?.searchLayout?.visibility = View.GONE
         binding?.noJobsLayout?.visibility = View.GONE
-        binding?.noInternetLayout?.visibility = View.VISIBLE
+
+        binding?.errorTv?.setText(errorMessage)
+        val drawableRes= when(errorMessage){
+            R.string.no_internet-> R.drawable.no_internet_placeholder
+            else-> R.drawable.server_error_on_search_screen
+        }
+        binding?.errorImage?.setImageResource(drawableRes)
+        binding?.errorLayout?.visibility = View.VISIBLE
     }
 
     private fun showEmptyState() {
         binding?.vacanciesRecyclerView?.visibility = View.GONE
         binding?.searchLayout?.visibility = View.GONE
-        binding?.noInternetLayout?.visibility = View.GONE
+        binding?.errorLayout?.visibility = View.GONE
         binding?.noJobsLayout?.visibility = View.VISIBLE
 
     }
@@ -138,7 +146,7 @@ class SearchJobFragment : Fragment() {
         binding?.vacanciesRecyclerView?.visibility = View.VISIBLE
         binding?.noJobsLayout?.visibility = View.GONE
         binding?.searchLayout?.visibility = View.GONE
-        binding?.noInternetLayout?.visibility = View.GONE
+        binding?.errorLayout?.visibility = View.GONE
         vacancyAdapter.submitList(vacancies)
     }
 
