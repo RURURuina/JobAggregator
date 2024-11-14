@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.convertors.VacancyDtoConvertor
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.response.VacanciesResponse
@@ -21,7 +22,7 @@ class HhRepositoryImpl(
 
         when (response.resultCode) {
             -1 -> {
-                emit(Resource.Error(response.resultCode))
+                emit(Resource.Error(R.string.no_internet))
             }
 
             200 -> {
@@ -35,7 +36,7 @@ class HhRepositoryImpl(
             }
 
             else -> {
-                emit(Resource.Error(response.resultCode))
+                emit(Resource.Error(R.string.server_error))
             }
         }
     }
