@@ -54,7 +54,7 @@ class SearchJobFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 // функция не используется
                 if (s?.isEmpty() == true) {
-                    clearRecyclerView()
+                    viewModel.clearVacancies()
                 }
             }
         })
