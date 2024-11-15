@@ -17,8 +17,8 @@
             android:id="@+id/action_favoriteJobFragment2_to_teamFragment2"
             app:destination="@id/teamFragment" />
         <action
-            android:id="@+id/action_favoriteJobFragment_to_vacancyDetailsFragment"
-            app:destination="@id/vacancyDetailsFragment" />
+            android:id="@+id/action_favoriteJobFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchJobFragment"
@@ -32,11 +32,11 @@
             android:id="@+id/action_searchJobFragment2_to_teamFragment2"
             app:destination="@id/teamFragment" />
         <action
-            android:id="@+id/action_searchJobFragment_to_vacancyDetailsFragment"
-            app:destination="@id/vacancyDetailsFragment" />
-        <action
             android:id="@+id/action_searchJobFragment_to_filtrationFragment"
             app:destination="@id/filtrationFragment" />
+        <action
+            android:id="@+id/action_searchJobFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/teamFragment"
@@ -50,11 +50,6 @@
             android:id="@+id/action_teamFragment2_to_searchJobFragment2"
             app:destination="@id/searchJobFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/vacancyDetailsFragment"
-        android:name="ru.practicum.android.diploma.ui.vacancy.VacancyDetailsFragment"
-        android:label="fragment_vacancy_details"
-        tools:layout="@layout/fragment_vacancy_details" />
     <fragment
         android:id="@+id/filtrationFragment"
         android:name="ru.practicum.android.diploma.ui.filtration.FiltrationFragment"
@@ -94,4 +89,9 @@
         android:name="ru.practicum.android.diploma.ui.industry.industryFragment"
         android:label="fragment_industry"
         tools:layout="@layout/fragment_industry" />
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="ru.practicum.android.diploma.ui.details.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" />
 </navigation>
