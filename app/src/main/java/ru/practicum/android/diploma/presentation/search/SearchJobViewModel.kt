@@ -55,7 +55,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     }
 
     // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
-    fun searchVacancies(query: String) {
+    private fun searchVacancies(query: String) {
         if (currentQuery != query) {
             currentPage = 0
             isLastPage = false
@@ -111,6 +111,10 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                     }
                 }
                 isLoading = false
+            }
+        }
+    }
+
     fun searchDebounce(changedText: String) {
         if (lastSearchText == changedText) {
             return
@@ -120,36 +124,6 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         searchJob = viewModelScope.launch {
             delay(DEBOUNCE_TIME)   // Реализован debounce 2 сек
             searchVacancies(changedText)
-        }
-    }
-
-    // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
-    private fun searchVacancies(query: String) {
-        if (query.isNotEmpty()) {
-            pushVacanciesState(VacanciesState.Loading)
-
-            viewModelScope.launch {
-
-                hhInteractor
-                    .getVacancies(hashMapOf("text" to query))
-                    .collect { result ->
-                        when (result) {
-                            is Resource.Success -> {
-                                val data = result.data ?: emptyList()
-                                if (data.isEmpty()) {
-                                    pushVacanciesState(VacanciesState.Empty)
-                                } else {
-                                    pushVacanciesState(VacanciesState.Success(data))
-                                }
-                            }
-
-                            is Resource.Error -> {
-                                pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))
-                            }
-                        }
-
-                    }
-            }
         }
     }
 
