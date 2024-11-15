@@ -46,13 +46,15 @@ class SearchJobFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 updateSearchIcon(s.isNullOrEmpty())
-                updateRecyclerView(emptyList())
-                viewModel.searchDebounce(s.toString())
 
+                if (!s.isNullOrBlank()) {
+                    updateRecyclerView(emptyList())
+                    viewModel.searchDebounce(s.toString())
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // функция не используется
+
                 if (s?.isEmpty() == true) {
                     viewModel.clearVacancies()
                 }
