@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchJobBinding
@@ -21,6 +22,7 @@ class SearchJobFragment : Fragment() {
     private var binding: FragmentSearchJobBinding? = null
     private val viewModel: SearchJobViewModel by viewModel()
     private val vacancyAdapter = VacancyAdapter()
+    private var scrollListener: RecyclerView.OnScrollListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,6 +73,23 @@ class SearchJobFragment : Fragment() {
         binding?.vacanciesRecyclerView?.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = vacancyAdapter
+
+            scrollListener?.let { removeOnScrollListener(it) }
+            scrollListener = object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val visibleItemCount = layoutManager.childCount // кол-во элементов на экране
+                    val totalItemCount = layoutManager.itemCount // сколько всего элементов в списке
+                    val positionFirst = layoutManager.findFirstVisibleItemPosition() // номер первого видимого элемента на экране
+
+                    if ( (visibleItemCount + positionFirst) >= totalItemCount && positionFirst >= 0 ) {
+                        viewModel.loadNextPage()
+                    }
+                }
+            }.also {
+                addOnScrollListener(it)
+            }
         }
     }
 
@@ -153,5 +172,6 @@ class SearchJobFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        scrollListener = null
     }
 }
