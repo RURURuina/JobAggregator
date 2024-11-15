@@ -34,7 +34,8 @@ class HhRepositoryImpl(
                     )
                 )
             }
-            in 500..599->{
+
+            in 500..599 -> {
                 emit(Resource.Error(R.string.server_error))
             }
 

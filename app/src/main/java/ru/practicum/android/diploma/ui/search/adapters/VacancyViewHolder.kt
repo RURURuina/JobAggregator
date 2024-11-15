@@ -1,13 +1,10 @@
 package ru.practicum.android.diploma.ui.search.adapters
 
-import android.icu.text.DecimalFormat
-import android.icu.text.DecimalFormatSymbols
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.practicum.android.diploma.databinding.JobItemBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.util.format
-import java.util.Locale
 
 class VacancyViewHolder(private val binding: JobItemBinding) : RecyclerView.ViewHolder(binding.root) {
 

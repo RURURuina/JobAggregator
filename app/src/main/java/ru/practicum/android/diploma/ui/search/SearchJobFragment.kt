@@ -28,7 +28,7 @@ class SearchJobFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentSearchJobBinding.inflate(layoutInflater)
         return binding?.root
@@ -81,9 +81,10 @@ class SearchJobFragment : Fragment() {
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                     val visibleItemCount = layoutManager.childCount // кол-во элементов на экране
                     val totalItemCount = layoutManager.itemCount // сколько всего элементов в списке
-                    val positionFirst = layoutManager.findFirstVisibleItemPosition() // номер первого видимого элемента на экране
+                    val positionFirst =
+                        layoutManager.findFirstVisibleItemPosition() // номер первого видимого элемента на экране
 
-                    if ( (visibleItemCount + positionFirst) >= totalItemCount && positionFirst >= 0 ) {
+                    if ((visibleItemCount + positionFirst) >= totalItemCount && positionFirst >= 0) {
                         viewModel.loadNextPage()
                     }
                 }
@@ -152,9 +153,9 @@ class SearchJobFragment : Fragment() {
         binding?.noJobsLayout?.visibility = View.GONE
 
         binding?.errorTv?.setText(errorMessage)
-        val drawableRes= when(errorMessage){
-            R.string.no_internet-> R.drawable.no_internet_placeholder
-            else-> R.drawable.server_error_on_search_screen
+        val drawableRes = when (errorMessage) {
+            R.string.no_internet -> R.drawable.no_internet_placeholder
+            else -> R.drawable.server_error_on_search_screen
         }
         binding?.errorImage?.setImageResource(drawableRes)
         binding?.errorLayout?.visibility = View.VISIBLE
