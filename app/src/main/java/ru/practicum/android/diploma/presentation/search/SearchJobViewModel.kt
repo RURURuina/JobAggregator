@@ -4,15 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Query
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.search.models.VacanciesState
 import ru.practicum.android.diploma.util.Resource
+import ru.practicum.android.diploma.util.debounce
 
 
 class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
@@ -26,13 +25,19 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     val vacanciesState: LiveData<VacanciesState> = _vacanciesState
 
     private var searchJob: Job? = null
-        // переменные для работы с paggination
+
+    // переменные для работы с paggination
     private var currentPage = 0
     private var currentQuery = ""
     private var isLastPage = false
     private var isLoading = false
     private var vacanciesList = mutableListOf<Vacancy>()
 
+    private val searchDebounced = debounce<Any>(DEBOUNCE_TIME, viewModelScope, true) {
+        searchJob = viewModelScope.launch {
+            loadVacancies(currentQuery)
+        }
+    }
 
     init {
         clearVacancies()
@@ -57,13 +62,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         }
         if (query.isNotBlank()) {
             searchJob?.cancel()
-            if (currentPage ==0) {
-                pushVacanciesState(VacanciesState.Loading)
-            }
-            searchJob = viewModelScope.launch {
-                delay(DEBOUNCE_TIME)
-                loadVacancies(query)
-            }
+            run(searchDebounced)
         } else {
             pushVacanciesState(VacanciesState.Hidden)
         }
@@ -80,29 +79,37 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
             "page" to currentPage.toString(),
             "per_page" to PAGE_SIZE.toString()
         )
-        hhInteractor.getVacancies(params).collect{result ->
-            when(result) {
-                is Resource.Success -> {
-                    val newVacancies = result.data ?: emptyList()
-                    if (newVacancies.isEmpty()) {
-                        isLastPage = true
-                        if (vacanciesList.isEmpty()) {
-                            pushVacanciesState(VacanciesState.Empty)
+        if (currentPage == 0) {
+            pushVacanciesState(VacanciesState.Loading)
+        }
+        if (query.isNotEmpty()) {
+            hhInteractor.getVacancies(params).collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        val newVacancies = result.data ?: emptyList()
+                        if (newVacancies.isEmpty()) {
+                            isLastPage = true
+                            if (vacanciesList.isEmpty()) {
+                                pushVacanciesState(VacanciesState.Empty)
+                            }
+                        } else {
+                            vacanciesList.addAll(newVacancies)
+                            pushVacanciesState(
+                                VacanciesState.Success(
+                                    vacancies = vacanciesList.toList(),
+                                    isLastPage = isLastPage,
+                                    isLoading = false
+                                )
+                            )
                         }
-                    } else {
-                        vacanciesList.addAll(newVacancies)
-                        pushVacanciesState(VacanciesState.Success(
-                            vacancies = vacanciesList.toList(),
-                            isLastPage = isLastPage,
-                            isLoading = false
-                        ))
+                    }
+
+                    is Resource.Error -> {
+                        pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))
                     }
                 }
-                is Resource.Error -> {
-                    pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))
-                }
+                isLoading = false
             }
-            isLoading = false
         }
     }
 
