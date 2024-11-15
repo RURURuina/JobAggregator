@@ -1,68 +1,61 @@
 package ru.practicum.android.diploma.data.dto.vacancy
 
 import com.google.gson.annotations.SerializedName
-import ru.practicum.android.diploma.domain.api.DriverLicense
-import ru.practicum.android.diploma.domain.api.Employer
-import ru.practicum.android.diploma.domain.api.Employment
-import ru.practicum.android.diploma.domain.api.Experience
-import ru.practicum.android.diploma.domain.api.KeySkill
-import ru.practicum.android.diploma.domain.api.Language
-import ru.practicum.android.diploma.domain.api.Salary
 
 data class VacancyData(
     // Для JobItem
     val id: String, // id вакансии
     val name: String?, // название вакансии
-    val employer: Employer?, // работодатель
-    val salary: Salary?, // зарплата
+    val employer: EmployerData?, // работодатель
+    @SerializedName("salary") val salaryData: SalaryData?, // зарплата
 
     // Для Описания вакансии
-    val experience: Experience?, // опыт
-    val employment: Employment?, // тип занятости
-    val keySkills: List<KeySkill>?, // ключевые навыки
-    val languages: List<Language>?, // языки
-    val driverLicenseTypes: List<DriverLicense>? // категория прав водителя
+    val experience: ExperienceData?, // опыт
+    val employment: EmploymentData?, // тип занятости
+    @SerializedName("key_skills") val keySkills: List<KeySkillData>?, // ключевые навыки
+    val languages: List<LanguageData>?, // языки
+    @SerializedName("driver_license_types") val driverLicenseTypes: List<DriverLicenseData>?, // категория прав водителя
 )
 
-data class Employer(
+data class EmployerData(
     val name: String?, // название работодателя
-    val logoUrls: LogoUrls? // Иконки работодателя
+    @SerializedName("logo_urls") val logoUrls: LogoUrlsData?, // Иконки работодателя
 )
 
-data class Salary(
+data class SalaryData(
     val currency: String?, // валюта
     val from: Int?, // сумма от
     val gross: Boolean?, // до или после вычета
-    val to: Int? // сумма до
+    val to: Int?, // сумма до
 )
 
-data class LogoUrls(
+data class LogoUrlsData(
     @SerializedName("90") val small: String?, // Маленькая иконка
     @SerializedName("240") val medium: String?, // Большая иконка
-    val original: String? // стандартная иконка
+    val original: String?, // стандартная иконка
 )
 
-data class Experience(
-    val name: String? // Строка "требуемый опыт"
+data class ExperienceData(
+    val name: String?, // Строка "требуемый опыт"
 )
 
-data class Employment(
-    val name: String? // строка "тип занятости"
+data class EmploymentData(
+    val name: String?, // строка "тип занятости"
 )
 
-data class KeySkill(
-    val name: String? // Описание(Обязанности)
+data class KeySkillData(
+    val name: String?, // Описание(Обязанности)
 )
 
-data class Language(
+data class LanguageData(
     val name: String?, // Название языка
-    val level: LanguageLevel?
+    val level: LanguageLevelData?,
 )
 
-data class LanguageLevel(
-    val name: String? // Уровень языка
+data class LanguageLevelData(
+    val name: String?, // Уровень языка
 )
 
-data class DriverLicense(
-    val id: String? // название категории
+data class DriverLicenseData(
+    val id: String?, // название категории
 )
