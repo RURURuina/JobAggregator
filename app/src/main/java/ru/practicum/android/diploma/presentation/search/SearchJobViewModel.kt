@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.api.HhInteractor
@@ -122,7 +121,6 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         lastSearchText = changedText
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(DEBOUNCE_TIME)   // Реализован debounce 2 сек
             searchVacancies(changedText)
         }
     }
