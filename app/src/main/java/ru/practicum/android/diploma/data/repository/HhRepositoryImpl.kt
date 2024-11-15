@@ -34,9 +34,12 @@ class HhRepositoryImpl(
                     )
                 )
             }
+            in 500..599->{
+                emit(Resource.Error(R.string.server_error))
+            }
 
             else -> {
-                emit(Resource.Error(R.string.server_error))
+                emit(Resource.Error(R.string.unknown_error))
             }
         }
     }
