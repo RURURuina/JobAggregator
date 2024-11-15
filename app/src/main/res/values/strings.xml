@@ -17,4 +17,9 @@
     <string name="third_team_mate">Рома Гарбуз</string>
     <string name="fourth_team_mate">Егор Макеев</string>
     <string name="fifth_team_mate">Антон Сикора</string>
+    <string name="vacancy">Вакансия</string>
+    <string name="back_button">Назад</string>
+    <string name="experience">Требуемый опыт</string>
+    <string name="description_title">Описание вакансии</string>
+    <string name="key_skills_title">Ключевые навыки</string>
 </resources>
