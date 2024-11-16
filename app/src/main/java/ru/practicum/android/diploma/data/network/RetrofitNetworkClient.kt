@@ -8,7 +8,6 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.response.Response
-import ru.practicum.android.diploma.data.dto.response.VacanciesResponse
 import ru.practicum.android.diploma.util.ResponseStatusCode
 
 class RetrofitNetworkClient(
