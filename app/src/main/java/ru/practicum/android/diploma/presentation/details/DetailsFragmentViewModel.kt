@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.databinding.FragmentSearchJobBinding
 import ru.practicum.android.diploma.domain.api.HhInteractor
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
 
@@ -12,7 +13,6 @@ class DetailsFragmentViewModel(private val hhInteractor: HhInteractor) : ViewMod
     init {
         println("DetailsFragmentViewModel")
     }
-
     private val stateLiveData = MutableLiveData<DetailsFragmentState>()
 
     fun observeState(): LiveData<DetailsFragmentState> = stateLiveData
@@ -24,7 +24,11 @@ class DetailsFragmentViewModel(private val hhInteractor: HhInteractor) : ViewMod
     fun start(id: String) {
         viewModelScope.launch {
             val a = hhInteractor.searchVacanceById(id)
-            a.collect { println(it.data) }
+            a.collect {
+                it.data?.let {
+                    renderState(DetailsFragmentState.Content(it))
+                } ?: renderState(DetailsFragmentState.ERROR)
+            }
         }
     }
 }
