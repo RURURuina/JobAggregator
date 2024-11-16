@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.convertors.VacancyDtoConvertor
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
+import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
 import ru.practicum.android.diploma.data.dto.response.VacanciesResponse
+import ru.practicum.android.diploma.data.dto.response.VacancyResponse
 import ru.practicum.android.diploma.data.dto.vacancy.VacancyData
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.HhRepository
@@ -33,6 +35,33 @@ class HhRepositoryImpl(
                             vacancyDtoConvertor.map(vacancyData)
                         }
                     )
+                )
+            }
+
+            is ResponseStatusCode.ERROR -> {
+                emit(Resource.Error(R.string.server_error))
+            }
+
+            else -> {
+                emit(Resource.Error(R.string.unknown_error))
+            }
+        }
+    }
+
+    override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy>> = flow {
+        val response = networkClient.getVacancyById(VacancyByIdRequest(id))
+        val resultRaw = (response as VacancyResponse).data!!
+        val result = vacancyDtoConvertor.map(resultRaw)
+        emit(Resource.Success(result))
+
+        when (response.resultCode) {
+            is ResponseStatusCode.NO_INTERNET -> {
+                emit(Resource.Error(R.string.no_internet))
+            }
+
+            is ResponseStatusCode.OK -> {
+                emit(
+                    Resource.Success(result)
                 )
             }
 
