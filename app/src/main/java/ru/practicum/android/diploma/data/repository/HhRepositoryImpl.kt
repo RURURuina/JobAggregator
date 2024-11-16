@@ -17,15 +17,23 @@ class HhRepositoryImpl(
     private val vacancyDtoConvertor: VacancyDtoConvertor,
 ) : HhRepository {
 
+    companion object{
+        private const val NO_INTERNET_CODE =-1
+        private const val SUCCESS_CODE =200
+        private const val MIN_SERVER_ERROR_CODE = 500
+        private const val MAX_SERVER_ERROR_CODE = 599
+
+    }
+
     override suspend fun getVacancies(expression: HashMap<String, String>): Flow<Resource<List<Vacancy>>> = flow {
         val response = networkClient.getVacancies(VacanciesSearchRequest(expression))
 
         when (response.resultCode) {
-            -1 -> {
+            NO_INTERNET_CODE -> {
                 emit(Resource.Error(R.string.no_internet))
             }
 
-            200 -> {
+            SUCCESS_CODE -> {
                 emit(
                     Resource.Success(
                         (response as VacanciesResponse).vacancies!!.map { vacancyData: VacancyData ->
@@ -35,7 +43,7 @@ class HhRepositoryImpl(
                 )
             }
 
-            in 500..599 -> {
+            in MIN_SERVER_ERROR_CODE..MAX_SERVER_ERROR_CODE -> {
                 emit(Resource.Error(R.string.server_error))
             }
 
