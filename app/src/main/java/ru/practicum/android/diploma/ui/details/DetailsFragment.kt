@@ -12,6 +12,7 @@ import ru.practicum.android.diploma.databinding.FragmentDetailsBinding
 import ru.practicum.android.diploma.presentation.details.DetailsFragmentViewModel
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
+import ru.practicum.android.diploma.util.format
 
 class DetailsFragment : Fragment() {
     private val viewModel: DetailsFragmentViewModel by viewModel()
@@ -39,6 +40,7 @@ class DetailsFragment : Fragment() {
     private fun render(state: DetailsFragmentState) {
         when (state) {
             is DetailsFragmentState.Content -> {
+                binding?.titleSalary?.text = state.vacancy.salary.format()
                 binding?.descriptionHtmlText?.text =
                     Html.fromHtml(
                         state.vacancy.description,

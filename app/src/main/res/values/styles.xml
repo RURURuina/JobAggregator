@@ -34,12 +34,18 @@
         <item name="android:layout_height">64dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="backgroundTint">@color/transparent</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:padding">12dp</item>
         <!--        text-->
         <item name="android:textColor">@color/black</item>
         <item name="textStartPadding">24dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">22sp</item>
+        <item name="android:textAlignment">viewStart</item>
+        <!--        icon   -->
+        <item name="iconSize">24dp</item>
+        <item name="iconTint">@color/black</item>
     </style>
 
     <style name="progressBar">
