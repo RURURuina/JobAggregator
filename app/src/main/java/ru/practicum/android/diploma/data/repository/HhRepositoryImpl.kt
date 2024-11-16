@@ -11,6 +11,7 @@ import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.HhRepository
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.util.Resource
+import ru.practicum.android.diploma.util.ResponseStatusCode
 
 class HhRepositoryImpl(
     private val networkClient: NetworkClient,
@@ -29,11 +30,11 @@ class HhRepositoryImpl(
         val response = networkClient.getVacancies(VacanciesSearchRequest(expression))
 
         when (response.resultCode) {
-            NO_INTERNET_CODE -> {
+            is ResponseStatusCode.NO_INTERNET -> {
                 emit(Resource.Error(R.string.no_internet))
             }
 
-            SUCCESS_CODE -> {
+            is ResponseStatusCode.OK -> {
                 emit(
                     Resource.Success(
                         (response as VacanciesResponse).vacancies!!.map { vacancyData: VacancyData ->
@@ -43,7 +44,7 @@ class HhRepositoryImpl(
                 )
             }
 
-            in MIN_SERVER_ERROR_CODE..MAX_SERVER_ERROR_CODE -> {
+            is ResponseStatusCode.ERROR -> {
                 emit(Resource.Error(R.string.server_error))
             }
 
