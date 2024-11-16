@@ -9,6 +9,7 @@ import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
 import ru.practicum.android.diploma.data.dto.response.Response
+import ru.practicum.android.diploma.util.ResponseStatusCode
 
 class RetrofitNetworkClient(
     private val hhService: HhApiService,
@@ -16,18 +17,18 @@ class RetrofitNetworkClient(
 ) : NetworkClient {
     override suspend fun getVacancies(dto: VacanciesSearchRequest): Response {
         if (!isConnected()) {
-            // если нет интернета возврат -1
-            return Response().apply { resultCode = -1 }
+            // если нет интернета возврат
+            return Response().apply { resultCode = ResponseStatusCode.NO_INTERNET }
         } else {
             return withContext(Dispatchers.IO) {
                 try {
                     val response = hhService.searchVacancies(
                         dto.expression
-                    )
-                    response.apply { resultCode = 200 }
+                    ).body()!!
+                    response.apply { resultCode = ResponseStatusCode.OK }
                 } catch (e: HttpException) {
                     println(e)
-                    Response().apply { resultCode = e.code() }
+                    Response().apply { resultCode = ResponseStatusCode.ERROR }
                 }
             }
         }
@@ -36,17 +37,17 @@ class RetrofitNetworkClient(
     override suspend fun getVacancyById(dto: VacancyByIdRequest): Response {
         if (!isConnected()) {
             // если нет интернета возврат -1
-            return Response().apply { resultCode = -1 }
+            return Response().apply { resultCode = ResponseStatusCode.NO_INTERNET }
         } else {
             return withContext(Dispatchers.IO) {
                 try {
                     val response = hhService.searchVacanceById(
                         dto.id
                     )
-                    response.apply { resultCode = 200 }
+                    response.apply { resultCode = ResponseStatusCode.OK }
                 } catch (e: HttpException) {
                     println(e)
-                    Response().apply { resultCode = e.code() }
+                    Response().apply { resultCode = ResponseStatusCode.ERROR }
                 }
             }
         }

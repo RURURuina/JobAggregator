@@ -11,7 +11,7 @@ class HhInteractorImpl(val hhRepository: HhRepository) : HhInteractor {
         return hhRepository.getVacancies(expression)
     }
 
-    override suspend fun searchVacanceById(id: String): Flow<Result<Vacancy>> {
+    override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy>> {
         return hhRepository.searchVacanceById(id)
     }
 
