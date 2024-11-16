@@ -84,7 +84,7 @@ class SearchJobFragment : Fragment() {
                     val positionFirst =
                         layoutManager.findFirstVisibleItemPosition() // номер первого видимого элемента на экране
 
-                    if ((visibleItemCount + positionFirst) >= totalItemCount && positionFirst >= 0) {
+                    if (visibleItemCount + positionFirst >= totalItemCount && positionFirst >= 0) {
                         viewModel.loadNextPage()
                     }
                 }
