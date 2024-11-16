@@ -50,10 +50,7 @@ class HhRepositoryImpl(
 
     override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy>> = flow {
         val response = networkClient.getVacancyById(VacancyByIdRequest(id))
-        val resultRaw = (response as VacancyResponse).data!!
-        val result = vacancyDtoConvertor.map(resultRaw)
-        emit(Resource.Success(result))
-
+        val resultRaw = (response as VacancyResponse)
         when (response.resultCode) {
             is ResponseStatusCode.NO_INTERNET -> {
                 emit(Resource.Error(R.string.no_internet))
@@ -61,7 +58,7 @@ class HhRepositoryImpl(
 
             is ResponseStatusCode.OK -> {
                 emit(
-                    Resource.Success(result)
+                    Resource.Success(vacancyDtoConvertor.run { map(resultRaw) })
                 )
             }
 

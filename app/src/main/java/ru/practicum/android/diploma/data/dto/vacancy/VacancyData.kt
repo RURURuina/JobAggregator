@@ -8,13 +8,71 @@ data class VacancyData(
     val name: String?, // название вакансии
     val employer: EmployerData?, // работодатель
     @SerializedName("salary") val salaryData: SalaryData?, // зарплата
-
+    val adress: AddressData?,
     // Для Описания вакансии
     val experience: ExperienceData?, // опыт
     val employment: EmploymentData?, // тип занятости
     @SerializedName("key_skills") val keySkills: List<KeySkillData>?, // ключевые навыки
     val languages: List<LanguageData>?, // языки
     @SerializedName("driver_license_types") val driverLicenseTypes: List<DriverLicenseData>?, // категория прав водителя
+    val area: AreaData?,
+    val industry: IndustryData?,
+    val country: CountryData?,
+    val contacts: ContactsData?,
+    val description: String?,
+    )
+class PhonesData(
+    val city: String,
+    val comment: String? = null,
+    val country: String,
+    val formatted: String,
+    val number: String,
+)
+data class  MetroStationsData (
+    @SerializedName("line_name")
+    val lineName: String?,
+    @SerializedName("station_name")
+    val stationName: String?
+)
+
+
+data class ContactsData(
+    val email: String?,
+    val name: String?,
+    val phones: List<PhonesData>? = null,
+)
+
+data class CountryData(
+    val id: String,
+    val name: String,
+)
+
+data class IndustryData(
+    val id: String,
+    val name: String,
+    val industries: List<IndustryNestedData>?,
+)
+
+data class IndustryNestedData(
+    val id: String,
+    val name: String,
+)
+
+data class AreaData(
+    val id: String?,
+    val name: String?,
+    val url: String?,
+)
+
+data class AddressData(
+    val building: String?,
+    val city: String?,
+    val description: String?,
+    @SerializedName("metro_stations")
+    val metro: List<MetroStationsData>?,
+    val street: String?,
+    @SerializedName("raw")
+    val full: String?,
 )
 
 data class EmployerData(

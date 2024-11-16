@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -15,15 +18,21 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchJobBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.presentation.search.SearchJobViewModel
+import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
 import ru.practicum.android.diploma.ui.search.adapters.VacancyAdapter
 import ru.practicum.android.diploma.ui.search.models.VacanciesState
+import ru.practicum.android.diploma.util.debounce
 
 class SearchJobFragment : Fragment() {
+    private companion object {
+        const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
 
     private var binding: FragmentSearchJobBinding? = null
     private val viewModel: SearchJobViewModel by viewModel()
     private val vacancyAdapter = VacancyAdapter()
     private var scrollListener: RecyclerView.OnScrollListener? = null
+    private var onItemClick: ((Vacancy) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +48,20 @@ class SearchJobFragment : Fragment() {
         initEditText()
         initRecyclerView()
         observeViewModel()
+        prepareOnItemClick()
+    }
+
+    private fun prepareOnItemClick() {
+        onItemClick = debounce(
+            delayMillis = CLICK_DEBOUNCE_DELAY,
+            coroutineScope = viewLifecycleOwner.lifecycleScope,
+            useLastParam = true
+        ) { vacancy ->
+            val bundle = bundleOf(VACANCY_TRANSFER_KEY to vacancy.id)
+            /*vacancy id нужно будет вынести в компаньон обджект в апп*/
+            findNavController().navigate(R.id.action_searchJobFragment_to_detailsFragment, bundle)
+        }
+
     }
 
     private fun initEditText() {
@@ -175,6 +198,9 @@ class SearchJobFragment : Fragment() {
         binding?.searchLayout?.visibility = View.GONE
         binding?.errorLayout?.visibility = View.GONE
         vacancyAdapter.submitList(vacancies)
+        onItemClick?.let {
+            vacancyAdapter.onItemClick = it
+        }
     }
 
     override fun onDestroyView() {

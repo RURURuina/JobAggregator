@@ -24,7 +24,7 @@ class RetrofitNetworkClient(
                 try {
                     val response = hhService.searchVacancies(
                         dto.expression
-                    ).body()!!
+                    )
                     response.apply { resultCode = ResponseStatusCode.OK }
                 } catch (e: HttpException) {
                     println(e)
