@@ -4,7 +4,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.convertors.VacancyDtoConvertor
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
+import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
 import ru.practicum.android.diploma.data.dto.response.VacanciesResponse
+import ru.practicum.android.diploma.data.dto.response.VacancyResponse
 import ru.practicum.android.diploma.data.dto.vacancy.VacancyData
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.HhRepository
@@ -37,6 +39,17 @@ class HhRepositoryImpl(
             else -> {
                 emit(Resource.Error(response.resultCode))
             }
+        }
+    }
+
+    override suspend fun searchVacanceById(id: String): Flow<Result<Vacancy>> = flow {
+        try {
+            val response = networkClient.getVacancyById(VacancyByIdRequest(id))
+            val resultRaw = (response as VacancyResponse).data!!
+            val result = vacancyDtoConvertor.map(resultRaw)
+            emit(Result.success(result))
+        } catch (e: Exception) {
+            emit(Result.failure(e))
         }
     }
 }

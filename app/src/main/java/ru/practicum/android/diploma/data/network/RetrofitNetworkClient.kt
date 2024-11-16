@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
+import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
 import ru.practicum.android.diploma.data.dto.response.Response
 
 class RetrofitNetworkClient(
@@ -22,6 +23,25 @@ class RetrofitNetworkClient(
                 try {
                     val response = hhService.searchVacancies(
                         dto.expression
+                    )
+                    response.apply { resultCode = 200 }
+                } catch (e: HttpException) {
+                    println(e)
+                    Response().apply { resultCode = e.code() }
+                }
+            }
+        }
+    }
+
+    override suspend fun getVacancyById(dto: VacancyByIdRequest): Response {
+        if (!isConnected()) {
+            // если нет интернета возврат -1
+            return Response().apply { resultCode = -1 }
+        } else {
+            return withContext(Dispatchers.IO) {
+                try {
+                    val response = hhService.searchVacanceById(
+                        dto.id
                     )
                     response.apply { resultCode = 200 }
                 } catch (e: HttpException) {
