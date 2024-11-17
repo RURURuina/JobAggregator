@@ -13,6 +13,7 @@ import ru.practicum.android.diploma.data.dto.vacancy.IndustryData
 import ru.practicum.android.diploma.data.dto.vacancy.KeySkillData
 import ru.practicum.android.diploma.data.dto.vacancy.LanguageData
 import ru.practicum.android.diploma.data.dto.vacancy.SalaryData
+import ru.practicum.android.diploma.data.dto.vacancy.ScheduleData
 
 class VacancyResponse(
     // Для JobItem
@@ -32,4 +33,5 @@ class VacancyResponse(
     val country: CountryData?,
     val contacts: ContactsData?,
     val description: String?,
+    val schedule: ScheduleData?,
 ) : Response()

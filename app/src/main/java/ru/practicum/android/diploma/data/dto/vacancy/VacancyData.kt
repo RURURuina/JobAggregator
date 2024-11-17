@@ -20,7 +20,14 @@ data class VacancyData(
     val country: CountryData?,
     val contacts: ContactsData?,
     val description: String?,
-    )
+    val schedule: ScheduleData?,
+)
+
+class ScheduleData(
+    val id: String?,
+    val name: String?,
+)
+
 class PhonesData(
     val city: String,
     val comment: String? = null,
@@ -28,11 +35,12 @@ class PhonesData(
     val formatted: String,
     val number: String,
 )
-data class  MetroStationsData (
+
+data class MetroStationsData(
     @SerializedName("line_name")
     val lineName: String?,
     @SerializedName("station_name")
-    val stationName: String?
+    val stationName: String?,
 )
 
 

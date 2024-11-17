@@ -18,6 +18,7 @@ import ru.practicum.android.diploma.data.dto.vacancy.LogoUrlsData
 import ru.practicum.android.diploma.data.dto.vacancy.MetroStationsData
 import ru.practicum.android.diploma.data.dto.vacancy.PhonesData
 import ru.practicum.android.diploma.data.dto.vacancy.SalaryData
+import ru.practicum.android.diploma.data.dto.vacancy.ScheduleData
 import ru.practicum.android.diploma.data.dto.vacancy.VacancyData
 import ru.practicum.android.diploma.domain.models.entity.Address
 import ru.practicum.android.diploma.domain.models.entity.Area
@@ -36,6 +37,7 @@ import ru.practicum.android.diploma.domain.models.entity.LogoUrls
 import ru.practicum.android.diploma.domain.models.entity.MetroStations
 import ru.practicum.android.diploma.domain.models.entity.Phone
 import ru.practicum.android.diploma.domain.models.entity.Salary
+import ru.practicum.android.diploma.domain.models.entity.Schedule
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 
 class VacancyDtoConvertor {
@@ -58,12 +60,12 @@ class VacancyDtoConvertor {
             vacancy.industry?.map(),
             vacancy.country?.map(),
             vacancy.contacts?.map(),
-            vacancy.description
+            vacancy.description,
+            vacancy.schedule?.map()
         )
     }
 
     fun map(vacancy: VacancyResponse): Vacancy {
-        println(vacancy.id)
         return Vacancy(
             vacancy.id,
             vacancy.name,
@@ -79,7 +81,15 @@ class VacancyDtoConvertor {
             vacancy.industry?.map(),
             vacancy.country?.map(),
             vacancy.contacts?.map(),
-            vacancy.description
+            vacancy.description,
+            vacancy.schedule?.map()
+        )
+    }
+
+    fun ScheduleData.map(): Schedule {
+        return Schedule(
+            this.id,
+            this.name
         )
     }
 
@@ -192,72 +202,73 @@ class VacancyDtoConvertor {
     }
 
 
-private fun SalaryData.map(): Salary {
-    return Salary(
-        this.currency,
-        this.from,
-        this.gross,
-        this.to
-    )
-}
+    private fun SalaryData.map(): Salary {
+        return Salary(
+            this.currency,
+            this.from,
+            this.gross,
+            this.to
+        )
+    }
 
-private fun ExperienceData.map(): Experience {
-    return Experience(
-        this.name,
-    )
-}
+    private fun ExperienceData.map(): Experience {
+        return Experience(
+            this.name,
+        )
+    }
 
-private fun EmploymentData.map(): Employment {
-    return Employment(
-        this.name,
-    )
-}
+    private fun EmploymentData.map(): Employment {
+        return Employment(
+            this.name,
+        )
+    }
 
-private fun keySkillsListMap(oldList: List<KeySkillData>?): List<KeySkill>? {
-    oldList?.let {
-        val list = mutableListOf<KeySkill>()
-        oldList.map { list.add(it.map()) }
-        return list
-    } ?: return null
-}
+    private fun keySkillsListMap(oldList: List<KeySkillData>?): List<KeySkill>? {
+        oldList?.let {
+            val list = mutableListOf<KeySkill>()
+            oldList.map { list.add(it.map()) }
+            return list
+        } ?: return null
+    }
 
-private fun KeySkillData.map(): KeySkill {
-    return KeySkill(
-        this.name,
-    )
-}
+    private fun KeySkillData.map(): KeySkill {
+        return KeySkill(
+            this.name,
+        )
+    }
 
-private fun LanguageData.map(): Language {
-    return Language(
-        this.name,
-        this.level?.map()
-    )
-}
+    private fun LanguageData.map(): Language {
+        return Language(
+            this.name,
+            this.level?.map()
+        )
+    }
 
-private fun LanguageLevelData.map(): LanguageLevel {
-    return LanguageLevel(
-        this.name
-    )
-}
+    private fun LanguageLevelData.map(): LanguageLevel {
+        return LanguageLevel(
+            this.name
+        )
+    }
 
-private fun languageList(oldList: List<LanguageData>?): List<Language>? {
-    oldList?.let {
-        val list = mutableListOf<Language>()
-        oldList.map { list.add(it.map()) }
-        return list
-    } ?: return null
-}
+    private fun languageList(oldList: List<LanguageData>?): List<Language>? {
+        oldList?.let {
+            val list = mutableListOf<Language>()
+            oldList.map { list.add(it.map()) }
+            return list
+        } ?: return null
+    }
 
-private fun driverLicenseListMap(olList: List<DriverLicenseData>?): List<DriverLicense>? {
-    olList?.let {
-        val list = mutableListOf<DriverLicense>()
-        olList.map { list.add(it.map()) }
-        return list
-    } ?: return null
-}
+    private fun driverLicenseListMap(olList: List<DriverLicenseData>?): List<DriverLicense>? {
+        olList?.let {
+            val list = mutableListOf<DriverLicense>()
+            olList.map { list.add(it.map()) }
+            return list
+        } ?: return null
+    }
 
-private fun DriverLicenseData.map(): DriverLicense {
-    return DriverLicense(
-        this.id
-    )
-}}
+    private fun DriverLicenseData.map(): DriverLicense {
+        return DriverLicense(
+            this.id
+        )
+    }
+}

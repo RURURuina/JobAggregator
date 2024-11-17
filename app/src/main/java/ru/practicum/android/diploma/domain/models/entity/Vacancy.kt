@@ -1,7 +1,5 @@
 package ru.practicum.android.diploma.domain.models.entity
 
-import com.google.gson.annotations.SerializedName
-
 data class Vacancy(
     // Для JobItem
     val id: String, // id вакансии
@@ -21,12 +19,20 @@ data class Vacancy(
     val country: Country?,
     val contacts: Contacts?,
     val description: String?,
+    val schedule: Schedule?,
 )
+
+class Schedule(
+    val id: String?,
+    val name: String?,
+)
+
 data class Contacts(
     val email: String?,
     val name: String?,
-    val phones: List<Phone>?// = null,
+    val phones: List<Phone>?,// = null,
 )
+
 class Phone(
     val city: String,
     val comment: String?, //= null,
@@ -34,9 +40,10 @@ class Phone(
     val formatted: String,
     val number: String,
 )
-data class  MetroStations (
+
+data class MetroStations(
     val lineName: String?,
-    val stationName: String?
+    val stationName: String?,
 )
 
 

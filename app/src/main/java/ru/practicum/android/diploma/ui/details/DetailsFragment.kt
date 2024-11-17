@@ -2,16 +2,23 @@ package ru.practicum.android.diploma.ui.details
 
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentDetailsBinding
+import ru.practicum.android.diploma.domain.models.entity.Experience
+import ru.practicum.android.diploma.domain.models.entity.KeySkill
+import ru.practicum.android.diploma.domain.models.entity.Salary
+import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.presentation.details.DetailsFragmentViewModel
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
+import ru.practicum.android.diploma.ui.root.RootActivity
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
+import ru.practicum.android.diploma.util.fillBy
 import ru.practicum.android.diploma.util.format
 
 class DetailsFragment : Fragment() {
@@ -28,31 +35,99 @@ class DetailsFragment : Fragment() {
         return binding?.root
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        true.navBarVisible()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        false.navBarVisible()
         prepareViewModel()
         getVacancyId()
+        initViewModel()
+        prepareBackButton()
+        binding?.toolbarLikeButton?.setOnClickListener {
+            binding?.toolbarLikeButton?.isSelected?.vacancyLiked()
+        }
+    }
+
+    private fun initViewModel() {
         vacancyId?.let {
             viewModel.start(it)
+        }
+    }
+
+    private fun prepareBackButton() {
+        binding?.preview?.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
     private fun render(state: DetailsFragmentState) {
         when (state) {
             is DetailsFragmentState.Content -> {
-                binding?.titleSalary?.text = state.vacancy.salary.format()
-                binding?.descriptionHtmlText?.text =
-                    Html.fromHtml(
-                        state.vacancy.description,
-                        Html.FROM_HTML_MODE_COMPACT
-                    )
-
-
+                showContent(state.vacancy)
             }
 
             DetailsFragmentState.ERROR -> TODO()
             else -> {}
         }
+    }
+
+    private fun showContent(vacancy: Vacancy) {
+        fillSalary(vacancy.salary)
+        fillDescription(vacancy.description)
+        fillTitle(vacancy.name)
+        fillExperience(vacancy.experience)
+        fillEmployment(vacancy)
+        fillEmployer(vacancy)
+        fillKeySkills(vacancy.keySkills)
+    }
+
+    private fun fillKeySkills(keySkills: List<KeySkill>?) {
+        keySkills?.let {
+            binding?.keySkillsTitle?.isVisible = keySkills.isNotEmpty()
+            var str = ""
+            keySkills.map { str += "<ul> <li>${it.name}.</li>" }
+            binding?.keySkillsText?.text = Html.fromHtml(
+                str,
+                Html.FROM_HTML_MODE_COMPACT
+            )
+            println(str)
+        }
+    }
+
+    private fun fillEmployer(vacancy: Vacancy) {
+        binding?.cardTitleText?.text = vacancy.employer?.name
+        binding?.cardCityText?.text = vacancy.area?.name
+        context?.let { binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.medium, it) }
+    }
+
+    private fun fillEmployment(vacancy: Vacancy?) {
+        val str = "${vacancy?.employment?.name}. ${vacancy?.schedule?.name}"
+        binding?.workShiftText?.text = str
+    }
+
+    private fun fillExperience(experience: Experience?) {
+        binding?.experienceTitleText?.text = experience?.name
+    }
+
+    private fun fillTitle(tittle: String?) {
+        binding?.titleName?.text = tittle
+    }
+
+    private fun fillDescription(description: String?) {
+        binding?.descriptionHtmlText?.text =
+            Html.fromHtml(
+                description,
+                Html.FROM_HTML_MODE_COMPACT
+            )
+        println(description)
+    }
+
+    private fun fillSalary(salary: Salary?) {
+        binding?.titleSalary?.text = salary.format()
     }
 
     private fun prepareViewModel() {
@@ -63,6 +138,13 @@ class DetailsFragment : Fragment() {
 
     private fun getVacancyId() {
         vacancyId = arguments?.getString(VACANCY_TRANSFER_KEY)
-        Log.d("DetailsFragment getVacancyId", "$vacancyId")
+    }
+
+    private fun Boolean.vacancyLiked() {
+        binding?.toolbarLikeButton?.isSelected = !this
+    }
+
+    private fun Boolean.navBarVisible() {
+        (activity as RootActivity).bottomNavigationVisibility(this)
     }
 }
