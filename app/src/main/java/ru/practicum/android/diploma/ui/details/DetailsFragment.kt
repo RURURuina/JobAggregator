@@ -49,6 +49,10 @@ class DetailsFragment : Fragment() {
         initViewModel()
         prepareBackButton()
         prepareLikeButton()
+        prepareShareButton()
+    }
+
+    private fun prepareShareButton() {
         binding?.toolbarShareButton?.setOnClickListener {
             viewModel.shareVacancy()
         }
@@ -123,14 +127,13 @@ class DetailsFragment : Fragment() {
                 str,
                 Html.FROM_HTML_MODE_COMPACT
             )
-            println(str)
         }
     }
 
     private fun fillEmployer(vacancy: Vacancy) {
         binding?.cardTitleText?.text = vacancy.employer?.name
-        binding?.cardCityText?.text = vacancy.area?.name
-        context?.let { binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.medium, it) }
+        binding?.cardCityText?.text = vacancy.adress?.full ?: vacancy.area?.name
+        context?.let { binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.original, it) }
     }
 
     private fun fillEmployment(vacancy: Vacancy?) {
@@ -152,7 +155,6 @@ class DetailsFragment : Fragment() {
                 description,
                 Html.FROM_HTML_MODE_COMPACT
             )
-        println(description)
     }
 
     private fun fillSalary(salary: Salary?) {
