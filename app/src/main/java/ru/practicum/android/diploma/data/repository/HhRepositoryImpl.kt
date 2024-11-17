@@ -9,7 +9,7 @@ import ru.practicum.android.diploma.data.dto.response.VacanciesResponse
 import ru.practicum.android.diploma.data.dto.response.VacancyResponse
 import ru.practicum.android.diploma.data.dto.vacancy.VacancyData
 import ru.practicum.android.diploma.data.network.NetworkClient
-import ru.practicum.android.diploma.domain.api.HhRepository
+import ru.practicum.android.diploma.domain.api.hh.HhRepository
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.util.Resource
 import ru.practicum.android.diploma.util.ResponseStatusCode

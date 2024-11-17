@@ -18,6 +18,9 @@ val viewModelModule = module {
         FavoriteJobViewModel()
     }
     viewModel {
-        DetailsFragmentViewModel(hhInteractor = get())
+        DetailsFragmentViewModel(
+            hhInteractor = get(),
+            vacancySharingInteractor = get()
+        )
     }
 }

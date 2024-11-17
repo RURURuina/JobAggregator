@@ -48,6 +48,13 @@ class DetailsFragment : Fragment() {
         getVacancyId()
         initViewModel()
         prepareBackButton()
+        prepareLikeButton()
+        binding?.toolbarShareButton?.setOnClickListener {
+            viewModel.shareVacancy()
+        }
+    }
+
+    private fun prepareLikeButton() {
         binding?.toolbarLikeButton?.setOnClickListener {
             binding?.toolbarLikeButton?.isSelected?.vacancyLiked()
         }
@@ -77,8 +84,6 @@ class DetailsFragment : Fragment() {
             is DetailsFragmentState.ERROR -> {
                 renderError(state.errState)
             }
-
-            else -> {}
         }
     }
 
@@ -166,6 +171,7 @@ class DetailsFragment : Fragment() {
 
     private fun Boolean.vacancyLiked() {
         binding?.toolbarLikeButton?.isSelected = !this
+        viewModel.likeButton()
     }
 
     private fun Boolean.navBarVisible() {
