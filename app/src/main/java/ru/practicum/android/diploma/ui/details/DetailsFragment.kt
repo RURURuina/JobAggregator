@@ -55,6 +55,7 @@ class DetailsFragment : Fragment() {
     private fun initViewModel() {
         vacancyId?.let {
             viewModel.start(it)
+            true.progressBarVisible()
         }
     }
 
@@ -83,6 +84,7 @@ class DetailsFragment : Fragment() {
         fillEmployment(vacancy)
         fillEmployer(vacancy)
         fillKeySkills(vacancy.keySkills)
+        false.progressBarVisible()
     }
 
     private fun fillKeySkills(keySkills: List<KeySkill>?) {
@@ -147,4 +149,9 @@ class DetailsFragment : Fragment() {
     private fun Boolean.navBarVisible() {
         (activity as RootActivity).bottomNavigationVisibility(this)
     }
+
+    private fun Boolean.progressBarVisible() {
+        binding?.progressBar?.isVisible = this
+    }
+
 }

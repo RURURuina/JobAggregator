@@ -6,25 +6,70 @@
     android:layout_height="match_parent"
     tools:context=".ui.details.DetailsFragment">
 
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/progressBar"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:background="@color/background_alpha_50"-->
-    <!--        android:elevation="0.01dp"-->
-    <!--        android:gravity="center"-->
-    <!--        android:orientation="vertical"-->
-    <!--        android:visibility="gone">-->
+    <LinearLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/background_alpha_50"
+        android:elevation="0.01dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/preview">
 
-    <!--        <ProgressBar-->
-    <!--            android:id="@+id/playerProgressBar"-->
-    <!--            style="@style/progressBar"-->
-    <!--            android:elevation="0.1dp"-->
-    <!--            app:layout_constraintBottom_toBottomOf="@+id/progressBar"-->
-    <!--            app:layout_constraintLeft_toLeftOf="@+id/leftBorder"-->
-    <!--            app:layout_constraintRight_toRightOf="@+id/rightBorder"-->
-    <!--            app:layout_constraintTop_toTopOf="@+id/progressBar" />-->
-    <!--    </LinearLayout>-->
+        <ProgressBar
+            style="@style/progressBar"
+            android:elevation="0.1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/progressBar"
+            app:layout_constraintLeft_toLeftOf="@+id/leftBorder"
+            app:layout_constraintRight_toRightOf="@+id/rightBorder"
+            app:layout_constraintTop_toTopOf="@+id/progressBar" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/error_layout"
+        style="@style/vacancyDetailErrLayout"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/preview">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/no_internet"
+            android:src="@drawable/vacancy_delete_placeholder" />
+
+        <TextView
+            style="@style/vacancyDetailErrText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vacancy_details_no_vacancy_error"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/error_server"
+        style="@style/vacancyDetailErrLayout"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/preview">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/no_internet"
+            android:src="@drawable/server_error_on_details_screen" />
+
+        <TextView
+            style="@style/vacancyDetailErrText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vacancy_details_server_error"
+            android:textColor="@color/black" />
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorder"
