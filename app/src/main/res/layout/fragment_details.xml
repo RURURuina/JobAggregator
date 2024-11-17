@@ -14,7 +14,7 @@
         android:elevation="5dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/preview">
 
@@ -31,7 +31,7 @@
         android:id="@+id/error_layout"
         style="@style/vacancyDetailErrLayout"
         android:layout_width="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/preview">
 
