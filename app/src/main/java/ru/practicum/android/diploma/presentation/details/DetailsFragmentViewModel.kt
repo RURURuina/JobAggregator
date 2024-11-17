@@ -5,9 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.databinding.FragmentSearchJobBinding
 import ru.practicum.android.diploma.domain.api.HhInteractor
+import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
+import ru.practicum.android.diploma.util.Resource
 
 class DetailsFragmentViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     init {
@@ -24,10 +25,10 @@ class DetailsFragmentViewModel(private val hhInteractor: HhInteractor) : ViewMod
     fun start(id: String) {
         viewModelScope.launch {
             val a = hhInteractor.searchVacanceById(id)
-            a.collect {
-                it.data?.let {
+            a.collect {resource: Resource<Vacancy> ->
+                resource.data?.let {
                     renderState(DetailsFragmentState.Content(it))
-                } ?: renderState(DetailsFragmentState.ERROR)
+                } ?: renderState(DetailsFragmentState.ERROR(resource.responseCode!!))
             }
         }
     }

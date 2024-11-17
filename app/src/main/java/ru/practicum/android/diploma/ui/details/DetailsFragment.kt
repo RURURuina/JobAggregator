@@ -18,6 +18,7 @@ import ru.practicum.android.diploma.presentation.details.DetailsFragmentViewMode
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
 import ru.practicum.android.diploma.ui.root.RootActivity
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
+import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.fillBy
 import ru.practicum.android.diploma.util.format
 
@@ -69,10 +70,31 @@ class DetailsFragment : Fragment() {
         when (state) {
             is DetailsFragmentState.Content -> {
                 showContent(state.vacancy)
+                binding?.errorServer?.isVisible = false
+                binding?.errorLayout?.isVisible = false
             }
 
-            DetailsFragmentState.ERROR -> TODO()
+            is DetailsFragmentState.ERROR -> {
+                renderError(state.errState)
+            }
+
             else -> {}
+        }
+    }
+
+    private fun renderError(errState: ResponseStatusCode) {
+        when (errState) {
+            ResponseStatusCode.ERROR -> {
+                binding?.errorLayout?.isVisible = true
+            }
+
+            ResponseStatusCode.NO_INTERNET -> {
+                binding?.errorServer?.isVisible = true
+            }
+
+            ResponseStatusCode.OK -> {
+                /*наследие sealed classa*/
+            }
         }
     }
 

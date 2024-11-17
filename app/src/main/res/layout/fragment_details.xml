@@ -31,7 +31,7 @@
         android:id="@+id/error_layout"
         style="@style/vacancyDetailErrLayout"
         android:layout_width="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/preview">
 

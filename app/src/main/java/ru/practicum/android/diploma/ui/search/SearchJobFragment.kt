@@ -6,7 +6,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +20,7 @@ import ru.practicum.android.diploma.presentation.search.SearchJobViewModel
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
 import ru.practicum.android.diploma.ui.search.adapters.VacancyAdapter
 import ru.practicum.android.diploma.ui.search.models.VacanciesState
+import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.debounce
 
 class SearchJobFragment : Fragment() {
@@ -123,7 +123,7 @@ class SearchJobFragment : Fragment() {
                 is VacanciesState.Loading -> showLoading()
                 is VacanciesState.Error -> {
                     hideLoading()
-                    showError(state.message)
+                    showError(state.responseState)
                 }
 
                 is VacanciesState.Success -> {
@@ -170,17 +170,24 @@ class SearchJobFragment : Fragment() {
         binding?.progressBar?.visibility = View.GONE
     }
 
-    private fun showError(@StringRes errorMessage: Int) {
+    private fun showError(responseState: ResponseStatusCode?) {
         binding?.vacanciesRecyclerView?.visibility = View.GONE
         binding?.searchLayout?.visibility = View.GONE
         binding?.noJobsLayout?.visibility = View.GONE
 
-        binding?.errorTv?.setText(errorMessage)
-        val drawableRes = when (errorMessage) {
-            R.string.no_internet -> R.drawable.no_internet_placeholder
-            else -> R.drawable.server_error_on_search_screen
+        when (responseState) {
+            null -> {}
+            ResponseStatusCode.ERROR -> {
+                binding?.errorTv?.setText(R.string.server_error)
+                binding?.errorImage?.setImageResource(R.drawable.server_error_on_search_screen)
+            }
+
+            ResponseStatusCode.NO_INTERNET -> {
+                binding?.errorTv?.setText(R.string.no_internet)
+                binding?.errorImage?.setImageResource(R.drawable.no_internet_placeholder)
+            }
+            else -> {}
         }
-        binding?.errorImage?.setImageResource(drawableRes)
         binding?.errorLayout?.visibility = View.VISIBLE
     }
 

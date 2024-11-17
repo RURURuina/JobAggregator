@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.convertors.VacancyDtoConvertor
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
@@ -25,7 +24,7 @@ class HhRepositoryImpl(
 
         when (response.resultCode) {
             is ResponseStatusCode.NO_INTERNET -> {
-                emit(Resource.Error(R.string.no_internet))
+                emit(Resource.Error(ResponseStatusCode.NO_INTERNET))
             }
 
             is ResponseStatusCode.OK -> {
@@ -39,35 +38,35 @@ class HhRepositoryImpl(
             }
 
             is ResponseStatusCode.ERROR -> {
-                emit(Resource.Error(R.string.server_error))
+                emit(Resource.Error(ResponseStatusCode.ERROR))
             }
 
             else -> {
-                emit(Resource.Error(R.string.unknown_error))
+                emit(Resource.Error(ResponseStatusCode.ERROR))
             }
         }
     }
 
     override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy>> = flow {
         val response = networkClient.getVacancyById(VacancyByIdRequest(id))
-        val resultRaw = (response as VacancyResponse)
         when (response.resultCode) {
             is ResponseStatusCode.NO_INTERNET -> {
-                emit(Resource.Error(R.string.no_internet))
+                emit(Resource.Error(ResponseStatusCode.NO_INTERNET))
             }
 
             is ResponseStatusCode.OK -> {
+                val resultRaw = (response as VacancyResponse)
                 emit(
                     Resource.Success(vacancyDtoConvertor.run { map(resultRaw) })
                 )
             }
 
             is ResponseStatusCode.ERROR -> {
-                emit(Resource.Error(R.string.server_error))
+                emit(Resource.Error(ResponseStatusCode.ERROR))
             }
 
             else -> {
-                emit(Resource.Error(R.string.unknown_error))
+                emit(Resource.Error(ResponseStatusCode.ERROR))
             }
         }
     }
