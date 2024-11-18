@@ -34,4 +34,5 @@ class VacancyResponse(
     val contacts: ContactsData?,
     val description: String?,
     val schedule: ScheduleData?,
-) : Response()
+    val url: String?,
+    ) : Response()

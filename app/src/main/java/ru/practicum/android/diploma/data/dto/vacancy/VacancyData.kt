@@ -21,6 +21,7 @@ data class VacancyData(
     val contacts: ContactsData?,
     val description: String?,
     val schedule: ScheduleData?,
+    val url: String?,
 )
 
 class ScheduleData(

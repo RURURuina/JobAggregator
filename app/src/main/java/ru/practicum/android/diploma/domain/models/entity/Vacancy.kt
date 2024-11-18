@@ -20,7 +20,8 @@ data class Vacancy(
     val contacts: Contacts?,
     val description: String?,
     val schedule: Schedule?,
-)
+    val url: String?,
+    )
 
 class Schedule(
     val id: String?,

@@ -61,7 +61,8 @@ class VacancyDtoConvertor {
             vacancy.country?.map(),
             vacancy.contacts?.map(),
             vacancy.description,
-            vacancy.schedule?.map()
+            vacancy.schedule?.map(),
+            vacancy.url
         )
     }
 
@@ -82,7 +83,8 @@ class VacancyDtoConvertor {
             vacancy.country?.map(),
             vacancy.contacts?.map(),
             vacancy.description,
-            vacancy.schedule?.map()
+            vacancy.schedule?.map(),
+            vacancy.url
         )
     }
 

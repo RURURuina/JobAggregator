@@ -15,8 +15,7 @@ class VacancySharingRepositoryImpl(
                     action = Intent.ACTION_SEND
                     putExtra(
                         Intent.EXTRA_TEXT,
-                        ""
-// TODO: сформировать строку для отыслкой сообщением
+                        vacancy.url
                     )
                     type = "text/plain"
                 }, null)
