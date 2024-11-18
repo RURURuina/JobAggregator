@@ -9,7 +9,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.favorites.models.FavoritesState
 
-class FavoriteJobViewModel: ViewModel() {
+class FavoriteJobViewModel : ViewModel() {
 
     // нужно добавить интерактор
     // liveData для отрисовки экрана на будущее
