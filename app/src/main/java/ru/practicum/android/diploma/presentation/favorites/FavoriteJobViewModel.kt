@@ -9,11 +9,9 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.favorites.models.FavoritesState
 
-class FavoriteJobViewModel(
-//   нужно добавить интерактор
-//    private val interactor: FavoriteJobInteractor
-) : ViewModel() {
+class FavoriteJobViewModel: ViewModel() {
 
+    // нужно добавить интерактор
     // liveData для отрисовки экрана на будущее
     private val _favoritesState = MutableLiveData<FavoritesState>()
     val favoritesState: LiveData<FavoritesState> = _favoritesState
@@ -33,7 +31,6 @@ class FavoriteJobViewModel(
     }
 
     private fun showData(vacancies: List<Vacancy>) {
-
         if (vacancies.isEmpty()) {
             pushFavoriteState(FavoritesState.Empty(R.string.empty_list))
         } else {
@@ -41,7 +38,7 @@ class FavoriteJobViewModel(
         }
     }
 
-    //функция для обновления liveData
+    // функция для обновления liveData
     private fun pushFavoriteState(state: FavoritesState) {
         _favoritesState.postValue(state)
     }
