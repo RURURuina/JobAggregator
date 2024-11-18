@@ -7,7 +7,7 @@ import ru.practicum.android.diploma.databinding.JobItemBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 
 class VacancyAdapter : ListAdapter<Vacancy, VacancyViewHolder>(VacancyDiffCallback()) {
-
+    var onItemClick = { _: Vacancy -> }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacancyViewHolder {
         val binding = JobItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return VacancyViewHolder(binding)
@@ -15,5 +15,6 @@ class VacancyAdapter : ListAdapter<Vacancy, VacancyViewHolder>(VacancyDiffCallba
 
     override fun onBindViewHolder(holder: VacancyViewHolder, position: Int) {
         holder.bind(getItem(position))
+        holder.itemView.setOnClickListener { onItemClick.invoke(getItem(position)) }
     }
 }
