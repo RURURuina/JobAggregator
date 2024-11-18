@@ -17,7 +17,7 @@ import ru.practicum.android.diploma.ui.search.adapters.VacancyAdapter
 class FavoriteJobFragment : Fragment() {
     private var binding: FragmentFavoriteJobBinding? = null
     private val viewModel: FavoriteJobViewModel by viewModel()
-    private var vacancyAdapter : VacancyAdapter? = null
+    private var vacancyAdapter: VacancyAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,10 +44,10 @@ class FavoriteJobFragment : Fragment() {
         vacancyAdapter = null
         binding?.favoritesRv?.adapter = null
     }
-    private fun init(){
+
+    private fun init() {
         // добавлять слушателя кликов на адаптер когда будет
-        // пагинация?
-        
+
         vacancyAdapter = VacancyAdapter()
         binding?.favoritesRv?.adapter = vacancyAdapter
     }
