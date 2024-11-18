@@ -11,12 +11,12 @@
 
     <TextView
         android:id="@+id/toolbar_text"
+        style="@style/textSize22"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="19dp"
         android:text="@string/search_jobs"
-        style="@style/textSize22"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -104,12 +104,12 @@
 
         <TextView
             android:id="@+id/error_tv"
+            style="@style/textSize22"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:text="@string/no_internet"
-            style="@style/textSize22" />
+            android:text="@string/no_internet" />
 
     </LinearLayout>
 
@@ -132,12 +132,12 @@
             android:src="@drawable/nothing_found_placeholder" />
 
         <TextView
+            style="@style/textSize22"
             android:layout_width="268dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            style="@style/textSize22"
             android:text="@string/couldnt_get_job_list" />
     </LinearLayout>
 
@@ -169,12 +169,23 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/vacancies_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:visibility="gone"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/bottomProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/message_chip"
         tools:listitem="@layout/job_item" />
+
+    <ProgressBar
+        android:id="@+id/bottomProgressBar"
+        style="@style/progressBar"
+        android:layout_marginVertical="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/vacancies_recycler_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

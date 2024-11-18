@@ -21,7 +21,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:navGraph="@navigation/nav_graph"/>
+            app:navGraph="@navigation/nav_graph" />
 
         <View
             android:layout_width="0dp"
@@ -33,10 +33,10 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigation"
-            android:theme="@style/BottomNavigator"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:theme="@style/BottomNavigator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

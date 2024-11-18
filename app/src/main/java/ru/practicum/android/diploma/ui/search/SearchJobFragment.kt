@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -86,6 +87,7 @@ class SearchJobFragment : Fragment() {
 
                     if (visibleItemCount + positionFirst >= totalItemCount && positionFirst >= 0) {
                         viewModel.loadNextPage()
+                        binding?.bottomProgressBar?.isVisible = true
                     }
                 }
             }.also {
@@ -145,6 +147,7 @@ class SearchJobFragment : Fragment() {
 
     private fun hideLoading() {
         binding?.progressBar?.visibility = View.GONE
+        binding?.bottomProgressBar?.isVisible = false
     }
 
     private fun showError(@StringRes errorMessage: Int) {
