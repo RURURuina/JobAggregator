@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.ui.root
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
@@ -15,6 +16,11 @@ class RootActivity : AppCompatActivity() {
     private var navHostFragment: NavHostFragment? = null
     private var navController: NavController? = null
     private var bottomNavigationView: BottomNavigationView? = null
+
+    /*ключ для передачи id вакансии между фрагментами через safeArgs*/
+    companion object {
+        const val VACANCY_TRANSFER_KEY = "vacancy_id"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
