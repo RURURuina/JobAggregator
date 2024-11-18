@@ -169,23 +169,25 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/vacancies_recycler_view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@id/bottomProgressBar"
+        app:layout_constraintBottom_toTopOf="@id/bottom_progressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message_chip"
+        app:layout_constraintTop_toBottomOf="@id/search_edit_text"
         tools:listitem="@layout/job_item" />
 
     <ProgressBar
-        android:id="@+id/bottomProgressBar"
-        style="@style/progressBar"
+        android:id="@+id/bottom_progressBar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginVertical="16dp"
+        android:indeterminateTint="?attr/colorPrimary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/vacancies_recycler_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

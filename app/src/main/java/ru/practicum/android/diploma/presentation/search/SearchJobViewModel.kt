@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.domain.api.HhInteractor
+import ru.practicum.android.diploma.domain.api.hh.HhInteractor
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.search.models.VacanciesState
 import ru.practicum.android.diploma.util.Resource
@@ -106,7 +106,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                     }
 
                     is Resource.Error -> {
-                        pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))
+                        pushVacanciesState(VacanciesState.Error(result.responseCode))
                     }
                 }
                 isLoading = false

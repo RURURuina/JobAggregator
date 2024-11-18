@@ -6,9 +6,10 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.StringRes
-import androidx.core.view.isVisible
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -16,15 +17,22 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchJobBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.presentation.search.SearchJobViewModel
+import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
 import ru.practicum.android.diploma.ui.search.adapters.VacancyAdapter
 import ru.practicum.android.diploma.ui.search.models.VacanciesState
+import ru.practicum.android.diploma.util.ResponseStatusCode
+import ru.practicum.android.diploma.util.debounce
 
 class SearchJobFragment : Fragment() {
+    private companion object {
+        const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
 
     private var binding: FragmentSearchJobBinding? = null
     private val viewModel: SearchJobViewModel by viewModel()
     private val vacancyAdapter = VacancyAdapter()
     private var scrollListener: RecyclerView.OnScrollListener? = null
+    private var onItemClick: ((Vacancy) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +48,20 @@ class SearchJobFragment : Fragment() {
         initEditText()
         initRecyclerView()
         observeViewModel()
+        prepareOnItemClick()
+    }
+
+    private fun prepareOnItemClick() {
+        onItemClick = debounce(
+            delayMillis = CLICK_DEBOUNCE_DELAY,
+            coroutineScope = viewLifecycleOwner.lifecycleScope,
+            useLastParam = true
+        ) { vacancy ->
+            val bundle = bundleOf(VACANCY_TRANSFER_KEY to vacancy.id)
+            /*vacancy id нужно будет вынести в компаньон обджект в апп*/
+            findNavController().navigate(R.id.action_searchJobFragment_to_detailsFragment, bundle)
+        }
+
     }
 
     private fun initEditText() {
@@ -87,7 +109,6 @@ class SearchJobFragment : Fragment() {
 
                     if (visibleItemCount + positionFirst >= totalItemCount && positionFirst >= 0) {
                         viewModel.loadNextPage()
-                        binding?.bottomProgressBar?.isVisible = true
                     }
                 }
             }.also {
@@ -102,7 +123,7 @@ class SearchJobFragment : Fragment() {
                 is VacanciesState.Loading -> showLoading()
                 is VacanciesState.Error -> {
                     hideLoading()
-                    showError(state.message)
+                    showError(state.responseState)
                 }
 
                 is VacanciesState.Success -> {
@@ -147,20 +168,26 @@ class SearchJobFragment : Fragment() {
 
     private fun hideLoading() {
         binding?.progressBar?.visibility = View.GONE
-        binding?.bottomProgressBar?.isVisible = false
     }
 
-    private fun showError(@StringRes errorMessage: Int) {
+    private fun showError(responseState: ResponseStatusCode?) {
         binding?.vacanciesRecyclerView?.visibility = View.GONE
         binding?.searchLayout?.visibility = View.GONE
         binding?.noJobsLayout?.visibility = View.GONE
 
-        binding?.errorTv?.setText(errorMessage)
-        val drawableRes = when (errorMessage) {
-            R.string.no_internet -> R.drawable.no_internet_placeholder
-            else -> R.drawable.server_error_on_search_screen
+        when (responseState) {
+            null -> {}
+            ResponseStatusCode.ERROR -> {
+                binding?.errorTv?.setText(R.string.server_error)
+                binding?.errorImage?.setImageResource(R.drawable.server_error_on_search_screen)
+            }
+
+            ResponseStatusCode.NO_INTERNET -> {
+                binding?.errorTv?.setText(R.string.no_internet)
+                binding?.errorImage?.setImageResource(R.drawable.no_internet_placeholder)
+            }
+            else -> {}
         }
-        binding?.errorImage?.setImageResource(drawableRes)
         binding?.errorLayout?.visibility = View.VISIBLE
     }
 
@@ -178,6 +205,9 @@ class SearchJobFragment : Fragment() {
         binding?.searchLayout?.visibility = View.GONE
         binding?.errorLayout?.visibility = View.GONE
         vacancyAdapter.submitList(vacancies)
+        onItemClick?.let {
+            vacancyAdapter.onItemClick = it
+        }
     }
 
     override fun onDestroyView() {
