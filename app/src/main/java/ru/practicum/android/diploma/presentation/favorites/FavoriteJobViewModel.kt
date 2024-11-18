@@ -12,16 +12,13 @@ import ru.practicum.android.diploma.ui.favorites.models.FavoritesState
 class FavoriteJobViewModel(
 //   нужно добавить интерактор
 //    private val interactor: FavoriteJobInteractor
-    ) : ViewModel() {
-    init {
-        // тут пока пусто
-    }
+) : ViewModel() {
 
     // liveData для отрисовки экрана на будущее
     private val _favoritesState = MutableLiveData<FavoritesState>()
     val favoritesState: LiveData<FavoritesState> = _favoritesState
 
-    fun getVacancies(){
+    fun getVacancies() {
         viewModelScope.launch {
             /*
             Блок для получения вакансий Например:
@@ -35,17 +32,17 @@ class FavoriteJobViewModel(
         }
     }
 
-    private fun showData(vacancies: List<Vacancy>){
+    private fun showData(vacancies: List<Vacancy>) {
 
-        if (vacancies.isEmpty()){
+        if (vacancies.isEmpty()) {
             pushFavoriteState(FavoritesState.Empty(R.string.empty_list))
-        }else{
+        } else {
             pushFavoriteState(FavoritesState.Content(vacancies))
         }
     }
 
     //функция для обновления liveData
-    private fun pushFavoriteState(state: FavoritesState){
+    private fun pushFavoriteState(state: FavoritesState) {
         _favoritesState.postValue(state)
     }
 }
