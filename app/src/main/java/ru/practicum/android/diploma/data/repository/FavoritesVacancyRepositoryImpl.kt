@@ -1,10 +1,7 @@
 package ru.practicum.android.diploma.data.repository
 
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.data.db.AppDatabase
 import ru.practicum.android.diploma.data.db.FavoritesVacancyEntity
 import ru.practicum.android.diploma.domain.api.FavoritesVacancyRepository
@@ -13,7 +10,7 @@ import ru.practicum.android.diploma.domain.models.entity.LogoUrlsData
 import ru.practicum.android.diploma.domain.models.entity.SalaryData
 import ru.practicum.android.diploma.domain.models.entity.VacancyShort
 
-class FavoritesVacancyRepositoryImpl(val appDatabase: AppDatabase): FavoritesVacancyRepository {
+class FavoritesVacancyRepositoryImpl(val appDatabase: AppDatabase) : FavoritesVacancyRepository {
     override suspend fun insertVacancy(vacancy: VacancyShort) {
         appDatabase.favoritesVacancyDao().insertVacancy(vacancy.toData())
     }
@@ -23,7 +20,7 @@ class FavoritesVacancyRepositoryImpl(val appDatabase: AppDatabase): FavoritesVac
     }
 
     override fun getFavoriteVacancies(): Flow<List<VacancyShort>> = flow {
-        emit(appDatabase.favoritesVacancyDao().getFavoriteVacancies().map {it.toDomain()})
+        emit(appDatabase.favoritesVacancyDao().getFavoriteVacancies().map { it.toDomain() })
     }
 
     override fun getFavoriteVacancyById(id: String): Flow<VacancyShort> = flow {
@@ -42,17 +39,11 @@ fun VacancyShort.toData(): FavoritesVacancyEntity = FavoritesVacancyEntity(
 )
 
 fun FavoritesVacancyEntity.toDomain(): VacancyShort = VacancyShort(
-    this.id,
-    this.name,
-    EmployerData(
-        this.employerName,
-        LogoUrlsData(
+    this.id, this.name, EmployerData(
+        this.employerName, LogoUrlsData(
             this.logoOriginal
         )
-    ),
-    SalaryData(
-        this.currency,
-        this.from,
-        this.to
+    ), SalaryData(
+        this.currency, this.from, this.to
     )
 )
