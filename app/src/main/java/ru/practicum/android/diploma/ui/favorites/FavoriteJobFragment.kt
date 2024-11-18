@@ -17,7 +17,7 @@ import ru.practicum.android.diploma.ui.search.adapters.VacancyAdapter
 class FavoriteJobFragment : Fragment() {
     private var binding: FragmentFavoriteJobBinding? = null
     private val viewModel: FavoriteJobViewModel by viewModel()
-    private var adapter : VacancyAdapter? = null
+    private var vacancyAdapter : VacancyAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +33,7 @@ class FavoriteJobFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         init()
-
+        viewModel.getVacancies()
         viewModel.favoritesState.observe(viewLifecycleOwner) { state ->
             render(state)
         }
@@ -41,18 +41,23 @@ class FavoriteJobFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        adapter = null
+        vacancyAdapter = null
         binding?.favoritesRv?.adapter = null
     }
     private fun init(){
-
+        // добавлять слушателя кликов на адаптер когда будет
+        // пагинация?
+        
+        vacancyAdapter = VacancyAdapter()
+        binding?.favoritesRv?.adapter = vacancyAdapter
     }
 
     private fun render(state: FavoritesState) {
         when (state) {
             is FavoritesState.Content -> showFavorites(state.favoritesVacancies)
-            is FavoritesState.EmptyOrError -> showPlaceholder(state.message)
-            FavoritesState.Loading -> showLoading()
+            is FavoritesState.Empty -> showPlaceholder(state.message)
+            is FavoritesState.Loading -> showLoading()
+            is FavoritesState.Error -> showPlaceholder(state.message)
         }
     }
 
@@ -60,6 +65,7 @@ class FavoriteJobFragment : Fragment() {
         binding?.progressBar?.visibility = View.GONE
         binding?.favoritesListPlaceholder?.visibility = View.GONE
         binding?.favoritesRv?.visibility = View.VISIBLE
+        vacancyAdapter?.submitList(favoriteList)
     }
 
     private fun showLoading() {

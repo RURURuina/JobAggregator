@@ -9,7 +9,11 @@ sealed interface FavoritesState {
         val favoritesVacancies: List<Vacancy>
     ): FavoritesState
 
-    data class EmptyOrError(
+    data class Empty(
+       val message: Int
+    ): FavoritesState
+
+    data class Error(
        val message: Int
     ): FavoritesState
 
