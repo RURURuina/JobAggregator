@@ -29,21 +29,27 @@ class FavoritesVacancyRepositoryImpl(val appDatabase: AppDatabase) : FavoritesVa
 }
 
 fun VacancyShort.toData(): FavoritesVacancyEntity = FavoritesVacancyEntity(
-    this.id,
-    this.name,
-    this.employer?.name,
-    this.employer?.logoUrls?.original,
-    this.salaryData?.currency,
-    this.salaryData?.from,
-    this.salaryData?.to
+    id = this.id,
+    name = this.name,
+    employerName = this.employer?.name,
+    logoOriginal = this.employer?.logoUrls?.original,
+    currency = this.salaryData?.currency,
+    from = this.salaryData?.from,
+    to = this.salaryData?.to
 )
 
 fun FavoritesVacancyEntity.toDomain(): VacancyShort = VacancyShort(
-    this.id, this.name, EmployerData(
-        this.employerName, LogoUrlsData(
-            this.logoOriginal
+    id = this.id,
+    name = this.name,
+    employer = EmployerData(
+        name = this.employerName,
+        LogoUrlsData(
+            original = this.logoOriginal
         )
-    ), SalaryData(
-        this.currency, this.from, this.to
+    ),
+    salaryData = SalaryData(
+        currency = this.currency,
+        from = this.from,
+        to = this.to
     )
 )
