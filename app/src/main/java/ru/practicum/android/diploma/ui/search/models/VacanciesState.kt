@@ -12,6 +12,6 @@ sealed interface VacanciesState {
         val isLoading: Boolean // состояние загрузки
         ) : VacanciesState
     data class Error(val responseState: ResponseStatusCode?) : VacanciesState // состояние ошибки - видно placeHolder ошибки
-    object Empty : VacanciesState // Состояние "Не найдено" - видно placeHolder
-    object Hidden : VacanciesState // Состояние отсутствие запроса - показан стартовый placeHolder
+    data object Empty : VacanciesState // Состояние "Не найдено" - видно placeHolder
+    data object Hidden : VacanciesState // Состояние отсутствие запроса - показан стартовый placeHolder
 }

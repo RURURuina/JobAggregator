@@ -1,12 +1,18 @@
 package ru.practicum.android.diploma.ui.search
 
+import android.content.ContentValues.TAG
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,7 +31,7 @@ import ru.practicum.android.diploma.util.debounce
 
 class SearchJobFragment : Fragment() {
     private companion object {
-        const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val CLICK_DEBOUNCE_DELAY = 2000L
     }
 
     private var binding: FragmentSearchJobBinding? = null
@@ -79,7 +85,6 @@ class SearchJobFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-
                 if (s?.isEmpty() == true) {
                     viewModel.clearVacancies()
                 }
@@ -108,6 +113,7 @@ class SearchJobFragment : Fragment() {
                         layoutManager.findFirstVisibleItemPosition() // номер первого видимого элемента на экране
 
                     if (visibleItemCount + positionFirst >= totalItemCount && positionFirst >= 0) {
+                        binding?.bottomProgressBar?.isVisible = true
                         viewModel.loadNextPage()
                     }
                 }
@@ -120,23 +126,44 @@ class SearchJobFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.vacanciesState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is VacanciesState.Loading -> showLoading()
+                is VacanciesState.Loading -> {
+                    val a = binding?.vacanciesRecyclerView?.childCount ?: 0
+                    if (a > 0) {
+                        binding?.bottomProgressBar?.isVisible = true
+                        Log.d(TAG, "observeViewModel: bottomProgressBar")
+                    } else {
+                        showLoading()
+                    }
+                    Log.d(TAG, "observeViewModel: showLoading()")
+                    keyBoardVisibility(false)
+                }
+
                 is VacanciesState.Error -> {
-                    hideLoading()
+                    hideCenteralProgressBar()
                     showError(state.responseState)
+                    keyBoardVisibility(false)
+                    Log.d(TAG, "observeViewModel: Error")
                 }
 
                 is VacanciesState.Success -> {
-                    hideLoading()
+                    hideCenteralProgressBar()
                     updateRecyclerView(state.vacancies)
+                    keyBoardVisibility(false)
+                    binding?.bottomProgressBar?.isVisible = false
+                    Log.d(TAG, "observeViewModel: Success")
                 }
 
                 is VacanciesState.Empty -> {
-                    hideLoading()
+                    hideCenteralProgressBar()
                     showEmptyState()
+                    keyBoardVisibility(false)
+                    Log.d(TAG, "observeViewModel: Empty")
                 }
 
-                is VacanciesState.Hidden -> clearRecyclerView()
+                is VacanciesState.Hidden -> {
+                    Log.d(TAG, "observeViewModel: Hidden")
+                    clearRecyclerView()
+                }
             }
         }
     }
@@ -159,6 +186,7 @@ class SearchJobFragment : Fragment() {
     }
 
     private fun showLoading() {
+        Log.d(TAG, "observeViewModel: show central progressBar")
         binding?.progressBar?.visibility = View.VISIBLE
         binding?.searchLayout?.visibility = View.GONE
         binding?.errorLayout?.visibility = View.GONE
@@ -166,26 +194,37 @@ class SearchJobFragment : Fragment() {
         binding?.vacanciesRecyclerView?.visibility = View.GONE
     }
 
-    private fun hideLoading() {
+    private fun hideCenteralProgressBar() {
         binding?.progressBar?.visibility = View.GONE
     }
 
     private fun showError(responseState: ResponseStatusCode?) {
-        binding?.vacanciesRecyclerView?.visibility = View.GONE
-        binding?.searchLayout?.visibility = View.GONE
-        binding?.noJobsLayout?.visibility = View.GONE
-
         when (responseState) {
             null -> {}
             ResponseStatusCode.ERROR -> {
-                binding?.errorTv?.setText(R.string.server_error)
-                binding?.errorImage?.setImageResource(R.drawable.server_error_on_search_screen)
+                if (binding?.vacanciesRecyclerView?.isVisible == true) {
+                    showResponseErrToast()
+                } else {
+                    binding?.searchLayout?.visibility = View.GONE
+                    binding?.noJobsLayout?.visibility = View.GONE
+                    binding?.vacanciesRecyclerView?.visibility = View.GONE
+                    binding?.errorTv?.setText(R.string.server_error)
+                    binding?.errorImage?.setImageResource(R.drawable.server_error_on_search_screen)
+                }
             }
 
             ResponseStatusCode.NO_INTERNET -> {
-                binding?.errorTv?.setText(R.string.no_internet)
-                binding?.errorImage?.setImageResource(R.drawable.no_internet_placeholder)
+                if (binding?.vacanciesRecyclerView?.isVisible == true) {
+                    showNoInternetToast()
+                } else {
+                    binding?.searchLayout?.visibility = View.GONE
+                    binding?.noJobsLayout?.visibility = View.GONE
+                    binding?.vacanciesRecyclerView?.visibility = View.GONE
+                    binding?.errorTv?.setText(R.string.no_internet)
+                    binding?.errorImage?.setImageResource(R.drawable.no_internet_placeholder)
+                }
             }
+
             else -> {}
         }
         binding?.errorLayout?.visibility = View.VISIBLE
@@ -207,6 +246,28 @@ class SearchJobFragment : Fragment() {
         vacancyAdapter.submitList(vacancies)
         onItemClick?.let {
             vacancyAdapter.onItemClick = it
+        }
+    }
+
+    private fun showNoInternetToast() {
+        Toast.makeText(context, "Проверьте подключение к интернету", Toast.LENGTH_LONG)
+            .show()
+        binding?.bottomProgressBar?.isVisible = false
+        Log.d(TAG, "showNoInternetToast: true")
+    }
+
+    private fun showResponseErrToast() {
+        Toast.makeText(context, "Произошла ошибка", Toast.LENGTH_LONG)
+            .show()
+        binding?.bottomProgressBar?.isVisible = false
+    }
+
+    private fun keyBoardVisibility(visibile: Boolean) {
+        val inputMethodManager =
+            requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+        when (visibile) {
+            true -> inputMethodManager?.showSoftInput(binding?.searchEditText, 0)
+            else -> inputMethodManager?.hideSoftInputFromWindow(binding?.searchEditText?.windowToken, 0)
         }
     }
 
