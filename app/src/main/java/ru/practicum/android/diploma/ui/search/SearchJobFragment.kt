@@ -30,6 +30,7 @@ import ru.practicum.android.diploma.util.debounce
 class SearchJobFragment : Fragment() {
     private companion object {
         const val CLICK_DEBOUNCE_DELAY = 2000L
+
     }
 
     private var binding: FragmentSearchJobBinding? = null
@@ -138,6 +139,7 @@ class SearchJobFragment : Fragment() {
                     hideCentralProgressBar()
                     showError(state.responseState)
                     keyBoardVisibility(false)
+
                 }
 
                 is VacanciesState.Success -> {
@@ -261,6 +263,7 @@ class SearchJobFragment : Fragment() {
             true -> inputMethodManager?.showSoftInput(binding?.searchEditText, 0)
             else -> inputMethodManager?.hideSoftInputFromWindow(binding?.searchEditText?.windowToken, 0)
         }
+
     }
 
     override fun onDestroyView() {

@@ -22,6 +22,7 @@ data class VacancyData(
     val description: String?,
     val schedule: ScheduleData?,
     @SerializedName("alternate_url") val url: String?,
+
 )
 
 class ScheduleData(

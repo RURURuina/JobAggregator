@@ -120,7 +120,6 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                         }
                         isLoading = false
                     }
-
                 } catch (e: SocketTimeoutException) {
                     pushVacanciesState(VacanciesState.Error(ResponseStatusCode.ERROR))
                     this.coroutineContext.job.cancel()
