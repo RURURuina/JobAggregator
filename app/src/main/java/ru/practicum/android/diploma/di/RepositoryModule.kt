@@ -15,8 +15,8 @@ val repositoryModule = module {
     single<VacancyDtoConvertor> {
         VacancyDtoConvertor()
     }
-    single<FavoriteVacancyDbConverter>{
-        FavoriteVacancyDbConverter()
+    single<FavoriteVacancyDbConverter> {
+        FavoriteVacancyDbConverter(gson = get())
     }
 
     single<HhRepository> {

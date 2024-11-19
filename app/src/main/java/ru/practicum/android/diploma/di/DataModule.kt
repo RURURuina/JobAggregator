@@ -12,8 +12,6 @@ import ru.practicum.android.diploma.data.db.AppDatabase
 import ru.practicum.android.diploma.data.network.HhApiService
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
-import ru.practicum.android.diploma.data.repository.VacancySharingRepositoryImpl
-import ru.practicum.android.diploma.domain.api.sharing.VacancySharingRepository
 
 val dataModule = module {
     factory { Gson() }
@@ -44,7 +42,7 @@ val dataModule = module {
     }
     single {
         Room.databaseBuilder(
-          context = androidContext(),
+            context = androidContext(),
             klass = AppDatabase::class.java,
             name = "appDataBase.db"
         ).build()

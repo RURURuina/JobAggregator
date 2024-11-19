@@ -16,7 +16,6 @@ class FavoriteJobViewModel(
     private val interactor: FavoritesInteractor
 ) : ViewModel() {
 
-    // liveData для отрисовки экрана на будущее
     private val _favoritesState = MutableLiveData<FavoritesState>()
     val favoritesState: LiveData<FavoritesState> = _favoritesState
 
@@ -24,7 +23,7 @@ class FavoriteJobViewModel(
         viewModelScope.launch {
             interactor.getFavoriteVacancies()
                 .onStart { pushFavoriteState(FavoritesState.Loading) }
-                .catch { exception -> pushFavoriteState(FavoritesState.Error(R.string.couldnt_get_job_list)) }   //обработка ошибок
+                .catch { _ -> pushFavoriteState(FavoritesState.Error(R.string.couldnt_get_job_list)) }   //обработка ошибок
                 .collect { vacancies ->
                     showData(vacancies)
                 }

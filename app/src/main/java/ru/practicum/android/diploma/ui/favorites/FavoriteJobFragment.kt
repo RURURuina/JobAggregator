@@ -59,12 +59,12 @@ class FavoriteJobFragment : Fragment() {
     }
 
     private fun init() {
-        // добавлять слушателя кликов на адаптер когда будет
 
         vacancyAdapter = VacancyAdapter()
-        binding?.favoritesRv?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
+        binding?.favoritesRv?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding?.favoritesRv?.adapter = vacancyAdapter
     }
+
     private fun prepareOnItemClick() {
         onItemClick = debounce(
             delayMillis = CLICK_DEBOUNCE_DELAY,

@@ -19,8 +19,10 @@ import ru.practicum.android.diploma.domain.models.entity.Salary
 import ru.practicum.android.diploma.domain.models.entity.Schedule
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 
-class FavoriteVacancyDbConverter {
-    private val gson = Gson()
+class FavoriteVacancyDbConverter(
+    private val gson: Gson
+) {
+
 
     fun vacancyToEntity(vacancy: Vacancy): FavoritesVacancyEntity = FavoritesVacancyEntity(
         id = vacancy.id,
@@ -93,7 +95,8 @@ class FavoriteVacancyDbConverter {
             ),
             description = vacancyEntity.description,
             schedule = safeFromJson(vacancyEntity.schedule, object : TypeToken<Schedule>() {}) ?: Schedule(null, null),
-            url = vacancyEntity.url
+            url = vacancyEntity.url,
+            isFavorite = true
         )
     }
 }

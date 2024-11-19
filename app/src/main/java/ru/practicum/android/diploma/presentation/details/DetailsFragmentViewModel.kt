@@ -12,7 +12,6 @@ import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
 import ru.practicum.android.diploma.util.NetworkChecker
 import ru.practicum.android.diploma.util.Resource
-import ru.practicum.android.diploma.util.ResponseStatusCode
 
 class DetailsFragmentViewModel(
     private val hhInteractor: HhInteractor,
@@ -25,14 +24,15 @@ class DetailsFragmentViewModel(
 
     fun observeState(): LiveData<DetailsFragmentState> = stateLiveData
 
-//    liveData для иконки добавления в избранное
+    //    liveData для иконки добавления в избранное
     private var _isFavoriteLiveData = MutableLiveData<Boolean>()
-    val isFavoriteLiveData: LiveData<Boolean> =_isFavoriteLiveData
+    val isFavoriteLiveData: LiveData<Boolean> = _isFavoriteLiveData
 
     private fun renderState(state: DetailsFragmentState) {
         stateLiveData.postValue(state)
     }
-// изменил на изначальную загрузку с бд
+
+    // изменил на изначальную загрузку с бд
     fun start(id: String) {
         viewModelScope.launch {
 
@@ -42,6 +42,7 @@ class DetailsFragmentViewModel(
                 cachedVacancy.let {
                     vacancy = it
                     renderState(DetailsFragmentState.Content(it))
+                    _isFavoriteLiveData.postValue(vacancy?.isFavorite)
                 }
             }
 
@@ -68,16 +69,15 @@ class DetailsFragmentViewModel(
     fun likeButton() {
         val currentVacancy = vacancy ?: return
         viewModelScope.launch {
-            if (favoritesInteractor.isFavoriteCheck(currentVacancy.id)){
+            if (favoritesInteractor.isFavoriteCheck(currentVacancy.id)) {
                 favoritesInteractor.deleteVacancy(currentVacancy)
                 currentVacancy.isFavorite = false
                 _isFavoriteLiveData.postValue(false)
-            }else{
+            } else {
                 favoritesInteractor.insertVacancy(currentVacancy)
                 currentVacancy.isFavorite = true
                 _isFavoriteLiveData.postValue(true)
             }
-            start(currentVacancy.id)
         }
     }
 }
