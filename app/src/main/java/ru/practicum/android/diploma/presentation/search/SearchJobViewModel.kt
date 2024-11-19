@@ -36,7 +36,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     private var isLoading = false
     private var vacanciesList = mutableListOf<Vacancy>()
 
-    private val searchDebounced = debounce<Any>(DEBOUNCE_TIME, viewModelScope, true) { String ->
+    private val searchDebounced = debounce<Any>(DEBOUNCE_TIME, viewModelScope, true) {
         viewModelScope.launch {
             loadVacancies()
         }
@@ -88,8 +88,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
             pushVacanciesState(VacanciesState.Loading)
         }
         if (currentQuery.isNotEmpty()) {
-
-            hhInteractor.getVacancies(params).map { result ->
+            hhInteractor.getVacancies(params).collect { result ->
                 when (result) {
                     is Resource.Success -> {
                         val newVacancies = result.data ?: emptyList()
