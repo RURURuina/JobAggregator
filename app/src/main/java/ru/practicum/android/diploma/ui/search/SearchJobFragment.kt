@@ -1,11 +1,9 @@
 package ru.practicum.android.diploma.ui.search
 
-import android.content.ContentValues.TAG
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +53,9 @@ class SearchJobFragment : Fragment() {
         initRecyclerView()
         observeViewModel()
         prepareOnItemClick()
+        binding?.filterImageButton?.setOnClickListener {
+            findNavController().navigate(R.id.action_searchJobFragment_to_filtrationFragment)
+        }
     }
 
     private fun prepareOnItemClick() {
@@ -101,20 +102,18 @@ class SearchJobFragment : Fragment() {
         binding?.vacanciesRecyclerView?.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = vacancyAdapter
-
             scrollListener?.let { removeOnScrollListener(it) }
             scrollListener = object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val visibleItemCount = layoutManager.childCount // кол-во элементов на экране
-                    val totalItemCount = layoutManager.itemCount // сколько всего элементов в списке
-                    val positionFirst =
-                        layoutManager.findFirstVisibleItemPosition() // номер первого видимого элемента на экране
-
-                    if (visibleItemCount + positionFirst >= totalItemCount && positionFirst >= 0) {
-                        binding?.bottomProgressBar?.isVisible = true
-                        viewModel.loadNextPage()
+                    if (dy > 0) {
+                        val pos =
+                            (binding!!.vacanciesRecyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                        val itemsCount = vacancyAdapter.itemCount
+                        if (pos >= itemsCount - 1) {
+                            viewModel.loadNextPage()
+                            binding?.bottomProgressBar?.isVisible = true
+                        }
                     }
                 }
             }.also {
@@ -127,41 +126,34 @@ class SearchJobFragment : Fragment() {
         viewModel.vacanciesState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is VacanciesState.Loading -> {
-                    val a = binding?.vacanciesRecyclerView?.childCount ?: 0
-                    if (a > 0) {
+                    if ((binding?.vacanciesRecyclerView?.childCount ?: 0) > 0) {
                         binding?.bottomProgressBar?.isVisible = true
-                        Log.d(TAG, "observeViewModel: bottomProgressBar")
                     } else {
-                        showLoading()
+                        showTopProgressBar()
                     }
-                    Log.d(TAG, "observeViewModel: showLoading()")
                     keyBoardVisibility(false)
                 }
 
                 is VacanciesState.Error -> {
-                    hideCenteralProgressBar()
+                    hideCentralProgressBar()
                     showError(state.responseState)
                     keyBoardVisibility(false)
-                    Log.d(TAG, "observeViewModel: Error")
                 }
 
                 is VacanciesState.Success -> {
-                    hideCenteralProgressBar()
+                    hideCentralProgressBar()
                     updateRecyclerView(state.vacancies)
                     keyBoardVisibility(false)
                     binding?.bottomProgressBar?.isVisible = false
-                    Log.d(TAG, "observeViewModel: Success")
                 }
 
                 is VacanciesState.Empty -> {
-                    hideCenteralProgressBar()
+                    hideCentralProgressBar()
                     showEmptyState()
                     keyBoardVisibility(false)
-                    Log.d(TAG, "observeViewModel: Empty")
                 }
 
                 is VacanciesState.Hidden -> {
-                    Log.d(TAG, "observeViewModel: Hidden")
                     clearRecyclerView()
                 }
             }
@@ -185,8 +177,7 @@ class SearchJobFragment : Fragment() {
         binding?.noJobsLayout?.visibility = View.GONE
     }
 
-    private fun showLoading() {
-        Log.d(TAG, "observeViewModel: show central progressBar")
+    private fun showTopProgressBar() {
         binding?.progressBar?.visibility = View.VISIBLE
         binding?.searchLayout?.visibility = View.GONE
         binding?.errorLayout?.visibility = View.GONE
@@ -194,15 +185,14 @@ class SearchJobFragment : Fragment() {
         binding?.vacanciesRecyclerView?.visibility = View.GONE
     }
 
-    private fun hideCenteralProgressBar() {
+    private fun hideCentralProgressBar() {
         binding?.progressBar?.visibility = View.GONE
     }
 
     private fun showError(responseState: ResponseStatusCode?) {
         when (responseState) {
-            null -> {}
             ResponseStatusCode.ERROR -> {
-                if (binding?.vacanciesRecyclerView?.isVisible == true) {
+                if ((binding?.vacanciesRecyclerView?.childCount ?: 0) > 0) {
                     showResponseErrToast()
                 } else {
                     binding?.searchLayout?.visibility = View.GONE
@@ -210,11 +200,13 @@ class SearchJobFragment : Fragment() {
                     binding?.vacanciesRecyclerView?.visibility = View.GONE
                     binding?.errorTv?.setText(R.string.server_error)
                     binding?.errorImage?.setImageResource(R.drawable.server_error_on_search_screen)
+                    binding?.errorLayout?.visibility = View.VISIBLE
+
                 }
             }
 
             ResponseStatusCode.NO_INTERNET -> {
-                if (binding?.vacanciesRecyclerView?.isVisible == true) {
+                if ((binding?.vacanciesRecyclerView?.childCount ?: 0) > 0) {
                     showNoInternetToast()
                 } else {
                     binding?.searchLayout?.visibility = View.GONE
@@ -222,12 +214,13 @@ class SearchJobFragment : Fragment() {
                     binding?.vacanciesRecyclerView?.visibility = View.GONE
                     binding?.errorTv?.setText(R.string.no_internet)
                     binding?.errorImage?.setImageResource(R.drawable.no_internet_placeholder)
+                    binding?.errorLayout?.visibility = View.VISIBLE
+
                 }
             }
 
             else -> {}
         }
-        binding?.errorLayout?.visibility = View.VISIBLE
     }
 
     private fun showEmptyState() {
@@ -250,14 +243,13 @@ class SearchJobFragment : Fragment() {
     }
 
     private fun showNoInternetToast() {
-        Toast.makeText(context, "Проверьте подключение к интернету", Toast.LENGTH_LONG)
+        Toast.makeText(context, getString(R.string.no_internet_toast), Toast.LENGTH_LONG)
             .show()
         binding?.bottomProgressBar?.isVisible = false
-        Log.d(TAG, "showNoInternetToast: true")
     }
 
     private fun showResponseErrToast() {
-        Toast.makeText(context, "Произошла ошибка", Toast.LENGTH_LONG)
+        Toast.makeText(context, getString(R.string.response_error_toast), Toast.LENGTH_LONG)
             .show()
         binding?.bottomProgressBar?.isVisible = false
     }

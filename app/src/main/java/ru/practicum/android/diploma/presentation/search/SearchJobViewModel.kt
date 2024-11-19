@@ -1,33 +1,30 @@
 package ru.practicum.android.diploma.presentation.search
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.hh.HhInteractor
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.search.models.VacanciesState
 import ru.practicum.android.diploma.util.Resource
+import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.debounce
+import java.net.SocketTimeoutException
 
 
 class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     // Кто будет выполнять задание на обработку ошибок, то сообщение будет на стр 132
     companion object {
-        private const val DEBOUNCE_TIME = 2000L
+        private const val DEBOUNCE_SEARCH_TIME = 2000L
+        private const val DEBOUNCE_PAGE_TIME = 300L
         private const val PAGE_SIZE = 20 // кол-во элементов на странице для отображения в RV
     }
 
     private val _vacanciesState = MutableLiveData<VacanciesState>()
     val vacanciesState: LiveData<VacanciesState> = _vacanciesState
-
-    private var lastSearchText: String? = null
-    private var searchJob: Job? = null
 
     // переменные для работы с paggination
     private var currentPage = 0
@@ -36,15 +33,24 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     private var isLoading = false
     private var vacanciesList = mutableListOf<Vacancy>()
 
-    private val searchDebounced = debounce<Any>(DEBOUNCE_TIME, viewModelScope, true) {
-        viewModelScope.launch {
-            loadVacancies()
-        }
+    private val searchDebounce = debounce<String>(
+        delayMillis = DEBOUNCE_SEARCH_TIME,
+        coroutineScope = viewModelScope,
+        useLastParam = true
+    ) { searchText ->
+        searchVacancies(searchText)
+    }
+    private val loadDebounce = debounce<Int>(
+        delayMillis = DEBOUNCE_PAGE_TIME,
+        coroutineScope = viewModelScope,
+        useLastParam = true
+    ) {
+        currentPage++
+        loadVacancies()
     }
 
     init {
         clearVacancies()
-
     }
 
     fun clearVacancies() {
@@ -65,8 +71,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
             currentQuery = query
         }
         if (query.isNotBlank()) {
-            searchJob?.cancel()
-            run(searchDebounced)
+            loadVacancies()
         } else {
             pushVacanciesState(VacanciesState.Hidden)
         }
@@ -76,8 +81,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         _vacanciesState.postValue(state)
     }
 
-    private suspend fun loadVacancies() {
-        Log.d(TAG, "loadVacancies: starting")
+    private fun loadVacancies() {
         isLoading = true
         val params = hashMapOf(
             "text" to currentQuery,
@@ -88,52 +92,53 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
             pushVacanciesState(VacanciesState.Loading)
         }
         if (currentQuery.isNotEmpty()) {
-            hhInteractor.getVacancies(params).collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        val newVacancies = result.data ?: emptyList()
-                        isLastPage = newVacancies.size < PAGE_SIZE
-                        if (newVacancies.isEmpty()) {
-                            pushVacanciesState(VacanciesState.Empty)
-                        } else {
-                            vacanciesList.addAll(newVacancies)
-                            pushVacanciesState(
-                                VacanciesState.Success(
-                                    vacancies = vacanciesList.toList(),
-                                    isLastPage = isLastPage,
-                                    isLoading = false
-                                )
-                            )
+            viewModelScope.launch {
+                isLoading = true
+                try {
+                    hhInteractor.getVacancies(params).collect { result ->
+                        when (result) {
+                            is Resource.Success -> {
+                                val newVacancies = result.data ?: emptyList()
+                                isLastPage = newVacancies.size < PAGE_SIZE
+                                if (newVacancies.isEmpty()) {
+                                    VacanciesState.Empty
+                                } else {
+                                    vacanciesList.addAll(newVacancies)
+                                    pushVacanciesState(
+                                        VacanciesState.Success(
+                                            vacancies = vacanciesList.toList(),
+                                            isLastPage = isLastPage,
+                                            isLoading = false
+                                        )
+                                    )
+                                }
+                            }
+
+                            is Resource.Error -> {
+                                pushVacanciesState(VacanciesState.Error(result.responseCode))
+                            }
                         }
+                        isLoading = false
                     }
 
-                    is Resource.Error -> {
-                        Log.d(TAG, "loadVacancies: Resource.Error")
-                        if (isLoading) {
-                            pushVacanciesState(VacanciesState.Error(result.responseCode))
-                        }
-                    }
+                } catch (e: SocketTimeoutException) {
+                    pushVacanciesState(VacanciesState.Error(ResponseStatusCode.ERROR))
+                    this.coroutineContext.job.cancel()
                 }
-                isLoading = false
             }
         }
-
     }
 
-    fun searchDebounce(changedText: String) {
-        if (lastSearchText != changedText) {
-            lastSearchText = changedText
-            searchVacancies(changedText)
+    fun searchDebounce(changedText: String?) {
+        if (changedText != null) {
+            searchDebounce.invoke(changedText.trim())
         }
     }
 
     // Ф-ия для Fragment для загрузки следующей страницы
     fun loadNextPage() {
         if (!isLoading && !isLastPage && currentQuery.isNotBlank()) {
-            currentPage++
-            viewModelScope.launch {
-                loadVacancies()
-            }
+            loadDebounce(currentPage++)
         }
     }
 }
