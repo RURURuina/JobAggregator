@@ -1,0 +1,228 @@
+Index: app/src/main/java/ru/practicum/android/diploma/presentation/favorites/FavoriteJobViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.presentation.favorites\r\n\r\nimport androidx.lifecycle.LiveData\r\nimport androidx.lifecycle.MutableLiveData\r\nimport androidx.lifecycle.ViewModel\r\nimport androidx.lifecycle.viewModelScope\r\nimport kotlinx.coroutines.launch\r\nimport ru.practicum.android.diploma.R\r\nimport ru.practicum.android.diploma.domain.models.entity.Vacancy\r\nimport ru.practicum.android.diploma.ui.favorites.models.FavoritesState\r\n\r\nclass FavoriteJobViewModel : ViewModel() {\r\n\r\n    // нужно добавить интерактор\r\n    // liveData для отрисовки экрана на будущее\r\n    private val _favoritesState = MutableLiveData<FavoritesState>()\r\n    val favoritesState: LiveData<FavoritesState> = _favoritesState\r\n\r\n    fun getVacancies() {\r\n        viewModelScope.launch {\r\n            /*\r\n            Блок для получения вакансий Например:\r\n            interactor.getVacancies()\r\n                .onStart { pushFavoriteState(FavoriteState.Loading)}\r\n                .catch {exception->\r\n                    pushFavoriteState(FavoriteState.Error(R.string.couldnt_get_job_list))    //обработка ошибок\r\n                .collect { vacancies->\r\n                    showData(vacancies)\r\n             */\r\n        }\r\n    }\r\n\r\n    private fun showData(vacancies: List<Vacancy>) {\r\n        if (vacancies.isEmpty()) {\r\n            pushFavoriteState(FavoritesState.Empty(R.string.empty_list))\r\n        } else {\r\n            pushFavoriteState(FavoritesState.Content(vacancies))\r\n        }\r\n    }\r\n\r\n    // функция для обновления liveData\r\n    private fun pushFavoriteState(state: FavoritesState) {\r\n        _favoritesState.postValue(state)\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/presentation/favorites/FavoriteJobViewModel.kt b/app/src/main/java/ru/practicum/android/diploma/presentation/favorites/FavoriteJobViewModel.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/presentation/favorites/FavoriteJobViewModel.kt	(revision a9a664f1a2368d22e0aa9616f2b2ec8b85da70ac)
++++ b/app/src/main/java/ru/practicum/android/diploma/presentation/favorites/FavoriteJobViewModel.kt	(date 1731949700679)
+@@ -4,29 +4,32 @@
+ import androidx.lifecycle.MutableLiveData
+ import androidx.lifecycle.ViewModel
+ import androidx.lifecycle.viewModelScope
++import kotlinx.coroutines.flow.catch
++import kotlinx.coroutines.flow.onStart
+ import kotlinx.coroutines.launch
+ import ru.practicum.android.diploma.R
++import ru.practicum.android.diploma.domain.api.FavoritesInteractor
+ import ru.practicum.android.diploma.domain.models.entity.Vacancy
++import ru.practicum.android.diploma.domain.models.entity.VacancyShort
+ import ru.practicum.android.diploma.ui.favorites.models.FavoritesState
+ 
+-class FavoriteJobViewModel : ViewModel() {
++class FavoriteJobViewModel(
++    private val interactor: FavoritesInteractor
++) : ViewModel() {
+ 
+-    // нужно добавить интерактор
+-    // liveData для отрисовки экрана на будущее
++    // liveData для отрисовки экрана
+     private val _favoritesState = MutableLiveData<FavoritesState>()
+     val favoritesState: LiveData<FavoritesState> = _favoritesState
+ 
+     fun getVacancies() {
+         viewModelScope.launch {
+-            /*
+-            Блок для получения вакансий Например:
+-            interactor.getVacancies()
+-                .onStart { pushFavoriteState(FavoriteState.Loading)}
+-                .catch {exception->
+-                    pushFavoriteState(FavoriteState.Error(R.string.couldnt_get_job_list))    //обработка ошибок
+-                .collect { vacancies->
++
++            interactor.getFavoriteVacancies()
++                .onStart { pushFavoriteState(FavoritesState.Loading)}
++                .catch { pushFavoriteState(FavoritesState.Error(R.string.couldnt_get_job_list)) }   //обработка ошибок
++                .collect { vacancies ->
+                     showData(vacancies)
+-             */
++                }
+         }
+     }
+ 
+Index: app/src/main/java/ru/practicum/android/diploma/di/ViewModelModule.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.di\r\n\r\nimport org.koin.androidx.viewmodel.dsl.viewModel\r\nimport org.koin.dsl.module\r\nimport ru.practicum.android.diploma.presentation.favorites.FavoriteJobViewModel\r\nimport ru.practicum.android.diploma.presentation.search.SearchJobViewModel\r\nimport ru.practicum.android.diploma.presentation.team.TeamViewModel\r\n\r\nval viewModelModule = module {\r\n    viewModel {\r\n        SearchJobViewModel(hhInteractor = get())\r\n    }\r\n    viewModel {\r\n        TeamViewModel()\r\n    }\r\n    viewModel {\r\n        FavoriteJobViewModel()\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/di/ViewModelModule.kt b/app/src/main/java/ru/practicum/android/diploma/di/ViewModelModule.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/di/ViewModelModule.kt	(revision a9a664f1a2368d22e0aa9616f2b2ec8b85da70ac)
++++ b/app/src/main/java/ru/practicum/android/diploma/di/ViewModelModule.kt	(date 1731943515183)
+@@ -8,12 +8,16 @@
+ 
+ val viewModelModule = module {
+     viewModel {
+-        SearchJobViewModel(hhInteractor = get())
++        SearchJobViewModel(
++            hhInteractor = get()
++        )
+     }
+     viewModel {
+         TeamViewModel()
+     }
+     viewModel {
+-        FavoriteJobViewModel()
++        FavoriteJobViewModel(
++            interactor = get()
++        )
+     }
+ }
+Index: app/src/main/java/ru/practicum/android/diploma/di/RepositoryModule.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.di\r\n\r\nimport org.koin.dsl.module\r\nimport ru.practicum.android.diploma.data.convertors.VacancyDtoConvertor\r\nimport ru.practicum.android.diploma.data.repository.HhRepositoryImpl\r\nimport ru.practicum.android.diploma.domain.api.HhRepository\r\n\r\nval repositoryModule = module {\r\n    single<VacancyDtoConvertor> {\r\n        VacancyDtoConvertor()\r\n    }\r\n\r\n    single<HhRepository> {\r\n        HhRepositoryImpl(\r\n            networkClient = get(),\r\n            vacancyDtoConvertor = get()\r\n        )\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/di/RepositoryModule.kt b/app/src/main/java/ru/practicum/android/diploma/di/RepositoryModule.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/di/RepositoryModule.kt	(revision a9a664f1a2368d22e0aa9616f2b2ec8b85da70ac)
++++ b/app/src/main/java/ru/practicum/android/diploma/di/RepositoryModule.kt	(date 1731942871211)
+@@ -2,7 +2,9 @@
+ 
+ import org.koin.dsl.module
+ import ru.practicum.android.diploma.data.convertors.VacancyDtoConvertor
++import ru.practicum.android.diploma.data.repository.FavoritesVacancyRepositoryImpl
+ import ru.practicum.android.diploma.data.repository.HhRepositoryImpl
++import ru.practicum.android.diploma.domain.api.FavoritesVacancyRepository
+ import ru.practicum.android.diploma.domain.api.HhRepository
+ 
+ val repositoryModule = module {
+@@ -16,4 +18,7 @@
+             vacancyDtoConvertor = get()
+         )
+     }
++    single<FavoritesVacancyRepository> {
++        FavoritesVacancyRepositoryImpl(appDatabase = get())
++    }
+ }
+Index: app/src/main/java/ru/practicum/android/diploma/di/InteractorModule.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.di\r\n\r\nimport org.koin.dsl.module\r\nimport ru.practicum.android.diploma.domain.api.HhInteractor\r\nimport ru.practicum.android.diploma.domain.impl.HhInteractorImpl\r\n\r\nval interactorModule = module {\r\n    single<HhInteractor> {\r\n        HhInteractorImpl(\r\n            hhRepository = get()\r\n        )\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/di/InteractorModule.kt b/app/src/main/java/ru/practicum/android/diploma/di/InteractorModule.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/di/InteractorModule.kt	(revision a9a664f1a2368d22e0aa9616f2b2ec8b85da70ac)
++++ b/app/src/main/java/ru/practicum/android/diploma/di/InteractorModule.kt	(date 1731943515167)
+@@ -1,7 +1,9 @@
+ package ru.practicum.android.diploma.di
+ 
+ import org.koin.dsl.module
++import ru.practicum.android.diploma.domain.api.FavoritesInteractor
+ import ru.practicum.android.diploma.domain.api.HhInteractor
++import ru.practicum.android.diploma.domain.impl.FavoritesInteractorImpl
+ import ru.practicum.android.diploma.domain.impl.HhInteractorImpl
+ 
+ val interactorModule = module {
+@@ -10,4 +12,9 @@
+             hhRepository = get()
+         )
+     }
++    single<FavoritesInteractor> {
++        FavoritesInteractorImpl(
++            repository = get()
++        )
++    }
+ }
+Index: app/src/main/java/ru/practicum/android/diploma/di/DataModule.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.di\r\n\r\nimport com.google.gson.Gson\r\nimport okhttp3.OkHttpClient\r\nimport okhttp3.logging.HttpLoggingInterceptor\r\nimport org.koin.android.ext.koin.androidContext\r\nimport org.koin.dsl.module\r\nimport retrofit2.Retrofit\r\nimport retrofit2.converter.gson.GsonConverterFactory\r\nimport ru.practicum.android.diploma.data.network.HhApiService\r\nimport ru.practicum.android.diploma.data.network.NetworkClient\r\nimport ru.practicum.android.diploma.data.network.RetrofitNetworkClient\r\n\r\nval dataModule = module {\r\n    factory { Gson() }\r\n\r\n    single<HhApiService> {\r\n        val baseUrl = \"https://api.hh.ru/\"\r\n        val interceptorHttp = HttpLoggingInterceptor().apply {\r\n            this.level = HttpLoggingInterceptor.Level.BODY\r\n        }\r\n\r\n        val okHttpClient = OkHttpClient.Builder()\r\n            .addInterceptor(interceptorHttp)\r\n            .build()\r\n\r\n        Retrofit.Builder()\r\n            .client(okHttpClient)\r\n            .baseUrl(baseUrl)\r\n            .addConverterFactory(GsonConverterFactory.create())\r\n            .build()\r\n            .create(HhApiService::class.java)\r\n    }\r\n\r\n    single<NetworkClient> {\r\n        RetrofitNetworkClient(\r\n            hhService = get(),\r\n            context = androidContext()\r\n        )\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/di/DataModule.kt b/app/src/main/java/ru/practicum/android/diploma/di/DataModule.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/di/DataModule.kt	(revision a9a664f1a2368d22e0aa9616f2b2ec8b85da70ac)
++++ b/app/src/main/java/ru/practicum/android/diploma/di/DataModule.kt	(date 1731943137495)
+@@ -1,5 +1,6 @@
+ package ru.practicum.android.diploma.di
+ 
++import androidx.room.Room
+ import com.google.gson.Gson
+ import okhttp3.OkHttpClient
+ import okhttp3.logging.HttpLoggingInterceptor
+@@ -7,6 +8,7 @@
+ import org.koin.dsl.module
+ import retrofit2.Retrofit
+ import retrofit2.converter.gson.GsonConverterFactory
++import ru.practicum.android.diploma.data.db.AppDatabase
+ import ru.practicum.android.diploma.data.network.HhApiService
+ import ru.practicum.android.diploma.data.network.NetworkClient
+ import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
+@@ -38,4 +40,11 @@
+             context = androidContext()
+         )
+     }
++    single {
++        Room.databaseBuilder(
++            context = androidContext(),
++            klass = AppDatabase::class.java,
++            name = "database.db"
++        ).build()
++    }
+ }
+Index: app/src/main/java/ru/practicum/android/diploma/data/repository/FavoritesVacancyRepositoryImpl.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.data.repository\r\n\r\nimport kotlinx.coroutines.flow.Flow\r\nimport kotlinx.coroutines.flow.flow\r\nimport ru.practicum.android.diploma.data.db.AppDatabase\r\nimport ru.practicum.android.diploma.data.db.FavoritesVacancyEntity\r\nimport ru.practicum.android.diploma.domain.api.FavoritesVacancyRepository\r\nimport ru.practicum.android.diploma.domain.models.entity.EmployerData\r\nimport ru.practicum.android.diploma.domain.models.entity.LogoUrlsData\r\nimport ru.practicum.android.diploma.domain.models.entity.SalaryData\r\nimport ru.practicum.android.diploma.domain.models.entity.VacancyShort\r\n\r\nclass FavoritesVacancyRepositoryImpl(val appDatabase: AppDatabase) : FavoritesVacancyRepository {\r\n    override suspend fun insertVacancy(vacancy: VacancyShort) {\r\n        appDatabase.favoritesVacancyDao().insertVacancy(vacancy.toData())\r\n    }\r\n\r\n    override suspend fun deleteVacancy(vacancy: VacancyShort) {\r\n        appDatabase.favoritesVacancyDao().deleteVacancy(vacancy.toData())\r\n    }\r\n\r\n    override fun getFavoriteVacancies(): Flow<List<VacancyShort>> = flow {\r\n        emit(appDatabase.favoritesVacancyDao().getFavoriteVacancies().map { it.toDomain() })\r\n    }\r\n\r\n    override fun getFavoriteVacancyById(id: String): Flow<VacancyShort> = flow {\r\n        emit(appDatabase.favoritesVacancyDao().getFavoriteVacancyById(id).toDomain())\r\n    }\r\n}\r\n\r\nfun VacancyShort.toData(): FavoritesVacancyEntity = FavoritesVacancyEntity(\r\n    id = this.id,\r\n    name = this.name,\r\n    employerName = this.employer?.name,\r\n    logoOriginal = this.employer?.logoUrls?.original,\r\n    currency = this.salaryData?.currency,\r\n    from = this.salaryData?.from,\r\n    to = this.salaryData?.to\r\n)\r\n\r\nfun FavoritesVacancyEntity.toDomain(): VacancyShort = VacancyShort(\r\n    id = this.id,\r\n    name = this.name,\r\n    employer = EmployerData(\r\n        name = this.employerName,\r\n        LogoUrlsData(\r\n            original = this.logoOriginal\r\n        )\r\n    ),\r\n    salaryData = SalaryData(\r\n        currency = this.currency,\r\n        from = this.from,\r\n        to = this.to\r\n    )\r\n)\r\n
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/data/repository/FavoritesVacancyRepositoryImpl.kt b/app/src/main/java/ru/practicum/android/diploma/data/repository/FavoritesVacancyRepositoryImpl.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/data/repository/FavoritesVacancyRepositoryImpl.kt	(revision a9a664f1a2368d22e0aa9616f2b2ec8b85da70ac)
++++ b/app/src/main/java/ru/practicum/android/diploma/data/repository/FavoritesVacancyRepositoryImpl.kt	(date 1731942871194)
+@@ -10,7 +10,7 @@
+ import ru.practicum.android.diploma.domain.models.entity.SalaryData
+ import ru.practicum.android.diploma.domain.models.entity.VacancyShort
+ 
+-class FavoritesVacancyRepositoryImpl(val appDatabase: AppDatabase) : FavoritesVacancyRepository {
++class FavoritesVacancyRepositoryImpl(private val appDatabase: AppDatabase) : FavoritesVacancyRepository {
+     override suspend fun insertVacancy(vacancy: VacancyShort) {
+         appDatabase.favoritesVacancyDao().insertVacancy(vacancy.toData())
+     }
+Index: app/src/main/java/ru/practicum/android/diploma/ui/favorites/models/FavoritesState.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.ui.favorites.models\r\n\r\nimport ru.practicum.android.diploma.domain.models.entity.Vacancy\r\n\r\nsealed interface FavoritesState {\r\n    data object Loading : FavoritesState\r\n\r\n    data class Content(\r\n        val favoritesVacancies: List<Vacancy>\r\n    ) : FavoritesState\r\n\r\n    data class Empty(\r\n        val message: Int\r\n    ) : FavoritesState\r\n\r\n    data class Error(\r\n        val message: Int\r\n    ) : FavoritesState\r\n\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/ui/favorites/models/FavoritesState.kt b/app/src/main/java/ru/practicum/android/diploma/ui/favorites/models/FavoritesState.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/ui/favorites/models/FavoritesState.kt	(revision a9a664f1a2368d22e0aa9616f2b2ec8b85da70ac)
++++ b/app/src/main/java/ru/practicum/android/diploma/ui/favorites/models/FavoritesState.kt	(date 1731949700685)
+@@ -1,6 +1,7 @@
+ package ru.practicum.android.diploma.ui.favorites.models
+ 
+ import ru.practicum.android.diploma.domain.models.entity.Vacancy
++import ru.practicum.android.diploma.domain.models.entity.VacancyShort
+ 
+ sealed interface FavoritesState {
+     data object Loading : FavoritesState
+Index: app/src/main/java/ru/practicum/android/diploma/domain/impl/FavoritesInteractorImpl.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.domain.impl\r\n\r\nimport kotlinx.coroutines.flow.Flow\r\nimport ru.practicum.android.diploma.domain.api.FavoritesInteractor\r\nimport ru.practicum.android.diploma.domain.api.FavoritesVacancyRepository\r\nimport ru.practicum.android.diploma.domain.models.entity.VacancyShort\r\n\r\nclass FavoritesInteractorImpl(val repository: FavoritesVacancyRepository) : FavoritesInteractor {\r\n    override suspend fun insertVacancy(vacancy: VacancyShort) {\r\n        repository.insertVacancy(vacancy)\r\n    }\r\n\r\n    override suspend fun deleteVacancy(vacancy: VacancyShort) {\r\n        repository.deleteVacancy(vacancy)\r\n    }\r\n\r\n    override fun getFavoriteVacancies(): Flow<List<VacancyShort>> {\r\n        return repository.getFavoriteVacancies()\r\n    }\r\n\r\n    override fun getFavoriteVacancyById(id: String): Flow<VacancyShort> {\r\n        return repository.getFavoriteVacancyById(id)\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/domain/impl/FavoritesInteractorImpl.kt b/app/src/main/java/ru/practicum/android/diploma/domain/impl/FavoritesInteractorImpl.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/domain/impl/FavoritesInteractorImpl.kt	(revision a9a664f1a2368d22e0aa9616f2b2ec8b85da70ac)
++++ b/app/src/main/java/ru/practicum/android/diploma/domain/impl/FavoritesInteractorImpl.kt	(date 1731942871189)
+@@ -5,7 +5,7 @@
+ import ru.practicum.android.diploma.domain.api.FavoritesVacancyRepository
+ import ru.practicum.android.diploma.domain.models.entity.VacancyShort
+ 
+-class FavoritesInteractorImpl(val repository: FavoritesVacancyRepository) : FavoritesInteractor {
++class FavoritesInteractorImpl(private val repository: FavoritesVacancyRepository) : FavoritesInteractor {
+     override suspend fun insertVacancy(vacancy: VacancyShort) {
+         repository.insertVacancy(vacancy)
+     }
