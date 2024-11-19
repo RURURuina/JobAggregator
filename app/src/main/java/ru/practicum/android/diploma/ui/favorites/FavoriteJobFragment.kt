@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavoriteJobBinding
@@ -61,6 +62,7 @@ class FavoriteJobFragment : Fragment() {
         // добавлять слушателя кликов на адаптер когда будет
 
         vacancyAdapter = VacancyAdapter()
+        binding?.favoritesRv?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
         binding?.favoritesRv?.adapter = vacancyAdapter
     }
     private fun prepareOnItemClick() {
@@ -71,7 +73,7 @@ class FavoriteJobFragment : Fragment() {
         ) { vacancy ->
             val bundle = bundleOf(VACANCY_TRANSFER_KEY to vacancy.id)
             /*vacancy id нужно будет вынести в компаньон обджект в апп*/
-            findNavController().navigate(R.id.action_searchJobFragment_to_detailsFragment, bundle)
+            findNavController().navigate(R.id.action_favoriteJobFragment_to_detailsFragment, bundle)
         }
 
     }
