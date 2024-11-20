@@ -50,6 +50,10 @@ class DetailsFragment : Fragment() {
         prepareBackButton()
         prepareLikeButton()
         prepareShareButton()
+
+        viewModel.isFavoriteLiveData.observe(viewLifecycleOwner) { isFavorite ->
+            binding?.toolbarLikeButton?.isSelected = isFavorite
+        }
     }
 
     private fun prepareShareButton() {
@@ -60,7 +64,7 @@ class DetailsFragment : Fragment() {
 
     private fun prepareLikeButton() {
         binding?.toolbarLikeButton?.setOnClickListener {
-            binding?.toolbarLikeButton?.isSelected?.vacancyLiked()
+            viewModel.likeButton()
         }
     }
 
@@ -94,11 +98,11 @@ class DetailsFragment : Fragment() {
     private fun renderError(errState: ResponseStatusCode) {
         when (errState) {
             ResponseStatusCode.ERROR -> {
-                binding?.errorLayout?.isVisible = true
+                binding?.errorServer?.isVisible = true
             }
 
             ResponseStatusCode.NO_INTERNET -> {
-                binding?.errorServer?.isVisible = true
+                binding?.errorLayout?.isVisible = true
             }
 
             ResponseStatusCode.OK -> {
@@ -133,7 +137,11 @@ class DetailsFragment : Fragment() {
     private fun fillEmployer(vacancy: Vacancy) {
         binding?.cardTitleText?.text = vacancy.employer?.name
         binding?.cardCityText?.text = vacancy.adress?.full ?: vacancy.area?.name
-        context?.let { binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.original, it) }
+
+//        этот блок для отображения заглушки без интернета
+        context?.let { context ->
+            binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.original, context)
+        }
     }
 
     private fun fillEmployment(vacancy: Vacancy?) {
@@ -169,11 +177,6 @@ class DetailsFragment : Fragment() {
 
     private fun getVacancyId() {
         vacancyId = arguments?.getString(VACANCY_TRANSFER_KEY)
-    }
-
-    private fun Boolean.vacancyLiked() {
-        binding?.toolbarLikeButton?.isSelected = !this
-        viewModel.likeButton()
     }
 
     private fun Boolean.navBarVisible() {

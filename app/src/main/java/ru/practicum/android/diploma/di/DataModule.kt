@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.di
 
+import androidx.room.Room
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -7,11 +8,10 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.practicum.android.diploma.data.db.AppDatabase
 import ru.practicum.android.diploma.data.network.HhApiService
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
-import ru.practicum.android.diploma.data.repository.VacancySharingRepositoryImpl
-import ru.practicum.android.diploma.domain.api.sharing.VacancySharingRepository
 
 val dataModule = module {
     factory { Gson() }
@@ -40,4 +40,12 @@ val dataModule = module {
             context = androidContext()
         )
     }
+    single {
+        Room.databaseBuilder(
+            context = androidContext(),
+            klass = AppDatabase::class.java,
+            name = "appDataBase.db"
+        ).build()
+    }
+    single { get<AppDatabase>().favoritesVacancyDao() }
 }

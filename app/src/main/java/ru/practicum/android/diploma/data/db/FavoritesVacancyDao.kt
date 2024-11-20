@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoritesVacancyDao {
@@ -15,8 +16,11 @@ interface FavoritesVacancyDao {
     suspend fun deleteVacancy(vacancy: FavoritesVacancyEntity)
 
     @Query("SELECT * FROM favorites")
-    fun getFavoriteVacancies(): List<FavoritesVacancyEntity>
+    fun getFavoriteVacancies(): Flow<List<FavoritesVacancyEntity>>
 
     @Query("SELECT * FROM favorites WHERE id = :id")
-    fun getFavoriteVacancyById(id: String): FavoritesVacancyEntity
+    suspend fun getFavoriteVacancyById(id: String): FavoritesVacancyEntity?
+
+    @Query("SELECT id FROM favorites")
+    suspend fun getAllFavoritesIds(): List<String>
 }

@@ -4,29 +4,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.domain.api.FavoritesInteractor
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.favorites.models.FavoritesState
 
-class FavoriteJobViewModel : ViewModel() {
+class FavoriteJobViewModel(
+    private val interactor: FavoritesInteractor
+) : ViewModel() {
 
-    // нужно добавить интерактор
-    // liveData для отрисовки экрана на будущее
     private val _favoritesState = MutableLiveData<FavoritesState>()
     val favoritesState: LiveData<FavoritesState> = _favoritesState
 
     fun getVacancies() {
         viewModelScope.launch {
-            /*
-            Блок для получения вакансий Например:
-            interactor.getVacancies()
-                .onStart { pushFavoriteState(FavoriteState.Loading)}
-                .catch {exception->
-                    pushFavoriteState(FavoriteState.Error(R.string.couldnt_get_job_list))    //обработка ошибок
-                .collect { vacancies->
+            interactor.getFavoriteVacancies()
+                .onStart { pushFavoriteState(FavoritesState.Loading) }
+                .catch { _ -> pushFavoriteState(FavoritesState.Error(R.string.couldnt_get_job_list)) }   //обработка ошибок
+                .collect { vacancies ->
                     showData(vacancies)
-             */
+                }
         }
     }
 

@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.di
 
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import ru.practicum.android.diploma.presentation.details.DetailsFragmentViewModel
@@ -9,18 +10,23 @@ import ru.practicum.android.diploma.presentation.team.TeamViewModel
 
 val viewModelModule = module {
     viewModel {
-        SearchJobViewModel(hhInteractor = get())
+        SearchJobViewModel(
+            hhInteractor = get()
+        )
     }
     viewModel {
         TeamViewModel()
     }
     viewModel {
-        FavoriteJobViewModel()
+        FavoriteJobViewModel(
+            interactor = get()
+        )
     }
     viewModel {
         DetailsFragmentViewModel(
             hhInteractor = get(),
-            vacancySharingInteractor = get()
+            favoritesInteractor = get(),
+            vacancySharingInteractor = get(),
         )
     }
 }

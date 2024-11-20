@@ -1,12 +1,16 @@
 package ru.practicum.android.diploma.ui.search
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,7 +29,8 @@ import ru.practicum.android.diploma.util.debounce
 
 class SearchJobFragment : Fragment() {
     private companion object {
-        const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val CLICK_DEBOUNCE_DELAY = 2000L
+
     }
 
     private var binding: FragmentSearchJobBinding? = null
@@ -49,6 +54,9 @@ class SearchJobFragment : Fragment() {
         initRecyclerView()
         observeViewModel()
         prepareOnItemClick()
+        binding?.filterImageButton?.setOnClickListener {
+            findNavController().navigate(R.id.action_searchJobFragment_to_filtrationFragment)
+        }
     }
 
     private fun prepareOnItemClick() {
@@ -79,7 +87,6 @@ class SearchJobFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-
                 if (s?.isEmpty() == true) {
                     viewModel.clearVacancies()
                 }
@@ -96,19 +103,18 @@ class SearchJobFragment : Fragment() {
         binding?.vacanciesRecyclerView?.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = vacancyAdapter
-
             scrollListener?.let { removeOnScrollListener(it) }
             scrollListener = object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val visibleItemCount = layoutManager.childCount // кол-во элементов на экране
-                    val totalItemCount = layoutManager.itemCount // сколько всего элементов в списке
-                    val positionFirst =
-                        layoutManager.findFirstVisibleItemPosition() // номер первого видимого элемента на экране
-
-                    if (visibleItemCount + positionFirst >= totalItemCount && positionFirst >= 0) {
-                        viewModel.loadNextPage()
+                    if (dy > 0) {
+                        val pos =
+                            (binding!!.vacanciesRecyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                        val itemsCount = vacancyAdapter.itemCount
+                        if (pos >= itemsCount - 1) {
+                            viewModel.loadNextPage()
+                            binding?.bottomProgressBar?.isVisible = true
+                        }
                     }
                 }
             }.also {
@@ -120,23 +126,38 @@ class SearchJobFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.vacanciesState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is VacanciesState.Loading -> showLoading()
+                is VacanciesState.Loading -> {
+                    if ((binding?.vacanciesRecyclerView?.childCount ?: 0) > 0) {
+                        binding?.bottomProgressBar?.isVisible = true
+                    } else {
+                        showTopProgressBar()
+                    }
+                    keyBoardVisibility(false)
+                }
+
                 is VacanciesState.Error -> {
-                    hideLoading()
+                    hideCentralProgressBar()
                     showError(state.responseState)
+                    keyBoardVisibility(false)
+
                 }
 
                 is VacanciesState.Success -> {
-                    hideLoading()
+                    hideCentralProgressBar()
                     updateRecyclerView(state.vacancies)
+                    keyBoardVisibility(false)
+                    binding?.bottomProgressBar?.isVisible = false
                 }
 
                 is VacanciesState.Empty -> {
-                    hideLoading()
+                    hideCentralProgressBar()
                     showEmptyState()
+                    keyBoardVisibility(false)
                 }
 
-                is VacanciesState.Hidden -> clearRecyclerView()
+                is VacanciesState.Hidden -> {
+                    clearRecyclerView()
+                }
             }
         }
     }
@@ -158,7 +179,7 @@ class SearchJobFragment : Fragment() {
         binding?.noJobsLayout?.visibility = View.GONE
     }
 
-    private fun showLoading() {
+    private fun showTopProgressBar() {
         binding?.progressBar?.visibility = View.VISIBLE
         binding?.searchLayout?.visibility = View.GONE
         binding?.errorLayout?.visibility = View.GONE
@@ -166,29 +187,42 @@ class SearchJobFragment : Fragment() {
         binding?.vacanciesRecyclerView?.visibility = View.GONE
     }
 
-    private fun hideLoading() {
+    private fun hideCentralProgressBar() {
         binding?.progressBar?.visibility = View.GONE
     }
 
     private fun showError(responseState: ResponseStatusCode?) {
-        binding?.vacanciesRecyclerView?.visibility = View.GONE
-        binding?.searchLayout?.visibility = View.GONE
-        binding?.noJobsLayout?.visibility = View.GONE
-
         when (responseState) {
-            null -> {}
             ResponseStatusCode.ERROR -> {
-                binding?.errorTv?.setText(R.string.server_error)
-                binding?.errorImage?.setImageResource(R.drawable.server_error_on_search_screen)
+                if ((binding?.vacanciesRecyclerView?.childCount ?: 0) > 0) {
+                    showResponseErrToast()
+                } else {
+                    binding?.searchLayout?.visibility = View.GONE
+                    binding?.noJobsLayout?.visibility = View.GONE
+                    binding?.vacanciesRecyclerView?.visibility = View.GONE
+                    binding?.errorTv?.setText(R.string.server_error)
+                    binding?.errorImage?.setImageResource(R.drawable.server_error_on_search_screen)
+                    binding?.errorLayout?.visibility = View.VISIBLE
+
+                }
             }
 
             ResponseStatusCode.NO_INTERNET -> {
-                binding?.errorTv?.setText(R.string.no_internet)
-                binding?.errorImage?.setImageResource(R.drawable.no_internet_placeholder)
+                if ((binding?.vacanciesRecyclerView?.childCount ?: 0) > 0) {
+                    showNoInternetToast()
+                } else {
+                    binding?.searchLayout?.visibility = View.GONE
+                    binding?.noJobsLayout?.visibility = View.GONE
+                    binding?.vacanciesRecyclerView?.visibility = View.GONE
+                    binding?.errorTv?.setText(R.string.no_internet)
+                    binding?.errorImage?.setImageResource(R.drawable.no_internet_placeholder)
+                    binding?.errorLayout?.visibility = View.VISIBLE
+
+                }
             }
+
             else -> {}
         }
-        binding?.errorLayout?.visibility = View.VISIBLE
     }
 
     private fun showEmptyState() {
@@ -208,6 +242,28 @@ class SearchJobFragment : Fragment() {
         onItemClick?.let {
             vacancyAdapter.onItemClick = it
         }
+    }
+
+    private fun showNoInternetToast() {
+        Toast.makeText(context, getString(R.string.no_internet_toast), Toast.LENGTH_LONG)
+            .show()
+        binding?.bottomProgressBar?.isVisible = false
+    }
+
+    private fun showResponseErrToast() {
+        Toast.makeText(context, getString(R.string.response_error_toast), Toast.LENGTH_LONG)
+            .show()
+        binding?.bottomProgressBar?.isVisible = false
+    }
+
+    private fun keyBoardVisibility(visibile: Boolean) {
+        val inputMethodManager =
+            requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+        when (visibile) {
+            true -> inputMethodManager?.showSoftInput(binding?.searchEditText, 0)
+            else -> inputMethodManager?.hideSoftInputFromWindow(binding?.searchEditText?.windowToken, 0)
+        }
+
     }
 
     override fun onDestroyView() {
