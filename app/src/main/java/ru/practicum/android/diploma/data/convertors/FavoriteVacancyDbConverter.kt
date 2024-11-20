@@ -23,7 +23,6 @@ class FavoriteVacancyDbConverter(
     private val gson: Gson
 ) {
 
-
     fun vacancyToEntity(vacancy: Vacancy): FavoritesVacancyEntity = FavoritesVacancyEntity(
         id = vacancy.id,
         name = vacancy.name,
@@ -44,9 +43,7 @@ class FavoriteVacancyDbConverter(
         url = vacancy.url
     )
 
-
     fun vacancyEntityToDomain(vacancyEntity: FavoritesVacancyEntity): Vacancy {
-
         fun <T> safeFromJson(json: String?, typeOfT: TypeToken<T>): T? {
             return try {
                 gson.fromJson(json, typeOfT.type)

@@ -88,7 +88,7 @@ class VacancyDtoConvertor {
         )
     }
 
-    fun ScheduleData.map(): Schedule {
+    private fun ScheduleData.map(): Schedule {
         return Schedule(
             this.id,
             this.name
@@ -105,7 +105,6 @@ class VacancyDtoConvertor {
             this.full
         )
     }
-
 
     private fun metroStationsMap(oldList: List<MetroStationsData>?): List<MetroStations>? {
         oldList?.let {
@@ -155,14 +154,12 @@ class VacancyDtoConvertor {
         )
     }
 
-
     private fun IndustryNestedData.map(): IndustryNested {
         return IndustryNested(
             this.id,
             this.name
         )
     }
-
 
     private fun IndustryData.map(): Industry {
         return Industry(
@@ -202,7 +199,6 @@ class VacancyDtoConvertor {
             this.original
         )
     }
-
 
     private fun SalaryData.map(): Salary {
         return Salary(

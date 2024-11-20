@@ -14,7 +14,6 @@ import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.debounce
 import java.net.SocketTimeoutException
 
-
 class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     // Кто будет выполнять задание на обработку ошибок, то сообщение будет на стр 132
     companion object {
