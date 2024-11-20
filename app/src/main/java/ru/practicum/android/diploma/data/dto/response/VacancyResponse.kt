@@ -35,4 +35,4 @@ class VacancyResponse(
     val description: String?,
     val schedule: ScheduleData?,
     @SerializedName("alternate_url") val url: String?,
-) : Response()
+    ) : Response()
