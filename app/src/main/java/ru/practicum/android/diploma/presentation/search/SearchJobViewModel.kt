@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.presentation.search
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -95,7 +96,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                         isLoading = false
                     }
                 } catch (e: SocketTimeoutException) {
-                    handleError(ResponseStatusCode.ERROR)
+                    handleErrorSocketTimeoutException(e)
                     this.coroutineContext.job.cancel()
                 }
             }
@@ -150,13 +151,16 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         }
     }
 
+    private fun handleErrorSocketTimeoutException(e: SocketTimeoutException) {
+        handleError(ResponseStatusCode.ERROR)
+        Log.e("SearchViewModel", "SocketTimeoutException, $e")
+    }
+
     private fun handleError(responseCode: ResponseStatusCode?) {
         pushVacanciesState(VacanciesState.Error(responseCode))
-
     }
 
     private fun handleEmptyQuery() {
         pushVacanciesState(VacanciesState.Empty)
-
     }
 }
