@@ -18,7 +18,6 @@ import ru.practicum.android.diploma.presentation.details.DetailsFragmentViewMode
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
 import ru.practicum.android.diploma.ui.root.RootActivity
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
-import ru.practicum.android.diploma.util.NetworkChecker
 import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.fillBy
 import ru.practicum.android.diploma.util.format
@@ -27,7 +26,6 @@ class DetailsFragment : Fragment() {
     private val viewModel: DetailsFragmentViewModel by viewModel()
     private var vacancyId: String? = null
     private var binding: FragmentDetailsBinding? = null
-    private lateinit var networkChecker: NetworkChecker
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +44,6 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         false.navBarVisible()
-        networkChecker = NetworkChecker(requireContext())
         prepareViewModel()
         getVacancyId()
         initViewModel()
@@ -101,11 +98,11 @@ class DetailsFragment : Fragment() {
     private fun renderError(errState: ResponseStatusCode) {
         when (errState) {
             ResponseStatusCode.ERROR -> {
-                binding?.errorLayout?.isVisible = true
+                binding?.errorServer?.isVisible = true
             }
 
             ResponseStatusCode.NO_INTERNET -> {
-                binding?.errorServer?.isVisible = true
+                binding?.errorLayout?.isVisible = true
             }
 
             ResponseStatusCode.OK -> {
@@ -143,11 +140,7 @@ class DetailsFragment : Fragment() {
 
 //        этот блок для отображения заглушки без интернета
         context?.let { context ->
-            if (networkChecker.isNetworkAvailable()) {
-                binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.original, context)
-            } else {
-                binding?.cardImage?.fillBy(null, context)
-            }
+            binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.original, context)
         }
     }
 

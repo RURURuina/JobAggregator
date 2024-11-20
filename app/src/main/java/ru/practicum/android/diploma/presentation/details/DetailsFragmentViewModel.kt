@@ -10,14 +10,12 @@ import ru.practicum.android.diploma.domain.api.hh.HhInteractor
 import ru.practicum.android.diploma.domain.api.sharing.VacancySharingInteractor
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
-import ru.practicum.android.diploma.util.NetworkChecker
 import ru.practicum.android.diploma.util.Resource
 
 class DetailsFragmentViewModel(
     private val hhInteractor: HhInteractor,
     private val favoritesInteractor: FavoritesInteractor,
     private val vacancySharingInteractor: VacancySharingInteractor,
-    private val networkChecker: NetworkChecker,
 ) : ViewModel() {
     private var vacancy: Vacancy? = null
     private val stateLiveData = MutableLiveData<DetailsFragmentState>()
@@ -35,20 +33,16 @@ class DetailsFragmentViewModel(
     // изменил на изначальную загрузку с бд
     fun start(id: String) {
         viewModelScope.launch {
-
             val isCached = favoritesInteractor.isFavoriteCheck(id)
             if (isCached) {
                 val cachedVacancy = favoritesInteractor.getFavoriteVacancyById(id)
-                cachedVacancy.let {
+                cachedVacancy?.let {
                     vacancy = it
                     renderState(DetailsFragmentState.Content(it))
                     _isFavoriteLiveData.postValue(vacancy?.isFavorite)
                 }
-            }
-
-            if (networkChecker.isNetworkAvailable()) {
-                val a = hhInteractor.searchVacanceById(id)
-                a.collect { resource: Resource<Vacancy> ->
+            } else {
+                hhInteractor.searchVacanceById(id).collect { resource: Resource<Vacancy> ->
                     resource.data?.let {
                         vacancy = it
                         renderState(DetailsFragmentState.Content(it))

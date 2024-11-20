@@ -22,7 +22,7 @@ class FavoritesInteractorImpl(val repository: FavoritesVacancyRepository) : Favo
         return repository.getFavoriteVacancies()
     }
 
-    override suspend fun getFavoriteVacancyById(id: String): Vacancy {
+    override suspend fun getFavoriteVacancyById(id: String): Vacancy? {
         return repository.getFavoriteVacancyById(id)
     }
 }

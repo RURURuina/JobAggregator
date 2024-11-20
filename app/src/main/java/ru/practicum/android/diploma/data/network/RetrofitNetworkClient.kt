@@ -10,6 +10,7 @@ import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
 import ru.practicum.android.diploma.data.dto.response.Response
 import ru.practicum.android.diploma.util.ResponseStatusCode
+import ru.practicum.android.diploma.util.isNetworkAvailable
 
 class RetrofitNetworkClient(
     private val hhService: HhApiService,
@@ -54,11 +55,6 @@ class RetrofitNetworkClient(
     }
 
     private fun isConnected(): Boolean {
-        val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-        val capabilities =
-            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        return (capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED))
+        return isNetworkAvailable(context)
     }
 }

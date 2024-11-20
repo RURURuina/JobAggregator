@@ -33,14 +33,14 @@ class FavoritesVacancyRepositoryImpl(
 
     }
 
-    override suspend fun getFavoriteVacancyById(id: String): Vacancy {
+    override suspend fun getFavoriteVacancyById(id: String): Vacancy? {
         val vacancyEntity = favoritesVacancyDao.getFavoriteVacancyById(id)
         return favoriteVacancyDbConverter.vacancyEntityToDomain(vacancyEntity)
 
     }
 
     private fun convertEntityToDomain(vacancies: List<FavoritesVacancyEntity>): List<Vacancy> {
-        return vacancies.map { vacancy -> favoriteVacancyDbConverter.vacancyEntityToDomain(vacancy) }
+        return vacancies.map { vacancy -> favoriteVacancyDbConverter.vacancyEntityToDomain(vacancy)!! }
     }
 }
 

@@ -43,27 +43,29 @@ class FavoriteVacancyDbConverter(
         url = vacancy.url
     )
 
-    fun vacancyEntityToDomain(vacancyEntity: FavoritesVacancyEntity): Vacancy {
-        return Vacancy(
-            id = vacancyEntity.id,
-            name = vacancyEntity.name,
-            employer = getEmployer(vacancyEntity),
-            salary = getSalary(vacancyEntity),
-            adress = getAddress(vacancyEntity),
-            experience = getExperience(vacancyEntity),
-            employment = getEmployment(vacancyEntity),
-            keySkills = getKeySkills(vacancyEntity),
-            languages = getLanguages(vacancyEntity),
-            driverLicenseTypes = getDriverLicenseTypes(vacancyEntity),
-            area = getArea(vacancyEntity),
-            industry = getIndustry(vacancyEntity),
-            country = getCountry(vacancyEntity),
-            contacts = getContacts(vacancyEntity),
-            description = vacancyEntity.description,
-            schedule = getSchedule(vacancyEntity),
-            url = vacancyEntity.url,
-            isFavorite = true
-        )
+    fun vacancyEntityToDomain(vacancyEntity: FavoritesVacancyEntity?): Vacancy? {
+        return vacancyEntity?.let {
+            Vacancy(
+                id = vacancyEntity.id,
+                name = vacancyEntity.name,
+                employer = getEmployer(vacancyEntity),
+                salary = getSalary(vacancyEntity),
+                adress = getAddress(vacancyEntity),
+                experience = getExperience(vacancyEntity),
+                employment = getEmployment(vacancyEntity),
+                keySkills = getKeySkills(vacancyEntity),
+                languages = getLanguages(vacancyEntity),
+                driverLicenseTypes = getDriverLicenseTypes(vacancyEntity),
+                area = getArea(vacancyEntity),
+                industry = getIndustry(vacancyEntity),
+                country = getCountry(vacancyEntity),
+                contacts = getContacts(vacancyEntity),
+                description = vacancyEntity.description,
+                schedule = getSchedule(vacancyEntity),
+                url = vacancyEntity.url,
+                isFavorite = true
+            )
+        }
     }
 
     private fun getEmployer(vacancyEntity: FavoritesVacancyEntity): Employer {
