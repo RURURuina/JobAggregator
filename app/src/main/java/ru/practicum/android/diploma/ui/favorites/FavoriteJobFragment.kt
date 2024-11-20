@@ -59,7 +59,6 @@ class FavoriteJobFragment : Fragment() {
     }
 
     private fun init() {
-
         vacancyAdapter = VacancyAdapter()
         binding?.favoritesRv?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding?.favoritesRv?.adapter = vacancyAdapter

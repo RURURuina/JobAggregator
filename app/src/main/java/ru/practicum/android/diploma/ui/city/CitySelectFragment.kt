@@ -1,13 +1,13 @@
 package ru.practicum.android.diploma.ui.city
 
-import androidx.fragment.app.viewModels
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ru.practicum.android.diploma.presentation.city.CitySelectViewModel
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.presentation.city.CitySelectViewModel
 
 class CitySelectFragment : Fragment() {
 
@@ -17,14 +17,9 @@ class CitySelectFragment : Fragment() {
 
     private val viewModel: CitySelectViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
-    }
-
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         return inflater.inflate(R.layout.fragment_city_select, container, false)
