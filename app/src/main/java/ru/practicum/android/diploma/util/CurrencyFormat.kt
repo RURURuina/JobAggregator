@@ -26,15 +26,25 @@ private val currencySymbols = mapOf(
 )
 
 fun Salary?.format(): String {
-    val numberFormat = DecimalFormat("#,###").apply {
+    return this?.let {
+        "${this.from?.formattedFrom()}${this.to?.formattedTo()} ${this.currency.currencySymbol()}"
+    } ?: "Зарплата не указана"
+}
+
+private fun Int.numberFormater(): String {
+    return DecimalFormat("#,###").apply {
         decimalFormatSymbols = DecimalFormatSymbols(Locale.getDefault()).apply {
             groupingSeparator = ' '
         }
-    }
-    val currencySymbol = currencySymbols[this?.currency] ?: this?.currency.orEmpty()
-    val formattedFrom = this?.from?.let { "от ${numberFormat.format(it)}" } ?: ""
-    val formattedTo = this?.to?.let { " до ${numberFormat.format(it)}" } ?: ""
-    return this?.let {
-        "$formattedFrom$formattedTo $currencySymbol"
-    } ?: "Зарплата не указана"
+    }.format(this)
+}
+private fun String?.currencySymbol():String{
+    return currencySymbols[this] ?: this.orEmpty()
+}
+
+private fun Int?.formattedFrom():String{
+    return this?.let { "от ${it.numberFormater()}" } ?: ""
+}
+private fun Int?.formattedTo():String{
+    return this?.let { " до ${it.numberFormater()}" } ?: ""
 }
