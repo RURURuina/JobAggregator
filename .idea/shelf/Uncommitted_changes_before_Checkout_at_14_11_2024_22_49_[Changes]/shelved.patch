@@ -1,0 +1,131 @@
+Index: app/src/main/java/ru/practicum/android/diploma/ui/search/SearchJobFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.ui.search\r\n\r\nimport android.os.Bundle\r\nimport android.text.Editable\r\nimport android.text.TextWatcher\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.fragment.app.Fragment\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport org.koin.androidx.viewmodel.ext.android.viewModel\r\nimport ru.practicum.android.diploma.R\r\nimport ru.practicum.android.diploma.databinding.FragmentSearchJobBinding\r\nimport ru.practicum.android.diploma.domain.models.entity.Vacancy\r\nimport ru.practicum.android.diploma.presentation.search.SearchJobViewModel\r\nimport ru.practicum.android.diploma.ui.search.adapters.VacancyAdapter\r\nimport ru.practicum.android.diploma.ui.search.models.VacanciesState\r\n\r\nclass SearchJobFragment : Fragment() {\r\n\r\n    private var binding: FragmentSearchJobBinding? = null\r\n    private val viewModel: SearchJobViewModel by viewModel()\r\n    private val vacancyAdapter = VacancyAdapter()\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater,\r\n        container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        binding = FragmentSearchJobBinding.inflate(layoutInflater)\r\n        return binding?.root\r\n    }\r\n\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n        initEditText()\r\n        initRecyclerView()\r\n        observeViewModel()\r\n    }\r\n\r\n    private fun initEditText() {\r\n        binding?.searchEditText?.addTextChangedListener(object : TextWatcher {\r\n            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {\r\n                // функция не используется\r\n            }\r\n\r\n            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {\r\n                updateSearchIcon(s.isNullOrEmpty())\r\n                viewModel.searchVacancies(s.toString())\r\n            }\r\n\r\n            override fun afterTextChanged(s: Editable?) {\r\n                // функция не используется\r\n            }\r\n        })\r\n\r\n        binding?.clearSearchButton?.setOnClickListener {\r\n            binding?.searchEditText?.text?.clear()\r\n            viewModel.clearVacancies()\r\n        }\r\n    }\r\n\r\n    private fun initRecyclerView() {\r\n        binding?.vacanciesRecyclerView?.apply {\r\n            layoutManager = LinearLayoutManager(context)\r\n            adapter = vacancyAdapter\r\n        }\r\n    }\r\n\r\n    private fun observeViewModel() {\r\n        viewModel.vacanciesState.observe(viewLifecycleOwner) { state ->\r\n            when (state) {\r\n                is VacanciesState.Loading -> showLoading()\r\n                is VacanciesState.Error -> {\r\n                    hideLoading()\r\n                    showError(state.message)\r\n                }\r\n\r\n                is VacanciesState.Success -> {\r\n                    hideLoading()\r\n                    updateRecyclerView(state.vacancies)\r\n                }\r\n\r\n                is VacanciesState.Empty -> {\r\n                    hideLoading()\r\n                    showEmptyState()\r\n                }\r\n\r\n                is VacanciesState.Hidden -> clearRecyclerView()\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun clearRecyclerView() {\r\n        updateRecyclerView(emptyList())\r\n        showHiddenState()\r\n    }\r\n\r\n    private fun updateSearchIcon(isEmpty: Boolean) {\r\n        binding?.clearSearchButton?.setImageResource(\r\n            if (isEmpty) R.drawable.search_24px else R.drawable.close_24px\r\n        )\r\n    }\r\n\r\n    private fun showHiddenState() {\r\n        binding?.searchLayout?.visibility = View.VISIBLE\r\n        binding?.noInternetLayout?.visibility = View.GONE\r\n        binding?.noJobsLayout?.visibility = View.GONE\r\n    }\r\n\r\n    private fun showLoading() {\r\n        binding?.progressBar?.visibility = View.VISIBLE\r\n        binding?.searchLayout?.visibility = View.GONE\r\n        binding?.noInternetLayout?.visibility = View.GONE\r\n        binding?.noJobsLayout?.visibility = View.GONE\r\n    }\r\n\r\n    private fun hideLoading() {\r\n        binding?.progressBar?.visibility = View.GONE\r\n    }\r\n\r\n    private fun showError(errorMessage: Int) {\r\n        binding?.vacanciesRecyclerView?.visibility = View.GONE\r\n        binding?.searchLayout?.visibility = View.GONE\r\n        binding?.noJobsLayout?.visibility = View.GONE\r\n        binding?.noInternetLayout?.visibility = View.VISIBLE\r\n    }\r\n\r\n    private fun showEmptyState() {\r\n        binding?.vacanciesRecyclerView?.visibility = View.GONE\r\n        binding?.searchLayout?.visibility = View.GONE\r\n        binding?.noInternetLayout?.visibility = View.GONE\r\n        binding?.noJobsLayout?.visibility = View.VISIBLE\r\n\r\n    }\r\n\r\n    private fun updateRecyclerView(vacancies: List<Vacancy>) {\r\n        binding?.vacanciesRecyclerView?.visibility = View.VISIBLE\r\n        binding?.noJobsLayout?.visibility = View.GONE\r\n        binding?.searchLayout?.visibility = View.GONE\r\n        binding?.noInternetLayout?.visibility = View.GONE\r\n        vacancyAdapter.submitList(vacancies)\r\n    }\r\n\r\n    override fun onDestroyView() {\r\n        super.onDestroyView()\r\n        binding = null\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/ui/search/SearchJobFragment.kt b/app/src/main/java/ru/practicum/android/diploma/ui/search/SearchJobFragment.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/ui/search/SearchJobFragment.kt	(revision b6534086cd9d8d32808bc1cf99c1cf3c2129fe72)
++++ b/app/src/main/java/ru/practicum/android/diploma/ui/search/SearchJobFragment.kt	(date 1731607072874)
+@@ -46,11 +46,16 @@
+ 
+             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                 updateSearchIcon(s.isNullOrEmpty())
+-                viewModel.searchVacancies(s.toString())
++                updateRecyclerView(emptyList())
++                viewModel.searchDebounce(s.toString())
++
+             }
+ 
+             override fun afterTextChanged(s: Editable?) {
+                 // функция не используется
++                if (s?.isEmpty() == true) {
++                    clearRecyclerView()
++                }
+             }
+         })
+ 
+@@ -113,6 +118,7 @@
+         binding?.searchLayout?.visibility = View.GONE
+         binding?.noInternetLayout?.visibility = View.GONE
+         binding?.noJobsLayout?.visibility = View.GONE
++        binding?.vacanciesRecyclerView?.visibility = View.GONE
+     }
+ 
+     private fun hideLoading() {
+Index: app/src/main/java/ru/practicum/android/diploma/presentation/search/SearchJobViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.presentation.search\r\n\r\nimport androidx.lifecycle.LiveData\r\nimport androidx.lifecycle.MutableLiveData\r\nimport androidx.lifecycle.ViewModel\r\nimport androidx.lifecycle.viewModelScope\r\nimport kotlinx.coroutines.Job\r\nimport kotlinx.coroutines.delay\r\nimport kotlinx.coroutines.launch\r\nimport ru.practicum.android.diploma.R\r\nimport ru.practicum.android.diploma.domain.api.HhInteractor\r\nimport ru.practicum.android.diploma.ui.search.models.VacanciesState\r\nimport ru.practicum.android.diploma.util.Resource\r\n\r\nclass SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {\r\n\r\n    companion object {\r\n        private const val DEBOUNCE_TIME = 2000L\r\n    }\r\n\r\n    private val _vacanciesState = MutableLiveData<VacanciesState>()\r\n    val vacanciesState: LiveData<VacanciesState> = _vacanciesState\r\n\r\n    private var searchJob: Job? = null\r\n\r\n    init {\r\n        clearVacancies()\r\n    }\r\n\r\n    fun clearVacancies() {\r\n        pushVacanciesState(VacanciesState.Hidden)\r\n    }\r\n\r\n    // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor\r\n    fun searchVacancies(query: String) {\r\n        if (query.isNotBlank()) {\r\n            searchJob?.cancel()\r\n            pushVacanciesState(VacanciesState.Loading)\r\n            searchJob = viewModelScope.launch {\r\n                delay(DEBOUNCE_TIME) // Реализован debounce 2 сек\r\n                hhInteractor\r\n                    .getVacancies(hashMapOf(\"text\" to query))\r\n                    .collect { result ->\r\n                        when (result) {\r\n                            is Resource.Success -> {\r\n                                val data = result.data ?: emptyList()\r\n                                if (data.isEmpty()) {\r\n                                    pushVacanciesState(VacanciesState.Empty)\r\n                                } else {\r\n                                    pushVacanciesState(VacanciesState.Success(data))\r\n                                }\r\n                            }\r\n                            is Resource.Error -> {\r\n                                pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))\r\n                            }\r\n                        }\r\n\r\n                    }\r\n            }\r\n        } else {\r\n            pushVacanciesState(VacanciesState.Empty)\r\n        }\r\n    }\r\n\r\n    private fun pushVacanciesState(state: VacanciesState) {\r\n        _vacanciesState.postValue(state)\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/presentation/search/SearchJobViewModel.kt b/app/src/main/java/ru/practicum/android/diploma/presentation/search/SearchJobViewModel.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/presentation/search/SearchJobViewModel.kt	(revision b6534086cd9d8d32808bc1cf99c1cf3c2129fe72)
++++ b/app/src/main/java/ru/practicum/android/diploma/presentation/search/SearchJobViewModel.kt	(date 1731604387134)
+@@ -5,6 +5,7 @@
+ import androidx.lifecycle.ViewModel
+ import androidx.lifecycle.viewModelScope
+ import kotlinx.coroutines.Job
++import kotlinx.coroutines.cancel
+ import kotlinx.coroutines.delay
+ import kotlinx.coroutines.launch
+ import ru.practicum.android.diploma.R
+@@ -21,6 +22,7 @@
+     private val _vacanciesState = MutableLiveData<VacanciesState>()
+     val vacanciesState: LiveData<VacanciesState> = _vacanciesState
+ 
++    private var lastSearchText: String? = null
+     private var searchJob: Job? = null
+ 
+     init {
+@@ -31,13 +33,25 @@
+         pushVacanciesState(VacanciesState.Hidden)
+     }
+ 
+-    // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
+-    fun searchVacancies(query: String) {
+-        if (query.isNotBlank()) {
+-            searchJob?.cancel()
+-            pushVacanciesState(VacanciesState.Loading)
+-            searchJob = viewModelScope.launch {
+-                delay(DEBOUNCE_TIME) // Реализован debounce 2 сек
++    fun searchDebounce(changedText: String) {
++        if (lastSearchText == changedText) {
++            return
++        }
++        lastSearchText = changedText
++        searchJob?.cancel()
++        searchJob = viewModelScope.launch {
++            delay(DEBOUNCE_TIME)   // Реализован debounce 2 сек
++            searchVacancies(changedText)
++        }
++    }
++
++    // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
++    private fun searchVacancies(query: String) {
++        if (query.isNotEmpty()) {
++            pushVacanciesState(VacanciesState.Loading)
++
++            viewModelScope.launch {
++
+                 hhInteractor
+                     .getVacancies(hashMapOf("text" to query))
+                     .collect { result ->
+@@ -50,6 +64,7 @@
+                                     pushVacanciesState(VacanciesState.Success(data))
+                                 }
+                             }
++
+                             is Resource.Error -> {
+                                 pushVacanciesState(VacanciesState.Error(result.message ?: R.string.no_internet))
+                             }
+@@ -57,8 +72,8 @@
+ 
+                     }
+             }
+-        } else {
+-            pushVacanciesState(VacanciesState.Empty)
++//        } else {
++//            pushVacanciesState(VacanciesState.Empty)
+         }
+     }
+ 
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># IntelliJ\r\n*.iml\r\n/.idea/caches\r\n/.idea/libraries\r\n/.idea/modules.xml\r\n/.idea/workspace.xml\r\n/.idea/navEditor.xml\r\n/.idea/assetWizardSettings.xml\r\n/.idea/kotlinc.xml\r\n/.idea/gradle.xml\r\n/.idea/compiler.xml\r\n/.idea/misc.xml\r\n\r\n# Gradle files\r\n.gradle/\r\nbuild/\r\nout/\r\n\r\n# Local configuration file (sdk path, etc)\r\nlocal.properties\r\ndevelop.properties\r\n\r\n# Gradle-profiler data\r\nprofile-out*/\r\ngradle-user-home/\r\n*.hprof\r\n\r\n# Android Studio generated files and folders\r\ncaptures/\r\n.externalNativeBuild/\r\n.cxx/\r\noutput.json\r\n\r\n# Built application files\r\n*.apk\r\n*.aar\r\n*.ap_\r\n*.aab\r\n\r\n# Keystore files\r\n*.jks\r\n*.keystore\r\n\r\n# Google Services (e.g. APIs or Firebase)\r\ngoogle-services.json\r\n\r\n# OS specific\r\n.DS_Store\r\n*.log\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.gitignore b/.gitignore
+--- a/.gitignore	(revision b6534086cd9d8d32808bc1cf99c1cf3c2129fe72)
++++ b/.gitignore	(date 1731487291400)
+@@ -1,4 +1,6 @@
+ # IntelliJ
++**/.idea/
++
+ *.iml
+ /.idea/caches
+ /.idea/libraries

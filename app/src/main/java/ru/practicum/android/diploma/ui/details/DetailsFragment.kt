@@ -18,6 +18,7 @@ import ru.practicum.android.diploma.presentation.details.DetailsFragmentViewMode
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
 import ru.practicum.android.diploma.ui.root.RootActivity
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
+import ru.practicum.android.diploma.util.NetworkChecker
 import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.fillBy
 import ru.practicum.android.diploma.util.format
@@ -26,6 +27,7 @@ class DetailsFragment : Fragment() {
     private val viewModel: DetailsFragmentViewModel by viewModel()
     private var vacancyId: String? = null
     private var binding: FragmentDetailsBinding? = null
+    private lateinit var networkChecker: NetworkChecker
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,12 +46,17 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         false.navBarVisible()
+        networkChecker = NetworkChecker(requireContext())
         prepareViewModel()
         getVacancyId()
         initViewModel()
         prepareBackButton()
         prepareLikeButton()
         prepareShareButton()
+
+        viewModel.isFavoriteLiveData.observe(viewLifecycleOwner) { isFavorite ->
+            binding?.toolbarLikeButton?.isSelected = isFavorite
+        }
     }
 
     private fun prepareShareButton() {
@@ -60,7 +67,7 @@ class DetailsFragment : Fragment() {
 
     private fun prepareLikeButton() {
         binding?.toolbarLikeButton?.setOnClickListener {
-            binding?.toolbarLikeButton?.isSelected?.vacancyLiked()
+            viewModel.likeButton()
         }
     }
 
@@ -133,7 +140,15 @@ class DetailsFragment : Fragment() {
     private fun fillEmployer(vacancy: Vacancy) {
         binding?.cardTitleText?.text = vacancy.employer?.name
         binding?.cardCityText?.text = vacancy.adress?.full ?: vacancy.area?.name
-        context?.let { binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.original, it) }
+
+//        этот блок для отображения заглушки без интернета
+        context?.let { context ->
+            if (networkChecker.isNetworkAvailable()) {
+                binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.original, context)
+            } else {
+                binding?.cardImage?.fillBy(null, context)
+            }
+        }
     }
 
     private fun fillEmployment(vacancy: Vacancy?) {
@@ -169,11 +184,6 @@ class DetailsFragment : Fragment() {
 
     private fun getVacancyId() {
         vacancyId = arguments?.getString(VACANCY_TRANSFER_KEY)
-    }
-
-    private fun Boolean.vacancyLiked() {
-        binding?.toolbarLikeButton?.isSelected = !this
-        viewModel.likeButton()
     }
 
     private fun Boolean.navBarVisible() {
