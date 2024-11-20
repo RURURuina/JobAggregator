@@ -21,9 +21,8 @@ import ru.practicum.android.diploma.domain.models.entity.Schedule
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 
 class FavoriteVacancyDbConverter(
-    private val gson: Gson
+    private val gson: Gson,
 ) {
-
     fun vacancyToEntity(vacancy: Vacancy): FavoritesVacancyEntity = FavoritesVacancyEntity(
         id = vacancy.id,
         name = vacancy.name,
