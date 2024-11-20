@@ -75,7 +75,6 @@ class FavoriteVacancyDbConverter(
         )
     }
 
-
     private fun getSalary(vacancyEntity: FavoritesVacancyEntity): Salary {
         return safeFromJson(vacancyEntity.salary, object : TypeToken<Salary>() {}) ?: Salary(
             null,
