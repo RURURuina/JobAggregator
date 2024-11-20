@@ -82,11 +82,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
 
     private fun loadVacancies() {
         isLoading = true
-        val params = hashMapOf(
-            "text" to currentQuery,
-            "page" to currentPage.toString(),
-            "per_page" to PAGE_SIZE.toString()
-        )
+        val params = createParams()
         if (currentPage == 0) {
             pushVacanciesState(VacanciesState.Loading)
         }
@@ -95,36 +91,18 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                 isLoading = true
                 try {
                     hhInteractor.getVacancies(params).collect { result ->
-                        when (result) {
-                            is Resource.Success -> {
-                                val newVacancies = result.data ?: emptyList()
-                                isLastPage = newVacancies.size < PAGE_SIZE
-                                if (newVacancies.isEmpty()) {
-                                    VacanciesState.Empty
-                                } else {
-                                    vacanciesList.addAll(newVacancies)
-                                    pushVacanciesState(
-                                        VacanciesState.Success(
-                                            vacancies = vacanciesList.toList(),
-                                            isLastPage = isLastPage,
-                                            isLoading = false
-                                        )
-                                    )
-                                }
-                            }
-
-                            is Resource.Error -> {
-                                pushVacanciesState(VacanciesState.Error(result.responseCode))
-                            }
-                        }
+                        handleResult(result)
                         isLoading = false
                     }
                 } catch (e: SocketTimeoutException) {
-                    pushVacanciesState(VacanciesState.Error(ResponseStatusCode.ERROR))
+                    handleError(ResponseStatusCode.ERROR)
                     this.coroutineContext.job.cancel()
                 }
             }
+        } else {
+            handleEmptyQuery()
         }
+
     }
 
     fun searchDebounce(changedText: String?) {
@@ -138,5 +116,47 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         if (!isLoading && !isLastPage && currentQuery.isNotBlank()) {
             loadDebounce(currentPage++)
         }
+    }
+
+    private fun createParams(): HashMap<String, String> {
+        return hashMapOf(
+            "text" to currentQuery,
+            "page" to currentPage.toString(),
+            "per_page" to PAGE_SIZE.toString()
+        )
+    }
+
+    private fun handleResult(result: Resource<List<Vacancy>>) {
+        when (result) {
+            is Resource.Success -> handleSuccess(result.data)
+            is Resource.Error -> handleError(result.responseCode)
+        }
+    }
+
+    private fun handleSuccess(data: List<Vacancy>?) {
+        val newVacancies = data ?: emptyList()
+        isLastPage = newVacancies.size < PAGE_SIZE
+        if (newVacancies.isEmpty()) {
+            VacanciesState.Empty
+        } else {
+            vacanciesList.addAll(newVacancies)
+            pushVacanciesState(
+                VacanciesState.Success(
+                    vacancies = vacanciesList.toList(),
+                    isLastPage = isLastPage,
+                    isLoading = false
+                )
+            )
+        }
+    }
+
+    private fun handleError(responseCode: ResponseStatusCode?) {
+        pushVacanciesState(VacanciesState.Error(responseCode))
+
+    }
+
+    private fun handleEmptyQuery() {
+        pushVacanciesState(VacanciesState.Empty)
+
     }
 }
