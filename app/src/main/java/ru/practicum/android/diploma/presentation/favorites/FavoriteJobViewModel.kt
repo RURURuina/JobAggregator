@@ -29,7 +29,7 @@ class FavoriteJobViewModel(
                             R.string.couldnt_get_job_list
                         )
                     )
-                }   // обработка ошибок
+                } // обработка ошибок
                 .collect { vacancies ->
                     showData(vacancies)
                 }

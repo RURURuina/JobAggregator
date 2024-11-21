@@ -1,9 +1,9 @@
 package ru.practicum.android.diploma.ui.country
 
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.view.View
 import android.view.ViewGroup
 import ru.practicum.android.diploma.R
@@ -15,7 +15,7 @@ class SelectCountryFragment : Fragment() {
         fun newInstance() = SelectCountryFragment()
     }
 
-    private val viewModel: SelectCountryViewModel by viewModels()
+    private val viewModel: SelectCountryViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

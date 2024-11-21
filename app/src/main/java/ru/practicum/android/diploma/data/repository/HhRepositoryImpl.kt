@@ -55,7 +55,7 @@ class HhRepositoryImpl(
             }
 
             is ResponseStatusCode.OK -> {
-                val resultRaw = (response as VacancyResponse)
+                val resultRaw = response as VacancyResponse
                 emit(
                     Resource.Success(vacancyDtoConvertor.run { map(resultRaw) })
                 )
