@@ -8,14 +8,7 @@ import ru.practicum.android.diploma.util.Resource
 
 class HhInteractorImpl(val hhRepository: HhRepository) : HhInteractor {
     override suspend fun getVacancies(expression: HashMap<String, String>): Flow<Resource<List<Vacancy>>?> {
-
-       val s =   hhRepository.getVacancies(expression)
-        s.collect{
-            it?.data?.map {vacancy ->
-                println(vacancy)
-            }
-        }
-        return s
+        return hhRepository.getVacancies(expression)
     }
 
     override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy?>> {

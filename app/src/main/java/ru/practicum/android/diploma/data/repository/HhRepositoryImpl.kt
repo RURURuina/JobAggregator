@@ -28,7 +28,8 @@ class HhRepositoryImpl(
             }
 
             is ResponseStatusCode.OK -> {
-                emit(Resource.Success(
+                emit(
+                    Resource.Success(
                     (response as VacanciesResponse).vacancies.let {
                         it.map { vacancyData: VacancyData ->
                             println(vacancyData.id)
@@ -51,7 +52,6 @@ class HhRepositoryImpl(
 
     override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy?>> = flow {
         val response = networkClient.getVacancyById(VacancyByIdRequest(id))
-        println("Response "+response.resultCode)
         when (response.resultCode) {
             is ResponseStatusCode.NO_INTERNET -> {
                 emit(Resource.Error(ResponseStatusCode.NO_INTERNET))
@@ -60,8 +60,9 @@ class HhRepositoryImpl(
             is ResponseStatusCode.OK -> {
                 (response as VacancyResponse).vacancyData?.let {
                     emit(
-                        Resource.Success(vacancyDtoConvertor.run { println(it)
-                            map(it) })
+                        Resource.Success(vacancyDtoConvertor.run {
+                            map(it)
+                        })
                     )
                 } ?: emit(Resource.Error(ResponseStatusCode.ERROR))
 
