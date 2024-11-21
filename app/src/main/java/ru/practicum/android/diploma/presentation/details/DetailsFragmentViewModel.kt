@@ -42,11 +42,11 @@ class DetailsFragmentViewModel(
                     _isFavoriteLiveData.postValue(vacancy?.isFavorite)
                 }
             } else {
-                hhInteractor.searchVacanceById(id).collect { resource: Resource<Vacancy> ->
+                hhInteractor.searchVacanceById(id).collect { resource: Resource<Vacancy?> ->
                     resource.data?.let {
                         vacancy = it
                         renderState(DetailsFragmentState.Content(it))
-                    } ?: renderState(DetailsFragmentState.ERROR(resource.responseCode!!))
+                    } ?: renderState(DetailsFragmentState.ERROR(resource.responseCode))
                 }
             }
         }

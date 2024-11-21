@@ -95,7 +95,7 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    private fun renderError(errState: ResponseStatusCode) {
+    private fun renderError(errState: ResponseStatusCode?) {
         when (errState) {
             ResponseStatusCode.ERROR -> {
                 binding?.errorServer?.isVisible = true
@@ -107,6 +107,10 @@ class DetailsFragment : Fragment() {
 
             ResponseStatusCode.OK -> {
                 /*наследие sealed classa*/
+            }
+
+            else -> {
+                binding?.errorServer?.isVisible = true
             }
         }
     }

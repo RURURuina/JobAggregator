@@ -94,6 +94,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                     hhInteractor.getVacancies(params).collect { result ->
                         handleResult(result)
                         isLoading = false
+                        println(result)
                     }
                 } catch (e: SocketTimeoutException) {
                     handleErrorSocketTimeoutException(e)
@@ -127,14 +128,18 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         )
     }
 
-    private fun handleResult(result: Resource<List<Vacancy>>) {
+    private fun handleResult(result: Resource<List<Vacancy>>?) {
         when (result) {
             is Resource.Success -> handleSuccess(result.data)
             is Resource.Error -> handleError(result.responseCode)
+            else -> {
+                handleError(result?.responseCode)
+            }
         }
     }
 
     private fun handleSuccess(data: List<Vacancy>?) {
+        println(data)
         val newVacancies = data ?: emptyList()
         isLastPage = newVacancies.size < PAGE_SIZE
         if (newVacancies.isEmpty()) {

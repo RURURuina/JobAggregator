@@ -19,7 +19,7 @@ class HhRepositoryImpl(
     private val vacancyDtoConvertor: VacancyDtoConvertor,
 ) : HhRepository {
 
-    override suspend fun getVacancies(expression: HashMap<String, String>): Flow<Resource<List<Vacancy>>> = flow {
+    override suspend fun getVacancies(expression: HashMap<String, String>): Flow<Resource<List<Vacancy>>?> = flow {
         val response = networkClient.getVacancies(VacanciesSearchRequest(expression))
 
         when (response.resultCode) {
@@ -28,12 +28,14 @@ class HhRepositoryImpl(
             }
 
             is ResponseStatusCode.OK -> {
-                emit(
-                    Resource.Success(
-                        (response as VacanciesResponse).vacancies!!.map { vacancyData: VacancyData ->
+                emit(Resource.Success(
+                    (response as VacanciesResponse).vacancies.let {
+                        it.map { vacancyData: VacancyData ->
+                            println(vacancyData.id)
                             vacancyDtoConvertor.map(vacancyData)
                         }
-                    )
+                    }
+                )
                 )
             }
 
@@ -47,18 +49,22 @@ class HhRepositoryImpl(
         }
     }
 
-    override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy>> = flow {
+    override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy?>> = flow {
         val response = networkClient.getVacancyById(VacancyByIdRequest(id))
+        println("Response "+response.resultCode)
         when (response.resultCode) {
             is ResponseStatusCode.NO_INTERNET -> {
                 emit(Resource.Error(ResponseStatusCode.NO_INTERNET))
             }
 
             is ResponseStatusCode.OK -> {
-                val resultRaw = response as VacancyResponse
-                emit(
-                    Resource.Success(vacancyDtoConvertor.run { map(resultRaw) })
-                )
+                (response as VacancyResponse).vacancyData?.let {
+                    emit(
+                        Resource.Success(vacancyDtoConvertor.run { println(it)
+                            map(it) })
+                    )
+                } ?: emit(Resource.Error(ResponseStatusCode.ERROR))
+
             }
 
             is ResponseStatusCode.ERROR -> {
