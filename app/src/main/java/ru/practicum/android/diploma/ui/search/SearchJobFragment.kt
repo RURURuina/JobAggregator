@@ -108,15 +108,15 @@ class SearchJobFragment : Fragment() {
             scrollListener = object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val visibleItemCount = layoutManager.childCount // кол-во элементов на экране
-                    val totalItemCount = layoutManager.itemCount // сколько всего элементов в списке
-                    val positionFirst =
-                        layoutManager.findFirstVisibleItemPosition() // номер первого видимого элемента на экране
-
-                    if (visibleItemCount + positionFirst >= totalItemCount && positionFirst >= 0) {
-                        binding?.bottomProgressBar?.isVisible = true
-                        viewModel.loadNextPage()
+                    if (dy > 0) {
+                        val pos =
+                            (binding!!.vacanciesRecyclerView.layoutManager as LinearLayoutManager)
+                                .findLastVisibleItemPosition()
+                        val itemsCount = vacancyAdapter.itemCount
+                        if (pos >= itemsCount - 1) {
+                            viewModel.loadNextPage()
+                            binding?.bottomProgressBar?.isVisible = true
+                        }
                     }
                 }
             }.also {
