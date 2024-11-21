@@ -12,6 +12,8 @@
         <item name="android:statusBarColor">@color/white_universal</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorSurface">@color/light_gray</item>
+        <item name="editTextBgColor">@color/light_gray</item>
+        <item name="editTextHintColor">@color/gray</item>
     </style>
 
     <style name="BottomNavigationTheme" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
