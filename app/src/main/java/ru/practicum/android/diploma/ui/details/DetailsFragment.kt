@@ -1,11 +1,10 @@
 package ru.practicum.android.diploma.ui.details
 
-import android.content.Context.INPUT_METHOD_SERVICE
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.text.Html
+import androidx.core.bundle.Bundle
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController

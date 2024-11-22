@@ -1,11 +1,11 @@
 package ru.practicum.android.diploma.ui.country
 
-import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.bundle.Bundle
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.presentation.country.SelectCountryViewModel
 
