@@ -1,13 +1,14 @@
 package ru.practicum.android.diploma.ui.filtration
 
-import androidx.fragment.app.Fragment
+
+import android.os.Bundle
 import android.view.LayoutInflater
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.bundle.Bundle
-import ru.practicum.android.diploma.presentation.filtration.FiltrationViewModel
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.presentation.filtration.FiltrationViewModel
 
 class FiltrationFragment : Fragment() {
 
@@ -15,7 +16,7 @@ class FiltrationFragment : Fragment() {
         fun newInstance() = FiltrationFragment()
     }
 
-    private val viewModel: FiltrationViewModel by viewModel()
+    private val viewModel: FiltrationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
