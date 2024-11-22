@@ -19,17 +19,17 @@ class RetrofitNetworkClient(
         return withContext(Dispatchers.IO) {
             if (!isConnected()) {
                 // если нет интернета возврат
-                Response().apply { resultCode = ResponseStatusCode.NO_INTERNET }
+                Response().apply { resultCode = ResponseStatusCode.NoContent }
             } else {
                 withContext(Dispatchers.IO) {
                     try {
                         val response = hhService.searchVacancies(
                             dto.expression
                         )
-                        response.apply { resultCode = ResponseStatusCode.OK }
+                        response.apply { resultCode = ResponseStatusCode.Ok }
                     } catch (e: HttpException) {
                         println(e)
-                        Response().apply { resultCode = ResponseStatusCode.ERROR }
+                        Response().apply { resultCode = ResponseStatusCode.Error }
                     }
                 }
             }
@@ -39,7 +39,7 @@ class RetrofitNetworkClient(
     override suspend fun getVacancyById(dto: VacancyByIdRequest): Response {
         if (!isConnected()) {
             // если нет интернета возврат -1
-            return Response().apply { resultCode = ResponseStatusCode.NO_INTERNET }
+            return Response().apply { resultCode = ResponseStatusCode.NoContent }
         } else {
             return withContext(Dispatchers.IO) {
                 try {
@@ -47,10 +47,10 @@ class RetrofitNetworkClient(
                         hhService.searchVacancyById(
                             dto.id
                         )
-                    ).apply { resultCode = ResponseStatusCode.OK }
+                    ).apply { resultCode = ResponseStatusCode.Ok }
                 } catch (e: HttpException) {
                     println(e)
-                    Response().apply { resultCode = ResponseStatusCode.ERROR }
+                    Response().apply { resultCode = ResponseStatusCode.Error }
                 }
             }
         }

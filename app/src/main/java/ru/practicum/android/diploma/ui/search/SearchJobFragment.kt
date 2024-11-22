@@ -196,7 +196,7 @@ class SearchJobFragment : Fragment() {
 
     private fun showError(responseState: ResponseStatusCode?) {
         when (responseState) {
-            ResponseStatusCode.ERROR -> {
+            ResponseStatusCode.Error -> {
                 val itemsCount = binding?.vacanciesRecyclerView?.childCount ?: 0
                 if (itemsCount > 0) {
                     showResponseErrToast()
@@ -211,7 +211,7 @@ class SearchJobFragment : Fragment() {
                 }
             }
 
-            ResponseStatusCode.NO_INTERNET -> {
+            ResponseStatusCode.NoContent -> {
                 val itemsCount = binding?.vacanciesRecyclerView?.childCount ?: 0
                 if (itemsCount > 0) {
                     showNoInternetToast()

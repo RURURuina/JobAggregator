@@ -25,7 +25,6 @@ import ru.practicum.android.diploma.util.format
 
 class DetailsFragment : Fragment() {
     private val viewModel: DetailsFragmentViewModel by viewModel()
-    private var vacancyId: String? = null
     private var binding: FragmentDetailsBinding? = null
 
     override fun onCreateView(
@@ -46,7 +45,6 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         false.navBarVisible()
         prepareViewModel()
-        getVacancyId()
         initViewModel()
         prepareBackButton()
         prepareLikeButton()
@@ -70,10 +68,8 @@ class DetailsFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        vacancyId?.let {
-            viewModel.start(it)
-            true.progressBarVisible()
-        }
+        viewModel.getVacancy(arguments?.getString(VACANCY_TRANSFER_KEY))
+        true.progressBarVisible()
     }
 
     private fun prepareBackButton() {
@@ -98,15 +94,15 @@ class DetailsFragment : Fragment() {
 
     private fun renderError(errState: ResponseStatusCode?) {
         when (errState) {
-            ResponseStatusCode.ERROR -> {
+            ResponseStatusCode.Error -> {
                 binding?.errorServer?.isVisible = true
             }
 
-            ResponseStatusCode.NO_INTERNET -> {
+            ResponseStatusCode.NoContent -> {
                 binding?.errorLayout?.isVisible = true
             }
 
-            ResponseStatusCode.OK -> {
+            ResponseStatusCode.Ok -> {
                 /*наследие sealed classa*/
             }
 
@@ -179,10 +175,6 @@ class DetailsFragment : Fragment() {
         viewModel.observeState().observe(getViewLifecycleOwner()) {
             render(it)
         }
-    }
-
-    private fun getVacancyId() {
-        vacancyId = arguments?.getString(VACANCY_TRANSFER_KEY)
     }
 
     private fun Boolean.navBarVisible() {

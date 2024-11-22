@@ -23,28 +23,28 @@ class HhRepositoryImpl(
         val response = networkClient.getVacancies(VacanciesSearchRequest(expression))
 
         when (response.resultCode) {
-            is ResponseStatusCode.NO_INTERNET -> {
-                emit(Resource.Error(ResponseStatusCode.NO_INTERNET))
+            is ResponseStatusCode.NoContent -> {
+                emit(Resource.Error(ResponseStatusCode.NoContent))
             }
 
-            is ResponseStatusCode.OK -> {
+            is ResponseStatusCode.Ok -> {
                 emit(
                     Resource.Success(
                         (response as VacanciesResponse).vacancies.let { list: List<VacancyData> ->
                             list.map { vacancyData: VacancyData ->
                                 vacancyDtoConvertor.map(vacancyData)
                             }
-                        }
+                        }, responseCode = response.resultCode
                     )
                 )
             }
 
-            is ResponseStatusCode.ERROR -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+            is ResponseStatusCode.Error -> {
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
 
             else -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
         }
     }
@@ -52,27 +52,27 @@ class HhRepositoryImpl(
     override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy?>> = flow {
         val response = networkClient.getVacancyById(VacancyByIdRequest(id))
         when (response.resultCode) {
-            is ResponseStatusCode.NO_INTERNET -> {
-                emit(Resource.Error(ResponseStatusCode.NO_INTERNET))
+            is ResponseStatusCode.NoContent -> {
+                emit(Resource.Error(ResponseStatusCode.NoContent))
             }
 
-            is ResponseStatusCode.OK -> {
+            is ResponseStatusCode.Ok -> {
                 (response as VacancyResponse).vacancyData?.let {
                     emit(
                         Resource.Success(vacancyDtoConvertor.run {
                             map(it)
-                        })
+                        }, response.resultCode)
                     )
-                } ?: emit(Resource.Error(ResponseStatusCode.ERROR))
+                } ?: emit(Resource.Error(ResponseStatusCode.Error))
 
             }
 
-            is ResponseStatusCode.ERROR -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+            is ResponseStatusCode.Error -> {
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
 
             else -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
         }
     }

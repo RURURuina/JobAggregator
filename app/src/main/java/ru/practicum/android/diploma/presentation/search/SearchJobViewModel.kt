@@ -154,7 +154,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     }
 
     private fun handleErrorSocketTimeoutException(e: SocketTimeoutException) {
-        handleError(ResponseStatusCode.ERROR)
+        handleError(ResponseStatusCode.Error)
         Log.e("SearchViewModel", "SocketTimeoutException, $e")
     }
 

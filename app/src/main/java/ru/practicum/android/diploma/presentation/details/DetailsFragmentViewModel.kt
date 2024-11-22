@@ -11,6 +11,7 @@ import ru.practicum.android.diploma.domain.api.sharing.VacancySharingInteractor
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
 import ru.practicum.android.diploma.util.Resource
+import ru.practicum.android.diploma.util.ResponseStatusCode
 
 class DetailsFragmentViewModel(
     private val hhInteractor: HhInteractor,
@@ -18,6 +19,7 @@ class DetailsFragmentViewModel(
     private val vacancySharingInteractor: VacancySharingInteractor,
 ) : ViewModel() {
     private var vacancy: Vacancy? = null
+    private var responseStatusCode: ResponseStatusCode? = null
     private val stateLiveData = MutableLiveData<DetailsFragmentState>()
 
     fun observeState(): LiveData<DetailsFragmentState> = stateLiveData
@@ -30,27 +32,39 @@ class DetailsFragmentViewModel(
         stateLiveData.postValue(state)
     }
 
-    // изменил на изначальную загрузку с бд
-    fun start(id: String) {
-        viewModelScope.launch {
-            val isCached = favoritesInteractor.isFavoriteCheck(id)
-            if (isCached) {
-                val cachedVacancy = favoritesInteractor.getFavoriteVacancyById(id)
-                cachedVacancy?.let {
-                    vacancy = it
-                    renderState(DetailsFragmentState.Content(it))
-                    _isFavoriteLiveData.postValue(vacancy?.isFavorite)
-                }
-            } else {
+    // изменил на изначальную загрузку с интернета
+    fun getVacancy(id: String?) {
+        id?.let {
+            viewModelScope.launch {
                 hhInteractor.searchVacanceById(id).collect { resource: Resource<Vacancy?> ->
-                    resource.data?.let {
-                        vacancy = it
-                        renderState(DetailsFragmentState.Content(it))
-                    } ?: renderState(DetailsFragmentState.ERROR(resource.responseCode))
+                    when (resource.responseCode) {
+                        ResponseStatusCode.Ok -> {
+                            resource.data?.let {
+                                vacancy = it
+                                renderState(DetailsFragmentState.Content(it))
+                                _isFavoriteLiveData.postValue(favoritesInteractor.isFavoriteCheck(id))
+                            } ?: renderState(DetailsFragmentState.ERROR(ResponseStatusCode.NoContent))
+                        }
+
+                        else -> {
+                            responseStatusCode = resource.responseCode
+                            getVacancyBd(id)
+                        }
+                    }
                 }
             }
-        }
+        } ?: renderState(DetailsFragmentState.ERROR(ResponseStatusCode.NoContent))
     }
+
+    private suspend fun getVacancyBd(id: String) {
+        val cachedVacancy = favoritesInteractor.getFavoriteVacancyById(id)
+        cachedVacancy?.let {
+            vacancy = it
+            renderState(DetailsFragmentState.Content(it))
+            _isFavoriteLiveData.postValue(favoritesInteractor.isFavoriteCheck(id))
+        } ?: renderState(DetailsFragmentState.ERROR(responseStatusCode))
+    }
+
 
     fun shareVacancy() {
         viewModelScope.launch {

@@ -21,7 +21,6 @@ data class Vacancy(
     val description: String?,
     val schedule: Schedule?,
     val url: String?,
-    val isFavorite: Boolean = false,
 )
 
 class Schedule(
