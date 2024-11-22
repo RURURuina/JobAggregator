@@ -132,19 +132,14 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         when (result) {
             is Resource.Success -> handleSuccess(result.data)
             is Resource.Error -> handleError(result.responseCode)
-            else -> {
-                handleError(result?.responseCode)
-            }
+            else -> handleError(result?.responseCode)
         }
     }
 
     private fun handleSuccess(data: List<Vacancy>?) {
-        println(data)
         val newVacancies = data ?: emptyList()
         isLastPage = newVacancies.size < PAGE_SIZE
-        if (newVacancies.isEmpty()) {
-            VacanciesState.Empty
-        } else {
+        if (newVacancies.isNotEmpty()) {
             vacanciesList.addAll(newVacancies)
             pushVacanciesState(
                 VacanciesState.Success(
@@ -153,6 +148,8 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                     isLoading = false
                 )
             )
+        } else {
+            pushVacanciesState(VacanciesState.Empty)
         }
     }
 
