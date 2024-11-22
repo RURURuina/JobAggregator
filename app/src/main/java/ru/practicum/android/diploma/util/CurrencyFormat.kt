@@ -44,8 +44,6 @@ private fun String?.currencySymbol(): String {
 }
 
 private fun Int?.formattedFrom(): String {
-    println("от "+this)
-
     return this?.let { "от ${it.numberFormater()}" } ?: ""
 }
 
