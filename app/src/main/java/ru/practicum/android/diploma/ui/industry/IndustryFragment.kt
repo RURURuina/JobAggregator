@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.bundle.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.presentation.industry.IndustryViewModel
 
@@ -15,7 +15,7 @@ class IndustryFragment : Fragment() {
         fun newInstance() = IndustryFragment()
     }
 
-    private val viewModel: IndustryViewModel by viewModels()
+    private val viewModel: IndustryViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,

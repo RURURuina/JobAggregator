@@ -7,17 +7,17 @@ import androidx.annotation.StringRes
 import androidx.core.bundle.Bundle
 import androidx.core.bundle.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavoriteJobBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.presentation.favorites.FavoriteJobViewModel
 import ru.practicum.android.diploma.ui.favorites.models.FavoritesState
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
-import ru.practicum.android.diploma.ui.search.adapters.VacancyAdapter
+import ru.practicum.android.diploma.presentation.card.adapters.VacancyAdapter
 import ru.practicum.android.diploma.util.debounce
 
 class FavoriteJobFragment : Fragment() {
@@ -26,7 +26,7 @@ class FavoriteJobFragment : Fragment() {
     }
 
     private var binding: FragmentFavoriteJobBinding? = null
-    private val viewModel: FavoriteJobViewModel by viewModels()
+    private val viewModel: FavoriteJobViewModel by viewModel()
     private var vacancyAdapter: VacancyAdapter? = null
     private var onItemClick: ((Vacancy) -> Unit)? = null
 

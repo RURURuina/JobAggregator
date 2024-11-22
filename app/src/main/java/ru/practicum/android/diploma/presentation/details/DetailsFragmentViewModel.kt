@@ -65,11 +65,9 @@ class DetailsFragmentViewModel(
         viewModelScope.launch {
             if (favoritesInteractor.isFavoriteCheck(currentVacancy.id)) {
                 favoritesInteractor.deleteVacancy(currentVacancy)
-                currentVacancy.isFavorite = false
                 _isFavoriteLiveData.postValue(false)
             } else {
                 favoritesInteractor.insertVacancy(currentVacancy)
-                currentVacancy.isFavorite = true
                 _isFavoriteLiveData.postValue(true)
             }
         }

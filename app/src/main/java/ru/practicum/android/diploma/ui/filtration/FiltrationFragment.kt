@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.bundle.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.presentation.filtration.FiltrationViewModel
 
@@ -15,7 +15,7 @@ class FiltrationFragment : Fragment() {
         fun newInstance() = FiltrationFragment()
     }
 
-    private val viewModel: FiltrationViewModel by viewModels()
+    private val viewModel: FiltrationViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

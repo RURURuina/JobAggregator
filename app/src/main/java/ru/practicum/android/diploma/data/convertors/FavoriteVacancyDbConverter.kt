@@ -63,7 +63,6 @@ class FavoriteVacancyDbConverter(
                 description = vacancyEntity.description,
                 schedule = getSchedule(vacancyEntity),
                 url = vacancyEntity.url,
-                isFavorite = true
             )
         }
     }

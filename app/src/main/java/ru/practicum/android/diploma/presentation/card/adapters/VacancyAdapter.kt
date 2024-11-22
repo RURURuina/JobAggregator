@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui.search.adapters
+package ru.practicum.android.diploma.presentation.card.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
