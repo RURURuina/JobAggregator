@@ -7,8 +7,8 @@ import android.text.Html
 import androidx.core.bundle.Bundle
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentDetailsBinding
 import ru.practicum.android.diploma.domain.models.entity.Experience
@@ -24,7 +24,7 @@ import ru.practicum.android.diploma.util.fillBy
 import ru.practicum.android.diploma.util.format
 
 class DetailsFragment : Fragment() {
-    private val viewModel: DetailsFragmentViewModel by viewModel()
+    private val viewModel: DetailsFragmentViewModel by viewModels()
     private var vacancyId: String? = null
     private var binding: FragmentDetailsBinding? = null
 
