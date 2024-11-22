@@ -30,13 +30,12 @@ class HhRepositoryImpl(
             is ResponseStatusCode.OK -> {
                 emit(
                     Resource.Success(
-                    (response as VacanciesResponse).vacancies.let {
-                        it.map { vacancyData: VacancyData ->
-                            println(vacancyData.id)
-                            vacancyDtoConvertor.map(vacancyData)
+                        (response as VacanciesResponse).vacancies.let {
+                            it.map { vacancyData: VacancyData ->
+                                vacancyDtoConvertor.map(vacancyData)
+                            }
                         }
-                    }
-                )
+                    )
                 )
             }
 
