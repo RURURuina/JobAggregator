@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.bundle.Bundle
-import androidx.core.view.isVisible
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -22,6 +22,7 @@ import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANS
 import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.fillBy
 import ru.practicum.android.diploma.util.format
+
 
 class DetailsFragment : Fragment() {
     private val viewModel: DetailsFragmentViewModel by viewModels()
