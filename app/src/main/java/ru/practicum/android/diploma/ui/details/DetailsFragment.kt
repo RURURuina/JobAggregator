@@ -1,14 +1,16 @@
 package ru.practicum.android.diploma.ui.details
 
-import android.text.Html
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.os.Bundle
+import android.text.Html
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentDetailsBinding
 import ru.practicum.android.diploma.domain.models.entity.Experience
 import ru.practicum.android.diploma.domain.models.entity.KeySkill
@@ -130,7 +132,7 @@ class DetailsFragment : Fragment() {
         keySkills?.let {
             binding?.keySkillsTitle?.isVisible = keySkills.isNotEmpty()
             var str = ""
-            keySkills.map { str += "<ul> <li>${it.name}.</li>" }
+            keySkills.map { str += getString(R.string.key_skill_mask, it.name) }
             binding?.keySkillsText?.text = Html.fromHtml(
                 str,
                 Html.FROM_HTML_MODE_COMPACT
