@@ -30,11 +30,12 @@ class HhRepositoryImpl(
             is ResponseStatusCode.Ok -> {
                 emit(
                     Resource.Success(
-                        (response as VacanciesResponse).vacancies.let { list: List<VacancyData> ->
+                        data = (response as VacanciesResponse).vacancies.let { list: List<VacancyData> ->
                             list.map { vacancyData: VacancyData ->
                                 vacancyDtoConvertor.map(vacancyData)
                             }
-                        }, responseCode = response.resultCode
+                        },
+                        responseCode = response.resultCode
                     )
                 )
             }
@@ -59,9 +60,12 @@ class HhRepositoryImpl(
             is ResponseStatusCode.Ok -> {
                 (response as VacancyResponse).vacancyData?.let {
                     emit(
-                        Resource.Success(vacancyDtoConvertor.run {
-                            map(it)
-                        }, response.resultCode)
+                        Resource.Success(
+                            data = vacancyDtoConvertor.run {
+                                map(it)
+                            },
+                            responseCode = response.resultCode
+                        )
                     )
                 } ?: emit(Resource.Error(ResponseStatusCode.Error))
 

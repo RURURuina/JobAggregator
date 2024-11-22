@@ -65,7 +65,6 @@ class DetailsFragmentViewModel(
         } ?: renderState(DetailsFragmentState.ERROR(responseStatusCode))
     }
 
-
     fun shareVacancy() {
         viewModelScope.launch {
             vacancy?.let {
