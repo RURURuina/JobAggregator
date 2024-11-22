@@ -23,7 +23,6 @@ import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.fillBy
 import ru.practicum.android.diploma.util.format
 
-
 class DetailsFragment : Fragment() {
     private val viewModel: DetailsFragmentViewModel by viewModels()
     private var vacancyId: String? = null
