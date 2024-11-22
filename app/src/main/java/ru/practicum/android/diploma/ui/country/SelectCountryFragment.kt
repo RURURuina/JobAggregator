@@ -15,7 +15,7 @@ class SelectCountryFragment : Fragment() {
         fun newInstance() = SelectCountryFragment()
     }
 
-    val viewModel by viewModels<SelectCountryViewModel>()
+    private val viewModel by viewModels<SelectCountryViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

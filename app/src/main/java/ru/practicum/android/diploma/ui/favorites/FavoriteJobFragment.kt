@@ -5,12 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.bundle.Bundle
-import androidx.core.os.bundleOf
+import androidx.core.bundle.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavoriteJobBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
@@ -26,7 +26,7 @@ class FavoriteJobFragment : Fragment() {
     }
 
     private var binding: FragmentFavoriteJobBinding? = null
-    private val viewModel: FavoriteJobViewModel by viewModel()
+    private val viewModel: FavoriteJobViewModel by viewModels()
     private var vacancyAdapter: VacancyAdapter? = null
     private var onItemClick: ((Vacancy) -> Unit)? = null
 

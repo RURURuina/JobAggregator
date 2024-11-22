@@ -9,14 +9,14 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.bundle.Bundle
-import androidx.core.os.bundleOf
+import androidx.core.bundle.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchJobBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
@@ -34,7 +34,7 @@ class SearchJobFragment : Fragment() {
     }
 
     private var binding: FragmentSearchJobBinding? = null
-    private val viewModel: SearchJobViewModel by viewModel()
+    private val viewModel: SearchJobViewModel by viewModels()
     private val vacancyAdapter = VacancyAdapter()
     private var scrollListener: RecyclerView.OnScrollListener? = null
     private var onItemClick: ((Vacancy) -> Unit)? = null
