@@ -3,9 +3,9 @@ package ru.practicum.android.diploma.ui.details
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.text.Html
 import androidx.core.bundle.Bundle
 import androidx.core.view.isVisible
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -132,9 +132,9 @@ class DetailsFragment : Fragment() {
             binding?.keySkillsTitle?.isVisible = keySkills.isNotEmpty()
             var str = ""
             keySkills.map { str += getString(R.string.key_skill_mask, it.name) }
-            binding?.keySkillsText?.text = Html.fromHtml(
+            binding?.keySkillsText?.text = HtmlCompat.fromHtml(
                 str,
-                Html.FROM_HTML_MODE_COMPACT
+                HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
             )
         }
     }
@@ -163,11 +163,12 @@ class DetailsFragment : Fragment() {
     }
 
     private fun fillDescription(description: String?) {
-        binding?.descriptionHtmlText?.text =
-            Html.fromHtml(
-                description,
-                Html.FROM_HTML_MODE_COMPACT
+        description?.let {
+            binding?.descriptionHtmlText?.text = HtmlCompat.fromHtml(
+                it,
+                HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
             )
+        }
     }
 
     private fun fillSalary(salary: Salary?) {
