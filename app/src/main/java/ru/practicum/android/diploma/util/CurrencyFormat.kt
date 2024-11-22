@@ -27,7 +27,7 @@ private val currencySymbols = mapOf(
 
 fun Salary?.format(): String {
     return this?.let {
-        "${this.from?.formattedFrom()}${this.to?.formattedTo()} ${this.currency.currencySymbol()}"
+        "${this.from.formattedFrom()}${this.to.formattedTo()} ${this.currency.currencySymbol()}"
     } ?: "Зарплата не указана"
 }
 
@@ -44,6 +44,8 @@ private fun String?.currencySymbol(): String {
 }
 
 private fun Int?.formattedFrom(): String {
+    println("от "+this)
+
     return this?.let { "от ${it.numberFormater()}" } ?: ""
 }
 
