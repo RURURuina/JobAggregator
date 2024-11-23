@@ -1,8 +1,7 @@
 package ru.practicum.android.diploma.data.dto.response
 
-import ru.practicum.android.diploma.data.dto.industries.IndustryData
 import ru.practicum.android.diploma.data.dto.industries.IndustryWrapper
 
-class IndustriesResponse (
-    val industriesRaw : List<IndustryWrapper>
+class IndustriesResponse(
+    val industriesRaw: List<IndustryWrapper>
 ) : Response()

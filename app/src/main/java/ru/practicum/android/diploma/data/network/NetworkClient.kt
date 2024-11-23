@@ -7,5 +7,5 @@ import ru.practicum.android.diploma.data.dto.response.Response
 interface NetworkClient {
     suspend fun getVacancies(dto: VacanciesSearchRequest): Response
     suspend fun getVacancyById(dto: VacancyByIdRequest): Response
-    suspend fun getIndustriesList() : Response
+    suspend fun getIndustriesList(): Response
 }

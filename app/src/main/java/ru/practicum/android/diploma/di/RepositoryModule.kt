@@ -9,7 +9,7 @@ import ru.practicum.android.diploma.data.repository.HhRepositoryImpl
 import ru.practicum.android.diploma.data.repository.IndustriesRepositoryImpl
 import ru.practicum.android.diploma.data.repository.VacancySharingRepositoryImpl
 import ru.practicum.android.diploma.domain.api.FavoritesVacancyRepository
-import ru.practicum.android.diploma.domain.api.Industries.IndustriesRepository
+import ru.practicum.android.diploma.domain.api.industries.IndustriesRepository
 import ru.practicum.android.diploma.domain.api.hh.HhRepository
 import ru.practicum.android.diploma.domain.api.sharing.VacancySharingRepository
 

@@ -1,8 +1,8 @@
 package ru.practicum.android.diploma.domain.impl
 
 import kotlinx.coroutines.flow.Flow
-import ru.practicum.android.diploma.domain.api.Industries.IndustriesInteractor
-import ru.practicum.android.diploma.domain.api.Industries.IndustriesRepository
+import ru.practicum.android.diploma.domain.api.industries.IndustriesInteractor
+import ru.practicum.android.diploma.domain.api.industries.IndustriesRepository
 import ru.practicum.android.diploma.domain.models.entity.IndustryDomain
 import ru.practicum.android.diploma.util.Resource
 

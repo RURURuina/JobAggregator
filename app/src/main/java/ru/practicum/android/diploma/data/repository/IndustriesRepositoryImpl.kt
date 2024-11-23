@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.convertors.IndustryDtoConverter
 import ru.practicum.android.diploma.data.dto.response.IndustriesResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
-import ru.practicum.android.diploma.domain.api.Industries.IndustriesRepository
+import ru.practicum.android.diploma.domain.api.industries.IndustriesRepository
 import ru.practicum.android.diploma.domain.models.entity.IndustryDomain
 import ru.practicum.android.diploma.util.Resource
 import ru.practicum.android.diploma.util.ResponseStatusCode
@@ -26,7 +26,7 @@ class IndustriesRepositoryImpl(
                 emit(
                     Resource.Success(
                         industryWrapper.flatMap { industryWrapper ->
-                            industryWrapper.industries.map{ industryData ->
+                            industryWrapper.industries.map { industryData ->
                                 industryDtoConverter.map(industryData)
                             }
                         }
