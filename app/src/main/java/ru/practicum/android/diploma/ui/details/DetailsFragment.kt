@@ -87,7 +87,7 @@ class DetailsFragment : Fragment() {
             }
 
             is DetailsFragmentState.ERROR -> {
-                binding?.progressBar?.isVisible = false
+                false.progressBarVisible()
                 renderError(state.errState)
             }
         }
@@ -101,13 +101,13 @@ class DetailsFragment : Fragment() {
             }
 
             ResponseStatusCode.NoInternet -> {
-                binding?.errorLayout?.isVisible = true
+                binding?.connectionErrorLayout?.isVisible = true
                 binding?.content?.isVisible = false
             }
 
             ResponseStatusCode.Ok -> {
-                /*наследие sealed classa*/
-            }
+                binding?.errorLayout?.isVisible = true
+                binding?.content?.isVisible = false            }
 
             else -> {
                 binding?.errorServer?.isVisible = true
@@ -188,6 +188,7 @@ class DetailsFragment : Fragment() {
 
     private fun Boolean.progressBarVisible() {
         binding?.progressBar?.isVisible = this
+        binding?.content?.isVisible = !this
     }
 
 }

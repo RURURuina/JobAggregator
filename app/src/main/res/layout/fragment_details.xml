@@ -48,7 +48,35 @@
             android:text="@string/vacancy_details_no_vacancy_error"
             android:textColor="@color/black" />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/connection_error_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseCompoundDrawables">
 
+        <ImageView
+            android:id="@+id/error_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/no_internet"
+            android:src="@drawable/no_internet_placeholder" />
+
+        <TextView
+            android:id="@+id/error_tv"
+            style="@style/textSize22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="@string/no_internet" />
+
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/error_server"
         style="@style/vacancyDetailErrLayout"
@@ -71,14 +99,11 @@
             android:textColor="@color/black" />
     </LinearLayout>
 
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/preview"
         style="@style/titlePreviewButtonStyle"
         android:layout_width="0dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/toolbar_share_button"
         app:layout_constraintTop_toTopOf="parent">
@@ -104,8 +129,7 @@
             android:text="@string/vacancy"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/arrow"
-            app:layout_constraintTop_toTopOf="parent"
-       />
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageButton
