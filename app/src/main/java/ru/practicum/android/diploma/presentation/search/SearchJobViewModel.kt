@@ -41,13 +41,14 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     ) { searchText ->
         searchVacancies(searchText.trim())
     }
-    private val loadDebounce = debounce<Int>(
+    private val loadPerPageDebounce = debounce<Int>(
         delayMillis = DEBOUNCE_PAGE_TIME,
         coroutineScope = viewModelScope,
         useLastParam = true
     ) {
-        loadVacancies()
+        loadVacancies(true)
     }
+
     fun clearVacancies() {
         pushVacanciesState(VacanciesState.Hidden)
         currentPage = 0
@@ -66,7 +67,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
             isLastPage = false
             vacanciesList.clear()
             currentQuery = query
-            loadVacancies()
+            loadVacancies(false)
         }
     }
 
@@ -74,7 +75,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         _vacanciesState.postValue(state)
     }
 
-    private fun loadVacancies() {
+    private fun loadVacancies(perPage: Boolean) {
         isLoading = true
         val params = createParams()
         if (currentPage == 0) {
@@ -85,11 +86,11 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                 isLoading = true
                 try {
                     hhInteractor.getVacancies(params).collect { result ->
-                        handleResult(result)
+                        handleResult(result, perPage)
                         isLoading = false
                     }
                 } catch (e: SocketTimeoutException) {
-                    handleErrorSocketTimeoutException(e)
+                    handleErrorSocketTimeoutException(e,perPage)
                     this.coroutineContext.job.cancel()
                 }
             }
@@ -106,7 +107,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     fun loadNextPage() {
         if (!isLoading && !isLastPage && currentQuery.isNotBlank()) {
             isLoading = true
-            loadDebounce(currentPage++)
+            loadPerPageDebounce(currentPage++)
         }
     }
 
@@ -118,7 +119,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         )
     }
 
-    private fun handleResult(result: Resource<List<Vacancy>>?) {
+    private fun handleResult(result: Resource<List<Vacancy>>?, perPage: Boolean) {
         when (result) {
             is Resource.Success -> {
                 result.currentPage?.let {
@@ -130,8 +131,8 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                 handleSuccess(result)
             }
 
-            is Resource.Error -> handleError(result.responseCode)
-            else -> handleError(result?.responseCode)
+            is Resource.Error -> handleError(result.responseCode,perPage)
+            else -> handleError(result?.responseCode,perPage)
         }
     }
 
@@ -153,13 +154,13 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         }
     }
 
-    private fun handleErrorSocketTimeoutException(e: SocketTimeoutException) {
-        handleError(ResponseStatusCode.Error)
+    private fun handleErrorSocketTimeoutException(e: SocketTimeoutException, perPage: Boolean) {
+        handleError(ResponseStatusCode.Error, perPage)
         Log.e("SearchViewModel", "SocketTimeoutException, $e")
     }
 
-    private fun handleError(responseCode: ResponseStatusCode?) {
-        pushVacanciesState(VacanciesState.Error(responseCode,false))
+    private fun handleError(responseCode: ResponseStatusCode?, perPage: Boolean) {
+        pushVacanciesState(VacanciesState.Error(responseCode,perPage))
     }
 
 }

@@ -72,8 +72,6 @@ class SearchJobFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 updateSearchIcon(s.isNullOrEmpty())
                 if (!s.isNullOrBlank()) {
-                    updateRecyclerView(emptyList())
-                    println("onTextChanged " + s)
                     viewModel.searchDebounce(s.toString())
                 }
             }
@@ -82,6 +80,7 @@ class SearchJobFragment : Fragment() {
                 if (s?.isEmpty() == true) {
                     viewModel.clearVacancies()
                 }
+                binding?.searchLayout?.isVisible = s.isNullOrEmpty()
             }
         })
 
@@ -135,10 +134,7 @@ class SearchJobFragment : Fragment() {
 
                 is VacanciesState.Error -> {
                     hideCentralProgressBar()
-                    if (!state.isShowed) {
-                        showError(state.responseState)
-                        state.isShowed = true
-                    }
+                    showError(state.responseState, state.showToast)
                     keyBoardVisibility(false)
                 }
 
@@ -202,11 +198,10 @@ class SearchJobFragment : Fragment() {
         binding?.progressBar?.visibility = View.GONE
     }
 
-    private fun showError(responseState: ResponseStatusCode?) {
+    private fun showError(responseState: ResponseStatusCode?, showToast: Boolean) {
         when (responseState) {
             ResponseStatusCode.Error -> {
-                val listVisibility = binding?.vacanciesRecyclerView?.isVisible ?: false
-                if (listVisibility) {
+                if (showToast) {
                     showResponseErrToast()
                 } else {
                     binding?.messageChip?.isVisible = false
@@ -220,8 +215,7 @@ class SearchJobFragment : Fragment() {
             }
 
             ResponseStatusCode.NoInternet -> {
-                val listVisibility = binding?.vacanciesRecyclerView?.isVisible ?: false
-                if (listVisibility) {
+                if (showToast) {
                     showNoInternetToast()
                 } else {
                     binding?.messageChip?.isVisible = false

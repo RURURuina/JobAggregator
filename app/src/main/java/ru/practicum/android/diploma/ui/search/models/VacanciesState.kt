@@ -19,7 +19,7 @@ sealed interface VacanciesState {
 
     data class Error(
         val responseState: ResponseStatusCode?,
-        var isShowed: Boolean
+        val showToast: Boolean
     ) : VacanciesState // состояние ошибки - видно placeHolder ошибки
 
     data object Empty : VacanciesState // Состояние "Не найдено" - видно placeHolder
