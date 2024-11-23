@@ -59,7 +59,6 @@ class SearchJobFragment : Fragment() {
     private fun prepareOnItemClick() {
         onItemClick = { vacancy ->
             val bundle = bundleOf(VACANCY_TRANSFER_KEY to vacancy.id)
-            /*vacancy id нужно будет вынести в компаньон обджект в апп*/
             findNavController().navigate(R.id.action_searchJobFragment_to_detailsFragment, bundle)
         }
     }
@@ -87,6 +86,8 @@ class SearchJobFragment : Fragment() {
 
         binding?.clearSearchButton?.setOnClickListener {
             binding?.searchEditText?.text?.clear()
+            binding?.progressBar?.isVisible = false
+            binding?.bottomProgressBar?.isVisible = false
             viewModel.clearVacancies()
         }
     }
