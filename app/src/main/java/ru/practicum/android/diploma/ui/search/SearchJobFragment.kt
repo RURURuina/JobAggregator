@@ -47,6 +47,10 @@ class SearchJobFragment : Fragment() {
         initRecyclerView()
         observeViewModel()
         prepareOnItemClick()
+        prepareFilterButton()
+    }
+
+    private fun prepareFilterButton() {
         binding?.filterImageButton?.setOnClickListener {
             findNavController().navigate(R.id.action_searchJobFragment_to_filtrationFragment)
         }
@@ -140,8 +144,14 @@ class SearchJobFragment : Fragment() {
                     keyBoardVisibility(false)
                     binding?.bottomProgressBar?.isVisible = false
                     binding?.messageChip?.isVisible = true
-                    binding?.messageChip?.text =
-                        getString(R.string.founded_vacancies_count, state.totalCount.toString())
+                    state.totalCount?.let {
+                        binding?.messageChip?.text =
+                            context?.resources?.getQuantityString(
+                                R.plurals.plurals_vacancies,
+                                state.totalCount,
+                                state.totalCount
+                            )
+                    }
                 }
 
                 is VacanciesState.Empty -> {
