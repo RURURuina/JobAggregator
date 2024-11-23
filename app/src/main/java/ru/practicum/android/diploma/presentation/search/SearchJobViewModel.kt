@@ -94,7 +94,6 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                     hhInteractor.getVacancies(params).collect { result ->
                         handleResult(result)
                         isLoading = false
-                        println(result)
                     }
                 } catch (e: SocketTimeoutException) {
                     handleErrorSocketTimeoutException(e)

@@ -35,7 +35,6 @@ class FavoriteJobFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        println()
         binding = FragmentFavoriteJobBinding.inflate(layoutInflater)
         return binding?.root
     }
@@ -71,7 +70,6 @@ class FavoriteJobFragment : Fragment() {
             useLastParam = true
         ) { vacancy ->
             val bundle = bundleOf(VACANCY_TRANSFER_KEY to vacancy.id)
-            /*vacancy id нужно будет вынести в компаньон обджект в апп*/
             findNavController().navigate(R.id.action_favoriteJobFragment_to_detailsFragment, bundle)
         }
 
