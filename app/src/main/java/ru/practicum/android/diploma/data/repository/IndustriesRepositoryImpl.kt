@@ -3,10 +3,7 @@ package ru.practicum.android.diploma.data.repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.convertors.IndustryDtoConverter
-import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.response.IndustriesResponse
-import ru.practicum.android.diploma.data.dto.response.VacanciesResponse
-import ru.practicum.android.diploma.data.dto.vacancy.VacancyData
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.api.Industries.IndustriesRepository
 import ru.practicum.android.diploma.domain.models.entity.IndustryDomain
@@ -19,12 +16,6 @@ class IndustriesRepositoryImpl(
 ) : IndustriesRepository {
     override suspend fun getIndustriesList(): Flow<Resource<List<IndustryDomain>>> = flow {
         val response = networkClient.getIndustriesList()
-
-        (response as IndustriesResponse).industriesRaw.map { industryWrapper ->
-            industryWrapper.industries.map { industryData ->
-                industryDtoConverter.map(industryData)
-            }
-        }
         when (response.resultCode) {
             is ResponseStatusCode.NO_INTERNET -> {
                 emit(Resource.Error(ResponseStatusCode.NO_INTERNET))
@@ -34,7 +25,7 @@ class IndustriesRepositoryImpl(
                 val industryWrapper = (response as IndustriesResponse).industriesRaw
                 emit(
                     Resource.Success(
-                        industryWrapper.map { industryWrapper ->
+                        industryWrapper.flatMap { industryWrapper ->
                             industryWrapper.industries.map{ industryData ->
                                 industryDtoConverter.map(industryData)
                             }
