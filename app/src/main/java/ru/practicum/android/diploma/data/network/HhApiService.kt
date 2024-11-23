@@ -9,10 +9,6 @@ import ru.practicum.android.diploma.data.dto.response.VacanciesResponse
 import ru.practicum.android.diploma.data.dto.vacancy.VacancyData
 
 interface HhApiService {
-    @Headers(
-        "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
-        "HH-User-Agent: YpDiplomaProject/1.0 (4habibulin@gmail.com)"
-    )
 
     @GET("vacancies")
     suspend fun searchVacancies(
