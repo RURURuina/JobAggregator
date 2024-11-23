@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.data.dto.vacancy
 
-import ru.practicum.android.diploma.domain.models.entity.IndustryDomain
+import ru.practicum.android.diploma.domain.models.entity.Industry
 import ru.practicum.android.diploma.domain.models.entity.IndustryNested
 
 data class IndustryData(
@@ -9,8 +9,8 @@ data class IndustryData(
     val industries: List<IndustryNestedData>?,
 )
 
-fun IndustryData.map(): IndustryDomain {
-    return IndustryDomain(
+fun IndustryData.map(): Industry {
+    return Industry(
         this.id,
         this.name,
         this.industries.map()
