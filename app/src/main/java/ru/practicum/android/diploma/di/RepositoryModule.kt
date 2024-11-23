@@ -42,8 +42,7 @@ val repositoryModule = module {
 
     single<IndustriesRepository> {
         IndustriesRepositoryImpl(
-            networkClient = get(),
-            industryDtoConverter = get()
+            networkClient = get()
         )
     }
 }

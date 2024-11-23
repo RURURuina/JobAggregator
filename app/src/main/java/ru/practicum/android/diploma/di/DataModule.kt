@@ -1,4 +1,4 @@
- package ru.practicum.android.diploma.di
+package ru.practicum.android.diploma.di
 
 import androidx.room.Room
 import com.google.gson.Gson
