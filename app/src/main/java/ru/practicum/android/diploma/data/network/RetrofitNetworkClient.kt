@@ -18,7 +18,6 @@ class RetrofitNetworkClient(
     override suspend fun getVacancies(dto: VacanciesSearchRequest): Response {
         return withContext(Dispatchers.IO) {
             if (!isConnected()) {
-                // если нет интернета возврат
                 Response().apply { resultCode = ResponseStatusCode.NoContent }
             } else {
                 withContext(Dispatchers.IO) {
@@ -38,7 +37,6 @@ class RetrofitNetworkClient(
 
     override suspend fun getVacancyById(dto: VacancyByIdRequest): Response {
         if (!isConnected()) {
-            // если нет интернета возврат -1
             return Response().apply { resultCode = ResponseStatusCode.NoContent }
         } else {
             return withContext(Dispatchers.IO) {

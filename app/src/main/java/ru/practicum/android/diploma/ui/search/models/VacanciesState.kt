@@ -13,7 +13,8 @@ sealed interface VacanciesState {
         // состояние успешно загруженных данных - видно RV
         val vacancies: List<Vacancy>,
         val isLastPage: Boolean, // последняя страница
-        val isLoading: Boolean, // состояние загрузки
+        val isLoading: Boolean,
+        val totalCount:Int?// состояние загрузки
     ) : VacanciesState
 
     data class Error(

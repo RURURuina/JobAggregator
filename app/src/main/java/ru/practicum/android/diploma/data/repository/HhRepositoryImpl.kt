@@ -35,7 +35,10 @@ class HhRepositoryImpl(
                                 vacancyDtoConvertor.map(vacancyData)
                             }
                         },
-                        responseCode = response.resultCode
+                        responseCode = response.resultCode,
+                        currentPage = response.page,
+                        pagesCount = response.pages,
+                        foundedCount = response.found
                     )
                 )
             }
@@ -63,8 +66,7 @@ class HhRepositoryImpl(
                         Resource.Success(
                             data = vacancyDtoConvertor.run {
                                 map(it)
-                            },
-                            responseCode = response.resultCode
+                            }, responseCode = response.resultCode
                         )
                     )
                 } ?: emit(Resource.Error(ResponseStatusCode.Error))
