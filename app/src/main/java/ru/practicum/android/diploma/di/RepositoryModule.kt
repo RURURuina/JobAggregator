@@ -6,8 +6,10 @@ import ru.practicum.android.diploma.data.convertors.FavoriteVacancyDbConverter
 import ru.practicum.android.diploma.data.convertors.VacancyDtoConvertor
 import ru.practicum.android.diploma.data.repository.FavoritesVacancyRepositoryImpl
 import ru.practicum.android.diploma.data.repository.HhRepositoryImpl
+import ru.practicum.android.diploma.data.repository.IndustriesRepositoryImpl
 import ru.practicum.android.diploma.data.repository.VacancySharingRepositoryImpl
 import ru.practicum.android.diploma.domain.api.FavoritesVacancyRepository
+import ru.practicum.android.diploma.domain.api.industries.IndustriesRepository
 import ru.practicum.android.diploma.domain.api.hh.HhRepository
 import ru.practicum.android.diploma.domain.api.sharing.VacancySharingRepository
 
@@ -35,6 +37,12 @@ val repositoryModule = module {
         FavoritesVacancyRepositoryImpl(
             favoritesVacancyDao = get(),
             favoriteVacancyDbConverter = get()
+        )
+    }
+
+    single<IndustriesRepository> {
+        IndustriesRepositoryImpl(
+            networkClient = get()
         )
     }
 }
