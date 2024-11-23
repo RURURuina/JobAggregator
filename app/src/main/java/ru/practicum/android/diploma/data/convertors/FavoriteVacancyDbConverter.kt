@@ -96,9 +96,7 @@ class FavoriteVacancyDbConverter(
     }
 
     private fun getDriverLicenseTypes(vacancyEntity: FavoritesVacancyEntity): List<DriverLicense>? {
-        return safeFromJson(
-            vacancyEntity.driverLicenseTypes,
-            object : TypeToken<List<DriverLicense>>() {})
+        return safeFromJson(vacancyEntity.driverLicenseTypes, object : TypeToken<List<DriverLicense>>() {})
     }
 
     private fun getArea(vacancyEntity: FavoritesVacancyEntity): Area? {
