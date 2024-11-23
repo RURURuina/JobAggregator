@@ -73,6 +73,7 @@ class SearchJobFragment : Fragment() {
                 updateSearchIcon(s.isNullOrEmpty())
                 if (!s.isNullOrBlank()) {
                     updateRecyclerView(emptyList())
+                    println("onTextChanged " + s)
                     viewModel.searchDebounce(s.toString())
                 }
             }
@@ -134,9 +135,11 @@ class SearchJobFragment : Fragment() {
 
                 is VacanciesState.Error -> {
                     hideCentralProgressBar()
-                    showError(state.responseState)
+                    if (!state.isShowed) {
+                        showError(state.responseState)
+                        state.isShowed = true
+                    }
                     keyBoardVisibility(false)
-                    binding?.messageChip?.isVisible = false
                 }
 
                 is VacanciesState.Success -> {
@@ -202,32 +205,32 @@ class SearchJobFragment : Fragment() {
     private fun showError(responseState: ResponseStatusCode?) {
         when (responseState) {
             ResponseStatusCode.Error -> {
-                val itemsCount = binding?.vacanciesRecyclerView?.childCount ?: 0
-                if (itemsCount > 0) {
+                val listVisibility = binding?.vacanciesRecyclerView?.isVisible ?: false
+                if (listVisibility) {
                     showResponseErrToast()
                 } else {
+                    binding?.messageChip?.isVisible = false
                     binding?.searchLayout?.visibility = View.GONE
                     binding?.noJobsLayout?.visibility = View.GONE
                     binding?.vacanciesRecyclerView?.visibility = View.GONE
                     binding?.errorTv?.setText(R.string.server_error)
                     binding?.errorImage?.setImageResource(R.drawable.server_error_on_search_screen)
                     binding?.errorLayout?.visibility = View.VISIBLE
-
                 }
             }
 
-            ResponseStatusCode.NoContent -> {
-                val itemsCount = binding?.vacanciesRecyclerView?.childCount ?: 0
-                if (itemsCount > 0) {
+            ResponseStatusCode.NoInternet -> {
+                val listVisibility = binding?.vacanciesRecyclerView?.isVisible ?: false
+                if (listVisibility) {
                     showNoInternetToast()
                 } else {
+                    binding?.messageChip?.isVisible = false
                     binding?.searchLayout?.visibility = View.GONE
                     binding?.noJobsLayout?.visibility = View.GONE
                     binding?.vacanciesRecyclerView?.visibility = View.GONE
                     binding?.errorTv?.setText(R.string.no_internet)
                     binding?.errorImage?.setImageResource(R.drawable.no_internet_placeholder)
                     binding?.errorLayout?.visibility = View.VISIBLE
-
                 }
             }
 

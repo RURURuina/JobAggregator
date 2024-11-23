@@ -23,8 +23,8 @@ class HhRepositoryImpl(
         val response = networkClient.getVacancies(VacanciesSearchRequest(expression))
 
         when (response.resultCode) {
-            is ResponseStatusCode.NoContent -> {
-                emit(Resource.Error(ResponseStatusCode.NoContent))
+            is ResponseStatusCode.NoInternet -> {
+                emit(Resource.Error(ResponseStatusCode.NoInternet))
             }
 
             is ResponseStatusCode.Ok -> {
@@ -56,8 +56,8 @@ class HhRepositoryImpl(
     override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy?>> = flow {
         val response = networkClient.getVacancyById(VacancyByIdRequest(id))
         when (response.resultCode) {
-            is ResponseStatusCode.NoContent -> {
-                emit(Resource.Error(ResponseStatusCode.NoContent))
+            is ResponseStatusCode.NoInternet -> {
+                emit(Resource.Error(ResponseStatusCode.NoInternet))
             }
 
             is ResponseStatusCode.Ok -> {

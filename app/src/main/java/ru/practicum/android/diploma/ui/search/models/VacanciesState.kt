@@ -14,11 +14,12 @@ sealed interface VacanciesState {
         val vacancies: List<Vacancy>,
         val isLastPage: Boolean, // последняя страница
         val isLoading: Boolean,
-        val totalCount:Int?// состояние загрузки
+        val totalCount: Int?// состояние загрузки
     ) : VacanciesState
 
     data class Error(
         val responseState: ResponseStatusCode?,
+        var isShowed: Boolean
     ) : VacanciesState // состояние ошибки - видно placeHolder ошибки
 
     data object Empty : VacanciesState // Состояние "Не найдено" - видно placeHolder

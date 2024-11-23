@@ -87,6 +87,7 @@ class DetailsFragment : Fragment() {
             }
 
             is DetailsFragmentState.ERROR -> {
+                binding?.progressBar?.isVisible = false
                 renderError(state.errState)
             }
         }
@@ -96,10 +97,12 @@ class DetailsFragment : Fragment() {
         when (errState) {
             ResponseStatusCode.Error -> {
                 binding?.errorServer?.isVisible = true
+                binding?.content?.isVisible = false
             }
 
-            ResponseStatusCode.NoContent -> {
+            ResponseStatusCode.NoInternet -> {
                 binding?.errorLayout?.isVisible = true
+                binding?.content?.isVisible = false
             }
 
             ResponseStatusCode.Ok -> {
@@ -108,11 +111,13 @@ class DetailsFragment : Fragment() {
 
             else -> {
                 binding?.errorServer?.isVisible = true
+                binding?.content?.isVisible = false
             }
         }
     }
 
     private fun showContent(vacancy: Vacancy) {
+        binding?.content?.isVisible = true
         fillSalary(vacancy.salary)
         fillDescription(vacancy.description)
         fillTitle(vacancy.name)

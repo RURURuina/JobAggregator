@@ -19,6 +19,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     // Кто будет выполнять задание на обработку ошибок, то сообщение будет на стр 132
     companion object {
         private const val DEBOUNCE_SEARCH_TIME = 2000L
+        private const val DEBOUNCE_PAGE_TIME = 300L
         private const val PAGE_SIZE = 20 // кол-во элементов на странице для отображения в RV
     }
 
@@ -38,13 +39,15 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         coroutineScope = viewModelScope,
         useLastParam = true
     ) { searchText ->
-        searchVacancies(searchText)
+        searchVacancies(searchText.trim())
     }
-
-    init {
-        clearVacancies()
+    private val loadDebounce = debounce<Int>(
+        delayMillis = DEBOUNCE_PAGE_TIME,
+        coroutineScope = viewModelScope,
+        useLastParam = true
+    ) {
+        loadVacancies()
     }
-
     fun clearVacancies() {
         pushVacanciesState(VacanciesState.Hidden)
         currentPage = 0
@@ -63,11 +66,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
             isLastPage = false
             vacanciesList.clear()
             currentQuery = query
-        }
-        if (query.isNotBlank()) {
             loadVacancies()
-        } else {
-            pushVacanciesState(VacanciesState.Hidden)
         }
     }
 
@@ -94,15 +93,12 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                     this.coroutineContext.job.cancel()
                 }
             }
-        } else {
-            handleEmptyQuery()
         }
-
     }
 
     fun searchDebounce(changedText: String?) {
         if (changedText != null) {
-            searchDebounce.invoke(changedText.trim())
+            searchDebounce.invoke(changedText)
         }
     }
 
@@ -110,8 +106,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     fun loadNextPage() {
         if (!isLoading && !isLastPage && currentQuery.isNotBlank()) {
             isLoading = true
-            currentPage++
-            loadVacancies()
+            loadDebounce(currentPage++)
         }
     }
 
@@ -164,10 +159,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     }
 
     private fun handleError(responseCode: ResponseStatusCode?) {
-        pushVacanciesState(VacanciesState.Error(responseCode))
+        pushVacanciesState(VacanciesState.Error(responseCode,false))
     }
 
-    private fun handleEmptyQuery() {
-        pushVacanciesState(VacanciesState.Empty)
-    }
 }
