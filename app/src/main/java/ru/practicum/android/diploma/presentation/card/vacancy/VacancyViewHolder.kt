@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.presentation.card.adapters
+package ru.practicum.android.diploma.presentation.card.vacancy
 
 import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.databinding.JobItemBinding

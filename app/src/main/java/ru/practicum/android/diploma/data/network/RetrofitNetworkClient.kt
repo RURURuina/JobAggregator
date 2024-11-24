@@ -4,6 +4,7 @@ import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import ru.practicum.android.diploma.data.dto.request.CitiesByAreaIdRequest
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
 import ru.practicum.android.diploma.data.dto.response.Response
@@ -62,6 +63,23 @@ class RetrofitNetworkClient(
             return withContext(Dispatchers.IO) {
                 try {
                     val response = hhService.getIndustriesList()
+                    response.apply { resultCode = ResponseStatusCode.Ok }
+                } catch (e: HttpException) {
+                    println(e)
+                    Response().apply { resultCode = ResponseStatusCode.Error }
+                }
+            }
+        }
+    }
+
+    override suspend fun getCitiesBiAreaId(dto: CitiesByAreaIdRequest): Response {
+        if (!isConnected()) {
+            // если нет интернета возврат -1
+            return Response().apply { resultCode = ResponseStatusCode.NoInternet }
+        } else {
+            return withContext(Dispatchers.IO) {
+                try {
+                    val response = hhService.getCitiesByAreaId(dto.areaId)
                     response.apply { resultCode = ResponseStatusCode.Ok }
                 } catch (e: HttpException) {
                     println(e)
