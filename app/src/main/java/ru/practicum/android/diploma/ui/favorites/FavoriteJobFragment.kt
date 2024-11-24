@@ -7,18 +7,16 @@ import androidx.annotation.StringRes
 import androidx.core.bundle.Bundle
 import androidx.core.bundle.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavoriteJobBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
+import ru.practicum.android.diploma.presentation.card.adapters.VacancyAdapter
 import ru.practicum.android.diploma.presentation.favorites.FavoriteJobViewModel
 import ru.practicum.android.diploma.ui.favorites.models.FavoritesState
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
-import ru.practicum.android.diploma.presentation.card.adapters.VacancyAdapter
-import ru.practicum.android.diploma.util.debounce
 
 class FavoriteJobFragment : Fragment() {
     private var binding: FragmentFavoriteJobBinding? = null
@@ -60,7 +58,7 @@ class FavoriteJobFragment : Fragment() {
     }
 
     private fun prepareOnItemClick() {
-        onItemClick =  { vacancy ->
+        onItemClick = { vacancy ->
             val bundle = bundleOf(VACANCY_TRANSFER_KEY to vacancy.id)
             findNavController().navigate(R.id.action_favoriteJobFragment_to_detailsFragment, bundle)
         }
