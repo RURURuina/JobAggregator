@@ -21,7 +21,8 @@ class IndustriesRepositoryImpl(
             }
 
             is ResponseStatusCode.Ok -> {
-                emit(Resource.Success(
+                emit(
+                    Resource.Success(
                     (response as IndustriesResponse).industriesRaw.map { industryData ->
                         industryData.map()
                     }
