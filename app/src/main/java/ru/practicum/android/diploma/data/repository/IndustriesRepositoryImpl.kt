@@ -21,6 +21,7 @@ class IndustriesRepositoryImpl(
             }
 
             is ResponseStatusCode.Ok -> {
+
                 emit(
                     Resource.Success(
                         (response as IndustriesResponse).industriesRaw.map { industryData ->
@@ -36,6 +37,7 @@ class IndustriesRepositoryImpl(
 
             else -> {
                 emit(Resource.Error(ResponseStatusCode.Error))
+
             }
         }
     }
