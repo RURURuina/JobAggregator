@@ -134,7 +134,7 @@ class SearchJobFragment : Fragment() {
 
                 is VacanciesState.Error -> {
                     hideCentralProgressBar()
-                    showError(state.responseState, state.showToast)
+                    showError(state.responseState)
                     keyBoardVisibility(false)
                 }
 
@@ -198,10 +198,11 @@ class SearchJobFragment : Fragment() {
         binding?.progressBar?.visibility = View.GONE
     }
 
-    private fun showError(responseState: ResponseStatusCode?, showToast: Boolean) {
+    private fun showError(responseState: ResponseStatusCode?) {
         when (responseState) {
             ResponseStatusCode.Error -> {
-                if (showToast) {
+                val recycleVieVisible = binding?.vacanciesRecyclerView?.isVisible ?: false
+                if (recycleVieVisible) {
                     showResponseErrToast()
                 } else {
                     binding?.messageChip?.isVisible = false
@@ -215,7 +216,8 @@ class SearchJobFragment : Fragment() {
             }
 
             ResponseStatusCode.NoInternet -> {
-                if (showToast) {
+                val recycleVieVisible = binding?.vacanciesRecyclerView?.isVisible ?: false
+                if (recycleVieVisible) {
                     showNoInternetToast()
                 } else {
                     binding?.messageChip?.isVisible = false
