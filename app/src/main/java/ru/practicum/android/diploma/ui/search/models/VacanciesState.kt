@@ -13,13 +13,12 @@ sealed interface VacanciesState {
         // состояние успешно загруженных данных - видно RV
         val vacancies: List<Vacancy>,
         val isLastPage: Boolean, // последняя страница
-        val isLoading: Boolean,
-        val totalCount: Int?// состояние загрузки
+        val isLoading: Boolean, // состояние загрузки
+        val totalCount: Int? // для вьюшки с общим отображением колличества найденных вакансий
     ) : VacanciesState
 
     data class Error(
         val responseState: ResponseStatusCode?,
-        val showToast: Boolean
     ) : VacanciesState // состояние ошибки - видно placeHolder ошибки
 
     data object Empty : VacanciesState // Состояние "Не найдено" - видно placeHolder

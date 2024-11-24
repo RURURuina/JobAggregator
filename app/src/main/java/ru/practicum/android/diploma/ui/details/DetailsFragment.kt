@@ -25,20 +25,21 @@ import ru.practicum.android.diploma.util.format
 
 class DetailsFragment : Fragment() {
     private val viewModel: DetailsFragmentViewModel by viewModel()
-    private var binding: FragmentDetailsBinding? = null
+    private var _binding: FragmentDetailsBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = FragmentDetailsBinding.inflate(layoutInflater)
-        return binding?.root
+        _binding = FragmentDetailsBinding.inflate(layoutInflater)
+        return _binding?.root
     }
 
     override fun onDetach() {
         super.onDetach()
         true.navBarVisible()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,18 +52,18 @@ class DetailsFragment : Fragment() {
         prepareShareButton()
 
         viewModel.isFavoriteLiveData.observe(viewLifecycleOwner) { isFavorite ->
-            binding?.toolbarLikeButton?.isSelected = isFavorite
+            _binding?.toolbarLikeButton?.isSelected = isFavorite
         }
     }
 
     private fun prepareShareButton() {
-        binding?.toolbarShareButton?.setOnClickListener {
+        _binding?.toolbarShareButton?.setOnClickListener {
             viewModel.shareVacancy()
         }
     }
 
     private fun prepareLikeButton() {
-        binding?.toolbarLikeButton?.setOnClickListener {
+        _binding?.toolbarLikeButton?.setOnClickListener {
             viewModel.likeButton()
         }
     }
@@ -73,7 +74,7 @@ class DetailsFragment : Fragment() {
     }
 
     private fun prepareBackButton() {
-        binding?.preview?.setOnClickListener {
+        _binding?.preview?.setOnClickListener {
             findNavController().popBackStack()
         }
     }
@@ -82,8 +83,8 @@ class DetailsFragment : Fragment() {
         when (state) {
             is DetailsFragmentState.Content -> {
                 showContent(state.vacancy)
-                binding?.errorServer?.isVisible = false
-                binding?.errorLayout?.isVisible = false
+                _binding?.errorServer?.isVisible = false
+                _binding?.errorLayout?.isVisible = false
             }
 
             is DetailsFragmentState.ERROR -> {
@@ -96,28 +97,29 @@ class DetailsFragment : Fragment() {
     private fun renderError(errState: ResponseStatusCode?) {
         when (errState) {
             ResponseStatusCode.Error -> {
-                binding?.errorServer?.isVisible = true
-                binding?.content?.isVisible = false
+                _binding?.errorServer?.isVisible = true
+                _binding?.content?.isVisible = false
             }
 
             ResponseStatusCode.NoInternet -> {
-                binding?.connectionErrorLayout?.isVisible = true
-                binding?.content?.isVisible = false
+                _binding?.connectionErrorLayout?.isVisible = true
+                _binding?.content?.isVisible = false
             }
 
             ResponseStatusCode.Ok -> {
-                binding?.errorLayout?.isVisible = true
-                binding?.content?.isVisible = false            }
+                _binding?.errorLayout?.isVisible = true
+                _binding?.content?.isVisible = false
+            }
 
             else -> {
-                binding?.errorServer?.isVisible = true
-                binding?.content?.isVisible = false
+                _binding?.errorServer?.isVisible = true
+                _binding?.content?.isVisible = false
             }
         }
     }
 
     private fun showContent(vacancy: Vacancy) {
-        binding?.content?.isVisible = true
+        _binding?.content?.isVisible = true
         fillSalary(vacancy.salary)
         fillDescription(vacancy.description)
         fillTitle(vacancy.name)
@@ -130,10 +132,10 @@ class DetailsFragment : Fragment() {
 
     private fun fillKeySkills(keySkills: List<KeySkill>?) {
         keySkills?.let {
-            binding?.keySkillsTitle?.isVisible = keySkills.isNotEmpty()
+            _binding?.keySkillsTitle?.isVisible = keySkills.isNotEmpty()
             var str = ""
             keySkills.map { str += getString(R.string.key_skill_mask, it.name) }
-            binding?.keySkillsText?.text = HtmlCompat.fromHtml(
+            _binding?.keySkillsText?.text = HtmlCompat.fromHtml(
                 str,
                 HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
             )
@@ -141,31 +143,31 @@ class DetailsFragment : Fragment() {
     }
 
     private fun fillEmployer(vacancy: Vacancy) {
-        binding?.cardTitleText?.text = vacancy.employer?.name
-        binding?.cardCityText?.text = vacancy.adress?.full ?: vacancy.area?.name
+        _binding?.cardTitleText?.text = vacancy.employer?.name
+        _binding?.cardCityText?.text = vacancy.adress?.full ?: vacancy.area?.name
 
 //        этот блок для отображения заглушки без интернета
         context?.let { context ->
-            binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.original, context)
+            _binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.original, context)
         }
     }
 
     private fun fillEmployment(vacancy: Vacancy?) {
         val str = "${vacancy?.employment?.name}. ${vacancy?.schedule?.name}"
-        binding?.workShiftText?.text = str
+        _binding?.workShiftText?.text = str
     }
 
     private fun fillExperience(experience: Experience?) {
-        binding?.experienceTitleText?.text = experience?.name
+        _binding?.experienceTitleText?.text = experience?.name
     }
 
     private fun fillTitle(tittle: String?) {
-        binding?.titleName?.text = tittle
+        _binding?.titleName?.text = tittle
     }
 
     private fun fillDescription(description: String?) {
         description?.let {
-            binding?.descriptionHtmlText?.text = HtmlCompat.fromHtml(
+            _binding?.descriptionHtmlText?.text = HtmlCompat.fromHtml(
                 it,
                 HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
             )
@@ -173,7 +175,7 @@ class DetailsFragment : Fragment() {
     }
 
     private fun fillSalary(salary: Salary?) {
-        binding?.titleSalary?.text = salary.format()
+        _binding?.titleSalary?.text = salary.format()
     }
 
     private fun prepareViewModel() {
@@ -187,8 +189,8 @@ class DetailsFragment : Fragment() {
     }
 
     private fun Boolean.progressBarVisible() {
-        binding?.progressBar?.isVisible = this
-        binding?.content?.isVisible = !this
+        _binding?.progressBar?.isVisible = this
+        _binding?.content?.isVisible = !this
     }
 
 }

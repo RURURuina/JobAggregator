@@ -21,10 +21,6 @@ import ru.practicum.android.diploma.presentation.card.adapters.VacancyAdapter
 import ru.practicum.android.diploma.util.debounce
 
 class FavoriteJobFragment : Fragment() {
-    private companion object {
-        const val CLICK_DEBOUNCE_DELAY = 1000L
-    }
-
     private var binding: FragmentFavoriteJobBinding? = null
     private val viewModel: FavoriteJobViewModel by viewModel()
     private var vacancyAdapter: VacancyAdapter? = null
@@ -64,11 +60,7 @@ class FavoriteJobFragment : Fragment() {
     }
 
     private fun prepareOnItemClick() {
-        onItemClick = debounce(
-            delayMillis = CLICK_DEBOUNCE_DELAY,
-            coroutineScope = viewLifecycleOwner.lifecycleScope,
-            useLastParam = true
-        ) { vacancy ->
+        onItemClick =  { vacancy ->
             val bundle = bundleOf(VACANCY_TRANSFER_KEY to vacancy.id)
             findNavController().navigate(R.id.action_favoriteJobFragment_to_detailsFragment, bundle)
         }

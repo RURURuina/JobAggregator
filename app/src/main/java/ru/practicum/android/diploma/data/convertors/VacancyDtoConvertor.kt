@@ -42,25 +42,25 @@ class VacancyDtoConvertor {
     }
 
     private fun List<KeySkillData>?.mapToListKeySkill(): List<KeySkill>? {
-        this?.let {
+        this?.let { oldList: List<KeySkillData> ->
             val list = mutableListOf<KeySkill>()
-            this.map { list.add(it.map()) }
+            oldList.map { keySkillData: KeySkillData -> list.add(keySkillData.map()) }
             return list
         } ?: return null
     }
 
     private fun List<LanguageData>?.mapToLostLanguage(): List<Language>? {
-        this?.let {
+        this?.let { oldList: List<LanguageData> ->
             val list = mutableListOf<Language>()
-            this.map { list.add(it.map()) }
+            oldList.map { languageData: LanguageData -> list.add(languageData.map()) }
             return list
         } ?: return null
     }
 
     private fun List<DriverLicenseData>?.mapToListDriverLicense(): List<DriverLicense>? {
-        this?.let {
+        this?.let { oldList: List<DriverLicenseData> ->
             val list = mutableListOf<DriverLicense>()
-            this.map { list.add(it.map()) }
+            oldList.map { driverLicenseData: DriverLicenseData -> list.add(driverLicenseData.map()) }
             return list
         } ?: return null
     }

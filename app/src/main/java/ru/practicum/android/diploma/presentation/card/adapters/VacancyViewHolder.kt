@@ -16,6 +16,7 @@ class VacancyViewHolder(private val binding: JobItemBinding) : RecyclerView.View
             cardSalaryText.text = vacancy.salary.format()
 
             vacancy.employer?.logoUrls?.original.let { logoUrl ->
+                println("uri: $logoUrl")
                 Glide.with(binding.root)
                     .load(logoUrl)
                     .placeholder(R.drawable.placeholder_recycleview)
