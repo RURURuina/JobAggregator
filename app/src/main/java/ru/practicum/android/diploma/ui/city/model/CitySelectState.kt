@@ -6,4 +6,5 @@ sealed interface CitySelectState {
     data class Success(val cities: List<Area>) : CitySelectState
     data object Error : CitySelectState
     data object Empty : CitySelectState
+    data object Exit : CitySelectState
 }

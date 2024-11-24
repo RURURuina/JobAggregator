@@ -6,4 +6,6 @@ import ru.practicum.android.diploma.util.Resource
 
 interface CitySelectRepository {
     suspend fun getCitiesByAreaId(id: String): Flow<Resource<List<Area>>?>
+    suspend fun getAllArea(): Flow<Resource<List<Area>>?>
+
 }

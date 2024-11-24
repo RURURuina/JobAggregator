@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.bundle.Bundle
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
@@ -40,6 +41,7 @@ class CitySelectFragment : Fragment() {
         navBarVisible(false)
         initEditText()
         observeVieModel()
+        onItemClick =  viewModel.chooseArea()
         initRecyclerView()
     }
 
@@ -62,6 +64,10 @@ class CitySelectFragment : Fragment() {
                 is CitySelectState.Error -> {
                     keyBoardVisibility(false)
 
+                }
+
+                CitySelectState.Exit -> {
+                    findNavController().popBackStack()
                 }
             }
         }

@@ -18,10 +18,12 @@ interface HhApiService {
     @GET("vacancies/{id}")
     suspend fun searchVacancyById(@Path("id") id: String): VacancyData?
 
-
     @GET("industries")
     suspend fun getIndustriesList(): IndustriesResponse
 
     @GET("/areas/{areas_id}")
     suspend fun getCitiesByAreaId(@Path("areas_id") areasId: String): CityResponse
+
+    @GET("/areas")
+    suspend fun getAllArea(): List<CityResponse>
 }

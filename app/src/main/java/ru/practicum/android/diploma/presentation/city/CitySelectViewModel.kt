@@ -19,14 +19,41 @@ class CitySelectViewModel(private val citySelectInteractor: CitySelectInteractor
 
     init {
         // получить айди страны
-        getCitiesById("2019") // тестовое айди, потом полученное внести "2019"
-
+        // если айди пустой, то вывести все ареи
+        getAllAreas()
+        // если не пустой, то вывести ареи принадлежащие этому айди
+        // getCitiesById("2019") // тестовое айди, потом полученное внести "2019"
     }
 
-    fun getCitiesById(id: String) {
+    fun chooseArea() = { area: Area ->
+        println(area)
+        saveToFilter(area)
+        pushState(CitySelectState.Exit)
+    }
+private fun saveToFilter(area: Area){
+    // что то, что сохранит в фильтр данные
+}
+    private fun getCitiesById(id: String) {
         viewModelScope.launch {
             try {
                 citySelectInteractor.getCitiesByAreaId(id).collect { resource ->
+                    resource?.data?.let { listAreas ->
+                        areasList.addAll(listAreas)
+                        pushState(CitySelectState.Success(areasList))
+                    } ?: pushState(CitySelectState.Error)
+                }
+            } catch (e: SocketTimeoutException) {
+                this.coroutineContext.job.cancel()
+                handleErrorSocketTimeoutException(e)
+
+            }
+        }
+    }
+
+    private fun getAllAreas() {
+        viewModelScope.launch {
+            try {
+                citySelectInteractor.getAllArea().collect { resource ->
                     resource?.data?.let { listAreas ->
                         areasList.addAll(listAreas)
                         pushState(CitySelectState.Success(listAreas))

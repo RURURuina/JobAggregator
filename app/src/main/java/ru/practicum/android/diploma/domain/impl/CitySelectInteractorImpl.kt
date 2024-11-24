@@ -10,4 +10,8 @@ class CitySelectInteractorImpl(val citySelectRepository: CitySelectRepository) :
     override suspend fun getCitiesByAreaId(id: String): Flow<Resource<List<Area>>?> {
         return citySelectRepository.getCitiesByAreaId(id)
     }
+
+    override suspend fun getAllArea(): Flow<Resource<List<Area>>?> {
+        return citySelectRepository.getAllArea()
+    }
 }

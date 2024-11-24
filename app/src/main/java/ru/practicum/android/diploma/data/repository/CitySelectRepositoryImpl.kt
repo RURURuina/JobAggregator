@@ -40,4 +40,31 @@ class CitySelectRepositoryImpl(
             }
         }
     }
+
+    override suspend fun getAllArea(): Flow<Resource<List<Area>>?> = flow {
+        val response = networkClient.getAllArea()
+        when (response.resultCode) {
+            is ResponseStatusCode.NoInternet -> {
+                emit(Resource.Error(ResponseStatusCode.NoInternet))
+            }
+
+            is ResponseStatusCode.Ok -> {
+                emit(
+                    Resource.Success(
+                        (response as CityResponse).areas.map { areaData ->
+                            areaData.map()
+                        }
+                    )
+                )
+            }
+
+            is ResponseStatusCode.Error -> {
+                emit(Resource.Error(ResponseStatusCode.Error))
+            }
+
+            else -> {
+                emit(Resource.Error(ResponseStatusCode.Error))
+            }
+        }
+    }
 }
