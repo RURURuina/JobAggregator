@@ -35,7 +35,7 @@ class FiltrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: android.os.Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navBarVisible(false)
-        binding.workPlaceLayout.setOnClickListener{
+        binding.workPlaceLayout.setOnClickListener {
             findNavController().navigate(R.id.action_filtrationFragment_to_selectRegionFragment)
         }
 

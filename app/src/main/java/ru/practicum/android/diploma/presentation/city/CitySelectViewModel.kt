@@ -22,7 +22,7 @@ class CitySelectViewModel(private val citySelectInteractor: CitySelectInteractor
         // если айди пустой, то вывести все ареи
         getAllAreas()
         // если не пустой, то вывести ареи принадлежащие этому айди
-         getCitiesById("2019") // тестовое айди, потом полученное внести "2019"
+        getCitiesById("2019") // тестовое айди, потом полученное внести "2019"
 
     }
 
