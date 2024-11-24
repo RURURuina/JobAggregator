@@ -25,6 +25,12 @@
     <string name="empty_list">Список пуст</string>
     <string name="vacancy_details_no_vacancy_error">Вакансия не найдена или\nудалена</string>
     <string name="vacancy_details_server_error">Ошибка сервера</string>
+    <string name="filter_settings">Настройки фильтрации</string>
+    <string name="work_place">Место работы</string>
+    <string name="industry">Отрасль</string>
+    <string name="expected_salary">Ожидаемая зарплата</string>
+    <string name="enter_amount">Введите сумму</string>
+    <string name="do_not_show_without_salary">Не показывать без зарплаты</string>
     <string name="no_internet_toast">Проверьте подключение к интернету</string>
     <string name="response_error_toast">Произошла ошибка</string>
     <string name="key_skill_mask"><![CDATA[<ul> <li>%1$s.</li>]]></string>
@@ -38,4 +44,7 @@
         <item quantity="other">Найдено %1$d other</item>
     </plurals>
 
+    <string name="industry_selection">Выбор отрасли</string>
+    <string name="select">Выбрать</string>
+    <string name="clear">Очистить</string>
 </resources>

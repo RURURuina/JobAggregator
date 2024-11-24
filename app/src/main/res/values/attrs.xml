@@ -2,5 +2,7 @@
     <declare-styleable name="FullscreenAttrs">
         <attr name="fullscreenBackgroundColor" format="color" />
         <attr name="fullscreenTextColor" format="color" />
+        <attr name="editTextBgColor" format="color" />
+        <attr name="editTextHintColor" format="color"/>
     </declare-styleable>
 </resources>
