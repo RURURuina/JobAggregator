@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui.search.adapters
+package ru.practicum.android.diploma.presentation.card.adapters
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,6 +16,7 @@ class VacancyViewHolder(private val binding: JobItemBinding) : RecyclerView.View
             cardSalaryText.text = vacancy.salary.format()
 
             vacancy.employer?.logoUrls?.original.let { logoUrl ->
+                println("uri: $logoUrl")
                 Glide.with(binding.root)
                     .load(logoUrl)
                     .placeholder(R.drawable.placeholder_recycleview)

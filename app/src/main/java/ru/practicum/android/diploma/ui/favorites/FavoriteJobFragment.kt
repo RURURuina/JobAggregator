@@ -1,30 +1,24 @@
 package ru.practicum.android.diploma.ui.favorites
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.core.os.bundleOf
+import androidx.core.bundle.Bundle
+import androidx.core.bundle.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavoriteJobBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
+import ru.practicum.android.diploma.presentation.card.adapters.VacancyAdapter
 import ru.practicum.android.diploma.presentation.favorites.FavoriteJobViewModel
 import ru.practicum.android.diploma.ui.favorites.models.FavoritesState
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
-import ru.practicum.android.diploma.ui.search.adapters.VacancyAdapter
-import ru.practicum.android.diploma.util.debounce
 
 class FavoriteJobFragment : Fragment() {
-    private companion object {
-        const val CLICK_DEBOUNCE_DELAY = 1000L
-    }
-
     private var binding: FragmentFavoriteJobBinding? = null
     private val viewModel: FavoriteJobViewModel by viewModel()
     private var vacancyAdapter: VacancyAdapter? = null
@@ -35,7 +29,6 @@ class FavoriteJobFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        println()
         binding = FragmentFavoriteJobBinding.inflate(layoutInflater)
         return binding?.root
     }
@@ -59,20 +52,14 @@ class FavoriteJobFragment : Fragment() {
     }
 
     private fun init() {
-
         vacancyAdapter = VacancyAdapter()
         binding?.favoritesRv?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding?.favoritesRv?.adapter = vacancyAdapter
     }
 
     private fun prepareOnItemClick() {
-        onItemClick = debounce(
-            delayMillis = CLICK_DEBOUNCE_DELAY,
-            coroutineScope = viewLifecycleOwner.lifecycleScope,
-            useLastParam = true
-        ) { vacancy ->
+        onItemClick = { vacancy ->
             val bundle = bundleOf(VACANCY_TRANSFER_KEY to vacancy.id)
-            /*vacancy id нужно будет вынести в компаньон обджект в апп*/
             findNavController().navigate(R.id.action_favoriteJobFragment_to_detailsFragment, bundle)
         }
 

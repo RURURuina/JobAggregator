@@ -1,14 +1,15 @@
 package ru.practicum.android.diploma.ui.details
 
-import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.bundle.Bundle
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentDetailsBinding
 import ru.practicum.android.diploma.domain.models.entity.Experience
 import ru.practicum.android.diploma.domain.models.entity.KeySkill
@@ -24,59 +25,56 @@ import ru.practicum.android.diploma.util.format
 
 class DetailsFragment : Fragment() {
     private val viewModel: DetailsFragmentViewModel by viewModel()
-    private var vacancyId: String? = null
-    private var binding: FragmentDetailsBinding? = null
+    private var _binding: FragmentDetailsBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = FragmentDetailsBinding.inflate(layoutInflater)
-        return binding?.root
+        _binding = FragmentDetailsBinding.inflate(layoutInflater)
+        return _binding?.root
     }
 
     override fun onDetach() {
         super.onDetach()
         true.navBarVisible()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         false.navBarVisible()
         prepareViewModel()
-        getVacancyId()
         initViewModel()
         prepareBackButton()
         prepareLikeButton()
         prepareShareButton()
 
         viewModel.isFavoriteLiveData.observe(viewLifecycleOwner) { isFavorite ->
-            binding?.toolbarLikeButton?.isSelected = isFavorite
+            _binding?.toolbarLikeButton?.isSelected = isFavorite
         }
     }
 
     private fun prepareShareButton() {
-        binding?.toolbarShareButton?.setOnClickListener {
+        _binding?.toolbarShareButton?.setOnClickListener {
             viewModel.shareVacancy()
         }
     }
 
     private fun prepareLikeButton() {
-        binding?.toolbarLikeButton?.setOnClickListener {
+        _binding?.toolbarLikeButton?.setOnClickListener {
             viewModel.likeButton()
         }
     }
 
     private fun initViewModel() {
-        vacancyId?.let {
-            viewModel.start(it)
-            true.progressBarVisible()
-        }
+        viewModel.getVacancy(arguments?.getString(VACANCY_TRANSFER_KEY))
+        true.progressBarVisible()
     }
 
     private fun prepareBackButton() {
-        binding?.preview?.setOnClickListener {
+        _binding?.preview?.setOnClickListener {
             findNavController().popBackStack()
         }
     }
@@ -85,33 +83,43 @@ class DetailsFragment : Fragment() {
         when (state) {
             is DetailsFragmentState.Content -> {
                 showContent(state.vacancy)
-                binding?.errorServer?.isVisible = false
-                binding?.errorLayout?.isVisible = false
+                _binding?.errorServer?.isVisible = false
+                _binding?.errorLayout?.isVisible = false
             }
 
             is DetailsFragmentState.ERROR -> {
+                false.progressBarVisible()
                 renderError(state.errState)
             }
         }
     }
 
-    private fun renderError(errState: ResponseStatusCode) {
+    private fun renderError(errState: ResponseStatusCode?) {
         when (errState) {
-            ResponseStatusCode.ERROR -> {
-                binding?.errorServer?.isVisible = true
+            ResponseStatusCode.Error -> {
+                _binding?.errorServer?.isVisible = true
+                _binding?.content?.isVisible = false
             }
 
-            ResponseStatusCode.NO_INTERNET -> {
-                binding?.errorLayout?.isVisible = true
+            ResponseStatusCode.NoInternet -> {
+                _binding?.connectionErrorLayout?.isVisible = true
+                _binding?.content?.isVisible = false
             }
 
-            ResponseStatusCode.OK -> {
-                /*наследие sealed classa*/
+            ResponseStatusCode.Ok -> {
+                _binding?.errorLayout?.isVisible = true
+                _binding?.content?.isVisible = false
+            }
+
+            else -> {
+                _binding?.errorServer?.isVisible = true
+                _binding?.content?.isVisible = false
             }
         }
     }
 
     private fun showContent(vacancy: Vacancy) {
+        _binding?.content?.isVisible = true
         fillSalary(vacancy.salary)
         fillDescription(vacancy.description)
         fillTitle(vacancy.name)
@@ -124,49 +132,50 @@ class DetailsFragment : Fragment() {
 
     private fun fillKeySkills(keySkills: List<KeySkill>?) {
         keySkills?.let {
-            binding?.keySkillsTitle?.isVisible = keySkills.isNotEmpty()
+            _binding?.keySkillsTitle?.isVisible = keySkills.isNotEmpty()
             var str = ""
-            keySkills.map { str += "<ul> <li>${it.name}.</li>" }
-            binding?.keySkillsText?.text = Html.fromHtml(
+            keySkills.map { str += getString(R.string.key_skill_mask, it.name) }
+            _binding?.keySkillsText?.text = HtmlCompat.fromHtml(
                 str,
-                Html.FROM_HTML_MODE_COMPACT
+                HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
             )
         }
     }
 
     private fun fillEmployer(vacancy: Vacancy) {
-        binding?.cardTitleText?.text = vacancy.employer?.name
-        binding?.cardCityText?.text = vacancy.adress?.full ?: vacancy.area?.name
+        _binding?.cardTitleText?.text = vacancy.employer?.name
+        _binding?.cardCityText?.text = vacancy.adress?.full ?: vacancy.area?.name
 
 //        этот блок для отображения заглушки без интернета
         context?.let { context ->
-            binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.original, context)
+            _binding?.cardImage?.fillBy(vacancy.employer?.logoUrls?.original, context)
         }
     }
 
     private fun fillEmployment(vacancy: Vacancy?) {
         val str = "${vacancy?.employment?.name}. ${vacancy?.schedule?.name}"
-        binding?.workShiftText?.text = str
+        _binding?.workShiftText?.text = str
     }
 
     private fun fillExperience(experience: Experience?) {
-        binding?.experienceTitleText?.text = experience?.name
+        _binding?.experienceTitleText?.text = experience?.name
     }
 
     private fun fillTitle(tittle: String?) {
-        binding?.titleName?.text = tittle
+        _binding?.titleName?.text = tittle
     }
 
     private fun fillDescription(description: String?) {
-        binding?.descriptionHtmlText?.text =
-            Html.fromHtml(
-                description,
-                Html.FROM_HTML_MODE_COMPACT
+        description?.let {
+            _binding?.descriptionHtmlText?.text = HtmlCompat.fromHtml(
+                it,
+                HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
             )
+        }
     }
 
     private fun fillSalary(salary: Salary?) {
-        binding?.titleSalary?.text = salary.format()
+        _binding?.titleSalary?.text = salary.format()
     }
 
     private fun prepareViewModel() {
@@ -175,16 +184,13 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    private fun getVacancyId() {
-        vacancyId = arguments?.getString(VACANCY_TRANSFER_KEY)
-    }
-
     private fun Boolean.navBarVisible() {
         (activity as RootActivity).bottomNavigationVisibility(this)
     }
 
     private fun Boolean.progressBarVisible() {
-        binding?.progressBar?.isVisible = this
+        _binding?.progressBar?.isVisible = this
+        _binding?.content?.isVisible = !this
     }
 
 }

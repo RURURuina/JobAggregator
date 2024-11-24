@@ -63,101 +63,60 @@ class FavoriteVacancyDbConverter(
                 description = vacancyEntity.description,
                 schedule = getSchedule(vacancyEntity),
                 url = vacancyEntity.url,
-                isFavorite = true
             )
         }
     }
 
-    private fun getEmployer(vacancyEntity: FavoritesVacancyEntity): Employer {
-        return safeFromJson(vacancyEntity.employer, object : TypeToken<Employer>() {}) ?: Employer(
-            null,
-            null
-        )
+    private fun getEmployer(vacancyEntity: FavoritesVacancyEntity): Employer? {
+        return safeFromJson(vacancyEntity.employer, object : TypeToken<Employer>() {})
     }
 
-
-    private fun getSalary(vacancyEntity: FavoritesVacancyEntity): Salary {
-        return safeFromJson(vacancyEntity.salary, object : TypeToken<Salary>() {}) ?: Salary(
-            null,
-            null,
-            null,
-            null
-        )
+    private fun getSalary(vacancyEntity: FavoritesVacancyEntity): Salary? {
+        return safeFromJson(vacancyEntity.salary, object : TypeToken<Salary>() {})
     }
 
-    private fun getAddress(vacancyEntity: FavoritesVacancyEntity): Address {
-        return safeFromJson(vacancyEntity.address, object : TypeToken<Address>() {}) ?: Address(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        )
+    private fun getAddress(vacancyEntity: FavoritesVacancyEntity): Address? {
+        return safeFromJson(vacancyEntity.address, object : TypeToken<Address>() {})
     }
 
-    private fun getExperience(vacancyEntity: FavoritesVacancyEntity): Experience {
+    private fun getExperience(vacancyEntity: FavoritesVacancyEntity): Experience? {
         return safeFromJson(vacancyEntity.experience, object : TypeToken<Experience>() {})
-            ?: Experience(null)
     }
 
-    private fun getEmployment(vacancyEntity: FavoritesVacancyEntity): Employment {
+    private fun getEmployment(vacancyEntity: FavoritesVacancyEntity): Employment? {
         return safeFromJson(vacancyEntity.employment, object : TypeToken<Employment>() {})
-            ?: Employment(null)
     }
 
-    private fun getKeySkills(vacancyEntity: FavoritesVacancyEntity): List<KeySkill> {
+    private fun getKeySkills(vacancyEntity: FavoritesVacancyEntity): List<KeySkill>? {
         return safeFromJson(vacancyEntity.keySkills, object : TypeToken<List<KeySkill>>() {})
-            ?: emptyList()
     }
 
-    private fun getLanguages(vacancyEntity: FavoritesVacancyEntity): List<Language> {
+    private fun getLanguages(vacancyEntity: FavoritesVacancyEntity): List<Language>? {
         return safeFromJson(vacancyEntity.languages, object : TypeToken<List<Language>>() {})
-            ?: emptyList()
     }
 
-    private fun getDriverLicenseTypes(vacancyEntity: FavoritesVacancyEntity): List<DriverLicense> {
-        return safeFromJson(
-            vacancyEntity.driverLicenseTypes,
-            object : TypeToken<List<DriverLicense>>() {}) ?: emptyList()
+    private fun getDriverLicenseTypes(vacancyEntity: FavoritesVacancyEntity): List<DriverLicense>? {
+        return safeFromJson(vacancyEntity.driverLicenseTypes, object : TypeToken<List<DriverLicense>>() {})
     }
 
-    private fun getArea(vacancyEntity: FavoritesVacancyEntity): Area {
-        return safeFromJson(vacancyEntity.area, object : TypeToken<Area>() {}) ?: Area(
-            null,
-            null,
-            null
-        )
+    private fun getArea(vacancyEntity: FavoritesVacancyEntity): Area? {
+        return safeFromJson(vacancyEntity.area, object : TypeToken<Area>() {})
     }
 
-    private fun getIndustry(vacancyEntity: FavoritesVacancyEntity): Industry {
-        return safeFromJson(vacancyEntity.industry, object : TypeToken<Industry>() {}) ?: Industry(
-            "",
-            "",
-            null
-        )
+    private fun getIndustry(vacancyEntity: FavoritesVacancyEntity): Industry? {
+        return safeFromJson(vacancyEntity.industry, object : TypeToken<Industry>() {})
     }
 
-    private fun getCountry(vacancyEntity: FavoritesVacancyEntity): Country {
-        return safeFromJson(vacancyEntity.country, object : TypeToken<Country>() {}) ?: Country(
-            "",
-            ""
-        )
+    private fun getCountry(vacancyEntity: FavoritesVacancyEntity): Country? {
+        return safeFromJson(vacancyEntity.country, object : TypeToken<Country>() {})
     }
 
-    private fun getContacts(vacancyEntity: FavoritesVacancyEntity): Contacts {
-        return safeFromJson(vacancyEntity.contacts, object : TypeToken<Contacts>() {}) ?: Contacts(
-            null,
-            null,
-            null
-        )
+    private fun getContacts(vacancyEntity: FavoritesVacancyEntity): Contacts? {
+        return safeFromJson(vacancyEntity.contacts, object : TypeToken<Contacts>() {})
     }
 
-    private fun getSchedule(vacancyEntity: FavoritesVacancyEntity): Schedule {
-        return safeFromJson(vacancyEntity.schedule, object : TypeToken<Schedule>() {}) ?: Schedule(
-            null,
-            null
-        )
+    private fun getSchedule(vacancyEntity: FavoritesVacancyEntity): Schedule? {
+        return safeFromJson(vacancyEntity.schedule, object : TypeToken<Schedule>() {})
     }
 
     private fun <T> safeFromJson(json: String?, typeOfT: TypeToken<T>): T? {

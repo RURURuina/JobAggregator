@@ -23,7 +23,7 @@ class FavoritesVacancyRepositoryImpl(
     }
 
     override suspend fun isFavoriteCheck(vacancyId: String): Boolean {
-        return favoritesVacancyDao.getAllFavoritesIds().contains(vacancyId)
+        return favoritesVacancyDao.getFavoriteVacancyById(vacancyId) != null
     }
 
     override fun getFavoriteVacancies(): Flow<List<Vacancy>> {
