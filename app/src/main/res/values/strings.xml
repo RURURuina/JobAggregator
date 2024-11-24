@@ -33,6 +33,17 @@
     <string name="do_not_show_without_salary">Не показывать без зарплаты</string>
     <string name="no_internet_toast">Проверьте подключение к интернету</string>
     <string name="response_error_toast">Произошла ошибка</string>
+    <string name="key_skill_mask"><![CDATA[<ul> <li>%1$s.</li>]]></string>
+
+    <plurals name="plurals_vacancies">
+        <item quantity="zero">Найдено %1$d вакансий</item>
+        <item quantity="one">Найдено %1$d вакансия</item>
+        <item quantity="two">Найдено %1$d вакансии</item>
+        <item quantity="few">Найдено %1$d вакансии</item>
+        <item quantity="many">Найдено %1$d вакансий</item>
+        <item quantity="other">Найдено %1$d other</item>
+    </plurals>
+
     <string name="industry_selection">Выбор отрасли</string>
     <string name="select">Выбрать</string>
     <string name="clear">Очистить</string>

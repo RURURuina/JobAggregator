@@ -7,11 +7,11 @@ import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.util.Resource
 
 class HhInteractorImpl(val hhRepository: HhRepository) : HhInteractor {
-    override suspend fun getVacancies(expression: HashMap<String, String>): Flow<Resource<List<Vacancy>>> {
+    override suspend fun getVacancies(expression: HashMap<String, String>): Flow<Resource<List<Vacancy>>?> {
         return hhRepository.getVacancies(expression)
     }
 
-    override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy>> {
+    override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy?>> {
         return hhRepository.searchVacanceById(id)
     }
 }
