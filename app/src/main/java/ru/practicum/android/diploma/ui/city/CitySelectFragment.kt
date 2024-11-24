@@ -41,7 +41,7 @@ class CitySelectFragment : Fragment() {
         navBarVisible(false)
         initEditText()
         observeVieModel()
-        onItemClick =  viewModel.chooseArea()
+        onItemClick = viewModel.chooseArea()
         initRecyclerView()
     }
 

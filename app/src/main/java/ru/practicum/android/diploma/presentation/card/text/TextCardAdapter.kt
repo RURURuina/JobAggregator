@@ -3,10 +3,8 @@ package ru.practicum.android.diploma.presentation.card.text
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import ru.practicum.android.diploma.databinding.JobItemBinding
 import ru.practicum.android.diploma.databinding.TextItemBinding
 import ru.practicum.android.diploma.domain.models.entity.Area
-import ru.practicum.android.diploma.domain.models.entity.Vacancy
 
 class TextCardAdapter : ListAdapter<Area, TextCardViewHolder>(TextCardDiffCallback()) {
     var onItemClick = { _: Area -> }

@@ -22,7 +22,8 @@ class CitySelectViewModel(private val citySelectInteractor: CitySelectInteractor
         // если айди пустой, то вывести все ареи
         getAllAreas()
         // если не пустой, то вывести ареи принадлежащие этому айди
-        // getCitiesById("2019") // тестовое айди, потом полученное внести "2019"
+         getCitiesById("2019") // тестовое айди, потом полученное внести "2019"
+
     }
 
     fun chooseArea() = { area: Area ->
@@ -30,9 +31,11 @@ class CitySelectViewModel(private val citySelectInteractor: CitySelectInteractor
         saveToFilter(area)
         pushState(CitySelectState.Exit)
     }
-private fun saveToFilter(area: Area){
-    // что то, что сохранит в фильтр данные
-}
+
+    private fun saveToFilter(area: Area) {
+        // что то, что сохранит в фильтр данные
+    }
+
     private fun getCitiesById(id: String) {
         viewModelScope.launch {
             try {
