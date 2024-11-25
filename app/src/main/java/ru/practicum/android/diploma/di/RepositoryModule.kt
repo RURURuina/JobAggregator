@@ -26,7 +26,7 @@ val repositoryModule = module {
     single<HhRepository> {
         HhRepositoryImpl(
             networkClient = get(),
-            vacancyDtoConvertor = get()
+            vacancyDtoConvertor = get(),
         )
     }
 
