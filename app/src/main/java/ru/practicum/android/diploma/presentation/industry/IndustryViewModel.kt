@@ -57,6 +57,7 @@ class IndustryViewModel(private val interactor: IndustriesInteractor) : ViewMode
                 }
             }
             _industries.value = filteredList
+
         }
     }
 }
