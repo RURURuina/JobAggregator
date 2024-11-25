@@ -61,18 +61,18 @@ class RetrofitNetworkClient(
     override suspend fun getIndustriesList(): Response {
         if (!isConnected()) {
             // если нет интернета возврат -1
-            return Response().apply { resultCode = ResponseStatusCode.NO_INTERNET }
+            return Response().apply { resultCode = ResponseStatusCode.NoInternet }
         }
         return withContext(Dispatchers.IO) {
             try {
                 val industriesList = hhService.getIndustriesList()
                 IndustriesResponse.fromList(industriesList).apply {
-                    resultCode = ResponseStatusCode.OK
+                    resultCode = ResponseStatusCode.Ok
                 }
             } catch (e: Exception) {
                 println(e)
                 Response().apply {
-                    resultCode = ResponseStatusCode.ERROR
+                    resultCode = ResponseStatusCode.Error
                 }
             }
         }
