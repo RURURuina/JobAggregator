@@ -27,7 +27,7 @@ class IndustryViewModel(private val interactor: IndustriesInteractor) : ViewMode
     private fun getIndustries() {
         viewModelScope.launch {
             interactor.getIndustriesList().collect { result ->
-                when(result) {
+                when (result) {
                     is Resource.Success -> {
                         unFilteredList = result.data?.flatMap { industry ->
                             industry.industries ?: emptyList()

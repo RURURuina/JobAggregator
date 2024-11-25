@@ -69,7 +69,7 @@ class RetrofitNetworkClient(
                 IndustriesResponse.fromList(industriesList).apply {
                     resultCode = ResponseStatusCode.Ok
                 }
-            } catch (e: Exception) {
+            } catch (e: HttpException) {
                 println(e)
                 Response().apply {
                     resultCode = ResponseStatusCode.Error

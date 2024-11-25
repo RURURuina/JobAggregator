@@ -36,7 +36,7 @@ val viewModelModule = module {
         )
     }
 
-    viewModel{
+    viewModel {
         IndustryViewModel(
             interactor = get(),
         )

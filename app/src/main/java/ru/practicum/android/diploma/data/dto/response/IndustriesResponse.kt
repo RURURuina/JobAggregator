@@ -6,7 +6,7 @@ data class IndustriesResponse(
     val industriesRaw: List<IndustryData>
 ) : Response() {
     companion object {
-        fun fromList(list : List<IndustryData>): IndustriesResponse {
+        fun fromList(list: List<IndustryData>): IndustriesResponse {
             return IndustriesResponse(list)
         }
     }

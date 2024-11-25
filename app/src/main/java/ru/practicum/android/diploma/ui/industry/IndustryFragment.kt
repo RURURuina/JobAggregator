@@ -1,18 +1,18 @@
 package ru.practicum.android.diploma.ui.industry
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.text.Editable
-import android.text.TextWatcher
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import ru.practicum.android.diploma.presentation.industry.IndustryViewModel
+import androidx.fragment.app.Fragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentIndustryBinding
 import ru.practicum.android.diploma.domain.models.entity.IndustryNested
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.presentation.industry.IndustryViewModel
 import ru.practicum.android.diploma.ui.custom.CustomRadioLayout
 
 class IndustryFragment : Fragment() {
@@ -66,13 +66,17 @@ class IndustryFragment : Fragment() {
 
     private fun setupSearchFilter() {
         binding.filterEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int){
+                // Не нужно
+            }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.filterIndustries(s?.toString() ?: "")
             }
 
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                // Не нужно
+            }
         })
     }
 
