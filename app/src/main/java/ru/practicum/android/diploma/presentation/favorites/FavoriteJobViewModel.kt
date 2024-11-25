@@ -13,7 +13,7 @@ import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.favorites.models.FavoritesState
 
 class FavoriteJobViewModel(
-    private val interactor: FavoritesInteractor
+    private val interactor: FavoritesInteractor,
 ) : ViewModel() {
 
     private val _favoritesState = MutableLiveData<FavoritesState>()
@@ -23,7 +23,13 @@ class FavoriteJobViewModel(
         viewModelScope.launch {
             interactor.getFavoriteVacancies()
                 .onStart { pushFavoriteState(FavoritesState.Loading) }
-                .catch { _ -> pushFavoriteState(FavoritesState.Error(R.string.couldnt_get_job_list)) }   //обработка ошибок
+                .catch { _ ->
+                    pushFavoriteState(
+                        FavoritesState.Error(
+                            R.string.couldnt_get_job_list
+                        )
+                    )
+                } // обработка ошибок
                 .collect { vacancies ->
                     showData(vacancies)
                 }

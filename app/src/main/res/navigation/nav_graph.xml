@@ -86,7 +86,7 @@
         tools:layout="@layout/fragment_city_select" />
     <fragment
         android:id="@+id/industryFragment"
-        android:name="ru.practicum.android.diploma.ui.industry.industryFragment"
+        android:name="ru.practicum.android.diploma.ui.industry.IndustryFragment"
         android:label="fragment_industry"
         tools:layout="@layout/fragment_industry" />
     <fragment

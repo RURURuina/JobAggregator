@@ -165,6 +165,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_edit_text"
+        app:layout_constraintBottom_toTopOf="@id/vacancies_recycler_view"
         tools:ignore="HardcodedText" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -176,7 +177,7 @@
         app:layout_constraintBottom_toTopOf="@id/bottom_progressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_edit_text"
+        app:layout_constraintTop_toBottomOf="@id/message_chip"
         tools:listitem="@layout/job_item" />
 
     <ProgressBar

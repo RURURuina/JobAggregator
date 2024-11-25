@@ -21,7 +21,6 @@ data class Vacancy(
     val description: String?,
     val schedule: Schedule?,
     val url: String?,
-    var isFavorite: Boolean = false
 )
 
 class Schedule(
@@ -32,12 +31,12 @@ class Schedule(
 data class Contacts(
     val email: String?,
     val name: String?,
-    val phones: List<Phone>?,// = null,
+    val phones: List<Phone>?, // = null,
 )
 
 class Phone(
     val city: String,
-    val comment: String?, //= null,
+    val comment: String?, // = null,
     val country: String,
     val formatted: String,
     val number: String,
@@ -47,7 +46,6 @@ data class MetroStations(
     val lineName: String?,
     val stationName: String?,
 )
-
 
 data class Country(
     val id: String,
@@ -67,6 +65,7 @@ data class IndustryNested(
 
 data class Area(
     val id: String?,
+    val parentId: String?,
     val name: String?,
     val url: String?,
 )

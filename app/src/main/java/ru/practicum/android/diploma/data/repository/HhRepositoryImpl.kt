@@ -24,54 +24,66 @@ class HhRepositoryImpl(
     private val vacancyDtoConvertor: VacancyDtoConvertor,
 ) : HhRepository {
 
-    override suspend fun getVacancies(expression: HashMap<String, String>): Flow<Resource<List<Vacancy>>> = flow {
+    override suspend fun getVacancies(expression: HashMap<String, String>): Flow<Resource<List<Vacancy>>?> = flow {
         val response = networkClient.getVacancies(VacanciesSearchRequest(expression))
 
         when (response.resultCode) {
-            is ResponseStatusCode.NO_INTERNET -> {
-                emit(Resource.Error(ResponseStatusCode.NO_INTERNET))
+            is ResponseStatusCode.NoInternet -> {
+                emit(Resource.Error(ResponseStatusCode.NoInternet))
             }
 
-            is ResponseStatusCode.OK -> {
+            is ResponseStatusCode.Ok -> {
                 emit(
                     Resource.Success(
-                        (response as VacanciesResponse).vacancies!!.map { vacancyData: VacancyData ->
-                            vacancyDtoConvertor.map(vacancyData)
-                        }
+                        data = (response as VacanciesResponse).vacancies.let { list: List<VacancyData> ->
+                            list.map { vacancyData: VacancyData ->
+                                vacancyDtoConvertor.map(vacancyData)
+                            }
+                        },
+                        responseCode = response.resultCode,
+                        currentPage = response.page,
+                        pagesCount = response.pages,
+                        foundedCount = response.found
                     )
                 )
             }
 
-            is ResponseStatusCode.ERROR -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+            is ResponseStatusCode.Error -> {
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
 
             else -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
         }
     }
 
-    override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy>> = flow {
+    override suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy?>> = flow {
         val response = networkClient.getVacancyById(VacancyByIdRequest(id))
         when (response.resultCode) {
-            is ResponseStatusCode.NO_INTERNET -> {
-                emit(Resource.Error(ResponseStatusCode.NO_INTERNET))
+            is ResponseStatusCode.NoInternet -> {
+                emit(Resource.Error(ResponseStatusCode.NoInternet))
             }
 
-            is ResponseStatusCode.OK -> {
-                val resultRaw = (response as VacancyResponse)
-                emit(
-                    Resource.Success(vacancyDtoConvertor.run { map(resultRaw) })
-                )
+            is ResponseStatusCode.Ok -> {
+                (response as VacancyResponse).vacancyData?.let {
+                    emit(
+                        Resource.Success(
+                            data = vacancyDtoConvertor.run {
+                                map(it)
+                            }, responseCode = response.resultCode
+                        )
+                    )
+                } ?: emit(Resource.Error(ResponseStatusCode.Error))
+
             }
 
-            is ResponseStatusCode.ERROR -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+            is ResponseStatusCode.Error -> {
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
 
             else -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
         }
     }

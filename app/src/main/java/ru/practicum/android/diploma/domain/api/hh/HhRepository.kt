@@ -12,4 +12,6 @@ interface HhRepository {
 
     suspend fun searchCountries(): Flow<Resource<List<Country>>>
 
+    suspend fun getVacancies(expression: HashMap<String, String>): Flow<Resource<List<Vacancy>>?>
+    suspend fun searchVacanceById(id: String): Flow<Resource<Vacancy?>>
 }
