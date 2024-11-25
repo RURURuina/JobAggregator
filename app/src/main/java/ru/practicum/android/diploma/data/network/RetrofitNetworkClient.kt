@@ -7,6 +7,7 @@ import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.request.CitiesByAreaIdRequest
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
+import ru.practicum.android.diploma.data.dto.response.IndustriesResponse
 import ru.practicum.android.diploma.data.dto.response.CityResponse
 import ru.practicum.android.diploma.data.dto.response.Response
 import ru.practicum.android.diploma.data.dto.response.VacancyResponse
@@ -61,14 +62,17 @@ class RetrofitNetworkClient(
         if (!isConnected()) {
             // если нет интернета возврат -1
             return Response().apply { resultCode = ResponseStatusCode.NoInternet }
-        } else {
-            return withContext(Dispatchers.IO) {
-                try {
-                    val response = hhService.getIndustriesList()
-                    response.apply { resultCode = ResponseStatusCode.Ok }
-                } catch (e: HttpException) {
-                    println(e)
-                    Response().apply { resultCode = ResponseStatusCode.Error }
+        }
+        return withContext(Dispatchers.IO) {
+            try {
+                val industriesList = hhService.getIndustriesList()
+                IndustriesResponse.fromList(industriesList).apply {
+                    resultCode = ResponseStatusCode.Ok
+                }
+            } catch (e: HttpException) {
+                println(e)
+                Response().apply {
+                    resultCode = ResponseStatusCode.Error
                 }
             }
         }

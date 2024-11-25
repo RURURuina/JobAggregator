@@ -39,9 +39,13 @@ class FiltrationFragment : Fragment() {
             findNavController().navigate(R.id.action_filtrationFragment_to_selectRegionFragment)
         }
 
+        binding?.indistryBtn?.setOnClickListener {
+            findNavController().navigate(R.id.action_filtrationFragment_to_industryFragment)
+        }
     }
 
     private fun navBarVisible(isVisible: Boolean) {
         (activity as RootActivity).bottomNavigationVisibility(isVisible)
     }
+
 }
