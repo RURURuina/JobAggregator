@@ -1,32 +1,62 @@
 package ru.practicum.android.diploma.ui.filtration
 
-import androidx.fragment.app.viewModels
-import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ru.practicum.android.diploma.presentation.filtration.FiltrationViewModel
+import androidx.core.bundle.Bundle
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.databinding.FragmentFiltrationBinding
+import ru.practicum.android.diploma.presentation.filtration.FiltrationViewModel
+import ru.practicum.android.diploma.ui.root.RootActivity
 
 class FiltrationFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = FiltrationFragment()
-    }
-
-    private val viewModel: FiltrationViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
-    }
+    private val viewModel: FiltrationViewModel by viewModel()
+    private var _binding: FragmentFiltrationBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        return inflater.inflate(R.layout.fragment_filtration, container, false)
+        _binding = FragmentFiltrationBinding.inflate(layoutInflater)
+        return this.binding.root
     }
+
+    override fun onDetach() {
+        super.onDetach()
+        navBarVisible(true)
+        _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: android.os.Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navBarVisible(false)
+        prepareRegionButton()
+        prepareIndustryButton()
+    }
+
+    private fun prepareIndustryButton() {
+        binding.industryLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_filtrationFragment_to_industryFragment)
+        }
+    }
+
+    private fun prepareRegionButton() {
+        binding.workPlaceLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_filtrationFragment_to_selectRegionFragment)
+        }
+
+        binding?.indistryBtn?.setOnClickListener {
+            findNavController().navigate(R.id.action_filtrationFragment_to_industryFragment)
+        }
+    }
+
+    private fun navBarVisible(isVisible: Boolean) {
+        (activity as RootActivity).bottomNavigationVisibility(isVisible)
+    }
+
 }

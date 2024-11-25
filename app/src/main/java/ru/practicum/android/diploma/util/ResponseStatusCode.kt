@@ -1,8 +1,8 @@
 package ru.practicum.android.diploma.util
 
 sealed interface ResponseStatusCode {
-    data object OK : ResponseStatusCode
-    data object ERROR : ResponseStatusCode
-    data object NO_INTERNET : ResponseStatusCode
+    data object Ok : ResponseStatusCode
+    data object Error : ResponseStatusCode
+    data object NoInternet : ResponseStatusCode
 
 }

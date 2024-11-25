@@ -1,7 +1,69 @@
 package ru.practicum.android.diploma.presentation.industry
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.industries.IndustriesInteractor
+import ru.practicum.android.diploma.domain.models.entity.IndustryNested
+import ru.practicum.android.diploma.ui.industry.models.IndustryFragmentState
+import ru.practicum.android.diploma.util.Resource
 
-class IndustryViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class IndustryViewModel(private val interactor: IndustriesInteractor) : ViewModel() {
+    private var unFilteredList: List<IndustryNested> = emptyList()
+    private var filterJob: Job? = null
+
+    private val _industriesState = MutableLiveData<IndustryFragmentState>()
+    val industries: LiveData<IndustryFragmentState> = _industriesState
+
+    private val _selectedIndustry = MutableLiveData<IndustryNested>()
+    val selectedIndustry: LiveData<IndustryNested> = _selectedIndustry
+
+    init {
+        getIndustries()
+    }
+
+    private fun getIndustries() {
+        viewModelScope.launch {
+            interactor.getIndustriesList().collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        unFilteredList = result.data?.flatMap { industry ->
+                            industry.industries ?: emptyList()
+                        } ?: emptyList()
+
+                        pushState(IndustryFragmentState.Content(unFilteredList))
+                    }
+
+                    is Resource.Error -> {
+                        // Handle error state
+                    }
+                }
+            }
+        }
+    }
+
+    fun setSelectedIndustry(industry: IndustryNested) {
+        _selectedIndustry.value = industry
+    }
+
+    fun filterIndustries(query: String) {
+        filterJob?.cancel() // Отменяем предыдущую операцию фильтрации
+        filterJob = viewModelScope.launch {
+            val filteredList = if (query.isEmpty()) {
+                unFilteredList
+            } else {
+                unFilteredList.filter { industry ->
+                    industry.name?.contains(query, ignoreCase = true) == true
+                }
+            }
+            pushState(IndustryFragmentState.Content(filteredList))
+        }
+    }
+
+    private fun pushState(state: IndustryFragmentState) {
+        _industriesState.value = state
+    }
 }
