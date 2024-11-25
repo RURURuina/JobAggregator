@@ -19,7 +19,7 @@ class VacancySharingRepositoryImpl(
                         Intent.EXTRA_TEXT,
                         vacancy.url.toString()
                     )
-                },context.getString(R.string.app_name))
+                }, context.getString(R.string.app_name))
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         )
     }

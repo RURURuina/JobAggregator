@@ -17,17 +17,12 @@ import java.net.SocketTimeoutException
 
 class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     // Кто будет выполнять задание на обработку ошибок, то сообщение будет на стр 132
-    companion object {
-        private const val DEBOUNCE_SEARCH_TIME = 2000L
-        private const val DEBOUNCE_PAGE_TIME = 300L
-        private const val PAGE_SIZE = 20 // кол-во элементов на странице для отображения в RV
-    }
-
     private val _vacanciesState = MutableLiveData<VacanciesState>()
     val vacanciesState: LiveData<VacanciesState> = _vacanciesState
 
     // переменные для работы с paggination
     private var currentPage = 0
+    private var maxPage = 0
     private var currentQuery = ""
     private var isLastPage = false
     private var isLoading = false
@@ -38,24 +33,20 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         coroutineScope = viewModelScope,
         useLastParam = true
     ) { searchText ->
-        searchVacancies(searchText)
+        searchVacancies(searchText.trim())
     }
-    private val loadDebounce = debounce<Int>(
+    private val loadPerPageDebounce = debounce<Int>(
         delayMillis = DEBOUNCE_PAGE_TIME,
         coroutineScope = viewModelScope,
         useLastParam = true
     ) {
-        currentPage++
         loadVacancies()
-    }
-
-    init {
-        clearVacancies()
     }
 
     fun clearVacancies() {
         pushVacanciesState(VacanciesState.Hidden)
         currentPage = 0
+        maxPage = 0
         currentQuery = ""
         isLastPage = false
         isLoading = false
@@ -66,14 +57,11 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     private fun searchVacancies(query: String) {
         if (currentQuery != query) {
             currentPage = 0
+            maxPage = 0
             isLastPage = false
             vacanciesList.clear()
             currentQuery = query
-        }
-        if (query.isNotBlank()) {
             loadVacancies()
-        } else {
-            pushVacanciesState(VacanciesState.Hidden)
         }
     }
 
@@ -100,22 +88,20 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
                     this.coroutineContext.job.cancel()
                 }
             }
-        } else {
-            handleEmptyQuery()
         }
-
     }
 
     fun searchDebounce(changedText: String?) {
         if (changedText != null) {
-            searchDebounce.invoke(changedText.trim())
+            searchDebounce.invoke(changedText)
         }
     }
 
     // Ф-ия для Fragment для загрузки следующей страницы
     fun loadNextPage() {
         if (!isLoading && !isLastPage && currentQuery.isNotBlank()) {
-            loadDebounce(currentPage++)
+            isLoading = true
+            loadPerPageDebounce(currentPage++)
         }
     }
 
@@ -127,40 +113,52 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         )
     }
 
-    private fun handleResult(result: Resource<List<Vacancy>>) {
+    private fun handleResult(result: Resource<List<Vacancy>>?) {
         when (result) {
-            is Resource.Success -> handleSuccess(result.data)
+            is Resource.Success -> {
+                result.currentPage?.let {
+                    currentPage = result.currentPage
+                }
+                result.pagesCount?.let {
+                    maxPage = result.pagesCount
+                }
+                handleSuccess(result)
+            }
+
             is Resource.Error -> handleError(result.responseCode)
+            else -> handleError(result?.responseCode)
         }
     }
 
-    private fun handleSuccess(data: List<Vacancy>?) {
-        val newVacancies = data ?: emptyList()
-        isLastPage = newVacancies.size < PAGE_SIZE
-        if (newVacancies.isEmpty()) {
-            VacanciesState.Empty
-        } else {
+    private fun handleSuccess(result: Resource<List<Vacancy>>?) {
+        val newVacancies = result?.data ?: emptyList()
+        isLastPage = currentPage == maxPage - 1
+        if (newVacancies.isNotEmpty()) {
             vacanciesList.addAll(newVacancies)
             pushVacanciesState(
                 VacanciesState.Success(
                     vacancies = vacanciesList.toList(),
                     isLastPage = isLastPage,
-                    isLoading = false
+                    isLoading = false,
+                    result?.foundedCount
                 )
             )
+        } else {
+            pushVacanciesState(VacanciesState.Empty)
         }
     }
 
     private fun handleErrorSocketTimeoutException(e: SocketTimeoutException) {
-        handleError(ResponseStatusCode.ERROR)
+        handleError(ResponseStatusCode.Error)
         Log.e("SearchViewModel", "SocketTimeoutException, $e")
     }
 
     private fun handleError(responseCode: ResponseStatusCode?) {
         pushVacanciesState(VacanciesState.Error(responseCode))
     }
-
-    private fun handleEmptyQuery() {
-        pushVacanciesState(VacanciesState.Empty)
+    companion object {
+        private const val DEBOUNCE_SEARCH_TIME = 2000L
+        private const val DEBOUNCE_PAGE_TIME = 300L
+        private const val PAGE_SIZE = 20 // кол-во элементов на странице для отображения в RV
     }
 }

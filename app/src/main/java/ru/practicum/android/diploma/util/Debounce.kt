@@ -5,7 +5,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/*предлогаю пользовать эту функцию, она не блокирует поток
+/*предлагаю пользовать эту функцию, она не блокирует поток
 Функция debounce используется для отложенного выполнения действия.
  Она принимает три параметра: время задержки в миллисекундах, объект
  CoroutineScope и логический параметр useLastParam. Если useLastParam
