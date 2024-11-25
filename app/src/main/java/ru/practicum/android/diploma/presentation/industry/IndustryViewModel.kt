@@ -8,14 +8,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.industries.IndustriesInteractor
 import ru.practicum.android.diploma.domain.models.entity.IndustryNested
+import ru.practicum.android.diploma.ui.industry.models.IndustryFragmentState
 import ru.practicum.android.diploma.util.Resource
 
 class IndustryViewModel(private val interactor: IndustriesInteractor) : ViewModel() {
     private var unFilteredList: List<IndustryNested> = emptyList()
     private var filterJob: Job? = null
 
-    private val _industries = MutableLiveData<List<IndustryNested>>()
-    val industries: LiveData<List<IndustryNested>> = _industries
+    private val _industriesState = MutableLiveData<IndustryFragmentState>()
+    val industries: LiveData<IndustryFragmentState> = _industriesState
 
     private val _selectedIndustry = MutableLiveData<IndustryNested>()
     val selectedIndustry: LiveData<IndustryNested> = _selectedIndustry
@@ -32,8 +33,10 @@ class IndustryViewModel(private val interactor: IndustriesInteractor) : ViewMode
                         unFilteredList = result.data?.flatMap { industry ->
                             industry.industries ?: emptyList()
                         } ?: emptyList()
-                        _industries.value = unFilteredList
+
+                        pushState(IndustryFragmentState.Content(unFilteredList))
                     }
+
                     is Resource.Error -> {
                         // Handle error state
                     }
@@ -56,8 +59,11 @@ class IndustryViewModel(private val interactor: IndustriesInteractor) : ViewMode
                     industry.name?.contains(query, ignoreCase = true) == true
                 }
             }
-            _industries.value = filteredList
-
+            pushState(IndustryFragmentState.Content(filteredList))
         }
+    }
+
+    private fun pushState(state: IndustryFragmentState) {
+        _industriesState.value = state
     }
 }

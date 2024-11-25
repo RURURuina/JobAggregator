@@ -43,6 +43,9 @@ class CitySelectFragment : Fragment() {
         observeVieModel()
         onItemClick = viewModel.chooseArea()
         initRecyclerView()
+        binding.preview.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun observeVieModel() {

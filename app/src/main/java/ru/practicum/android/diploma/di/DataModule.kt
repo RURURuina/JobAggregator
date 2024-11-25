@@ -25,7 +25,7 @@ val dataModule = module {
         val headers = Headers
             .Builder()
             .add("Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
-            .add("HH-User-Agent: Get a job! (morozov@rtr.spb.ru)").build()
+            .add("HH-User-Agent: YpDiplomaProject/1.0 (4habibulin@gmail.com)").build()
 
         val interceptorHttp = HttpLoggingInterceptor().apply {
             this.level = HttpLoggingInterceptor.Level.BODY
