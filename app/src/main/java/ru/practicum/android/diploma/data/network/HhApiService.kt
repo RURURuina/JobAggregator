@@ -9,6 +9,7 @@ import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.data.dto.response.IndustriesResponse
 import ru.practicum.android.diploma.data.dto.response.VacanciesResponse
 import ru.practicum.android.diploma.data.dto.response.VacancyResponse
+import ru.practicum.android.diploma.data.dto.vacancy.IndustryData
 
 interface HhApiService {
     @Headers(
@@ -25,5 +26,5 @@ interface HhApiService {
     suspend fun searchVacanceById(@Path("id") id: String): VacancyResponse
 
     @GET("industries")
-    suspend fun getIndustriesList(): IndustriesResponse
+    suspend fun getIndustriesList(): List<IndustryData>
 }

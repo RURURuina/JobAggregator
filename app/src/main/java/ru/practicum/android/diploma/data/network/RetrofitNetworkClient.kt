@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
+import ru.practicum.android.diploma.data.dto.response.IndustriesResponse
 import ru.practicum.android.diploma.data.dto.response.Response
 import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.isNetworkAvailable
@@ -58,14 +59,17 @@ class RetrofitNetworkClient(
         if (!isConnected()) {
             // если нет интернета возврат -1
             return Response().apply { resultCode = ResponseStatusCode.NO_INTERNET }
-        } else {
-            return withContext(Dispatchers.IO) {
-                try {
-                    val response = hhService.getIndustriesList()
-                    response.apply { resultCode = ResponseStatusCode.OK }
-                } catch (e: HttpException) {
-                    println(e)
-                    Response().apply { resultCode = ResponseStatusCode.ERROR }
+        }
+        return withContext(Dispatchers.IO) {
+            try {
+                val industriesList = hhService.getIndustriesList()
+                IndustriesResponse.fromList(industriesList).apply {
+                    resultCode = ResponseStatusCode.OK
+                }
+            } catch (e: Exception) {
+                println(e)
+                Response().apply {
+                    resultCode = ResponseStatusCode.ERROR
                 }
             }
         }
