@@ -121,7 +121,7 @@ class SearchJobFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.vacanciesState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                 VacanciesState.Loading -> {
+                VacanciesState.Loading -> {
                     val itemsCount = binding?.vacanciesRecyclerView?.childCount ?: 0
                     if (itemsCount > 0) {
                         binding?.bottomProgressBar?.isVisible = true
@@ -154,7 +154,7 @@ class SearchJobFragment : Fragment() {
                     }
                 }
 
-                 VacanciesState.Empty -> {
+                VacanciesState.Empty -> {
                     hideCentralProgressBar()
                     showEmptyState()
                     keyBoardVisibility(false)

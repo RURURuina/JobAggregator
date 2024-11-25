@@ -62,7 +62,7 @@ class IndustryFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.industries.observe(viewLifecycleOwner) { state ->
-            when(state){
+            when (state) {
                 is IndustryFragmentState.Content -> updateRadioGroup(state.listIndastries)
             }
         }
