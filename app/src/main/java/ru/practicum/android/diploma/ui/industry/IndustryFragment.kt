@@ -66,7 +66,7 @@ class IndustryFragment : Fragment() {
 
     private fun setupSearchFilter() {
         binding.filterEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int){
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // Не нужно
             }
 
