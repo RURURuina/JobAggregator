@@ -16,7 +16,7 @@ class CustomRadioLayout @JvmOverloads constructor(
     attr: AttributeSet? = null,
     defStyleAttr: Int = 0
 ): LinearLayout(context, attr, defStyleAttr)  {
-    val binding: CustomRadioButtonBinding =  CustomRadioButtonBinding.inflate(
+    private val binding: CustomRadioButtonBinding =  CustomRadioButtonBinding.inflate(
         LayoutInflater.from(context), this, true
     )
 
