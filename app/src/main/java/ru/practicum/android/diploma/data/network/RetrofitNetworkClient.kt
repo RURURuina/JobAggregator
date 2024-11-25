@@ -1,13 +1,13 @@
 package ru.practicum.android.diploma.data.network
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import ru.practicum.android.diploma.data.dto.request.CountriesRequest
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
+import ru.practicum.android.diploma.data.dto.response.CountriesResponse
 import ru.practicum.android.diploma.data.dto.response.Response
 import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.isNetworkAvailable
@@ -46,6 +46,22 @@ class RetrofitNetworkClient(
                         dto.id
                     )
                     response.apply { resultCode = ResponseStatusCode.OK }
+                } catch (e: HttpException) {
+                    println(e)
+                    Response().apply { resultCode = ResponseStatusCode.ERROR }
+                }
+            }
+        }
+    }
+
+    override suspend fun getCountries(dto: CountriesRequest): Response {
+        return if (!isConnected()) {
+            Response().apply { resultCode = ResponseStatusCode.NO_INTERNET }
+        } else {
+            withContext(Dispatchers.IO) {
+                try {
+                    val response = hhService.searchCountries()
+                    CountriesResponse(response).apply { resultCode = ResponseStatusCode.OK }
                 } catch (e: HttpException) {
                     println(e)
                     Response().apply { resultCode = ResponseStatusCode.ERROR }
