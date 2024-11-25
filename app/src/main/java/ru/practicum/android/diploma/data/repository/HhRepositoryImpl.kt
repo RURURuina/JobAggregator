@@ -91,12 +91,12 @@ class HhRepositoryImpl(
     override suspend fun searchCountries(): Flow<Resource<List<Country>>> = flow {
         val response = networkClient.getCountries(CountriesRequest())
         when (response.resultCode) {
-            is ResponseStatusCode.NO_INTERNET -> {
-                emit(Resource.Error(ResponseStatusCode.NO_INTERNET))
+            is ResponseStatusCode.NoInternet -> {
+                emit(Resource.Error(ResponseStatusCode.NoInternet))
             }
 
-            is ResponseStatusCode.OK -> {
-                if (response is CountriesResponse)
+            is ResponseStatusCode.Ok -> {
+                if (response is CountriesResponse) {
                     emit(
                         Resource.Success(
                             response.countries.map { countryData: CountryData ->
@@ -104,14 +104,15 @@ class HhRepositoryImpl(
                             }
                         )
                     )
+                }
             }
 
-            is ResponseStatusCode.ERROR -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+            is ResponseStatusCode.Error -> {
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
 
             else -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
         }
     }
