@@ -16,11 +16,11 @@ class IndustriesRepositoryImpl(
     override suspend fun getIndustriesList(): Flow<Resource<List<Industry>>> = flow {
         val response = networkClient.getIndustriesList()
         when (response.resultCode) {
-            is ResponseStatusCode.NO_INTERNET -> {
-                emit(Resource.Error(ResponseStatusCode.NO_INTERNET))
+            is ResponseStatusCode.NoInternet -> {
+                emit(Resource.Error(ResponseStatusCode.NoInternet))
             }
 
-            is ResponseStatusCode.OK -> {
+            is ResponseStatusCode.Ok -> {
                 emit(
                     Resource.Success(
                         (response as IndustriesResponse).industriesRaw.map { industryData ->
@@ -30,12 +30,12 @@ class IndustriesRepositoryImpl(
                 )
             }
 
-            is ResponseStatusCode.ERROR -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+            is ResponseStatusCode.Error -> {
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
 
             else -> {
-                emit(Resource.Error(ResponseStatusCode.ERROR))
+                emit(Resource.Error(ResponseStatusCode.Error))
             }
         }
     }

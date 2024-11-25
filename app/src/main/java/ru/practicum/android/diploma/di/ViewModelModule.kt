@@ -1,8 +1,8 @@
 package ru.practicum.android.diploma.di
 
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import ru.practicum.android.diploma.presentation.city.CitySelectViewModel
 import ru.practicum.android.diploma.presentation.details.DetailsFragmentViewModel
 import ru.practicum.android.diploma.presentation.favorites.FavoriteJobViewModel
 import ru.practicum.android.diploma.presentation.search.SearchJobViewModel
@@ -27,6 +27,11 @@ val viewModelModule = module {
             hhInteractor = get(),
             favoritesInteractor = get(),
             vacancySharingInteractor = get(),
+        )
+    }
+    viewModel {
+        CitySelectViewModel(
+            citySelectInteractor = get(),
         )
     }
 }

@@ -40,17 +40,14 @@ class IndustryFragment : Fragment() {
     }
 
     private fun setupUI() {
-        // Setup back button
         binding.backBtn.setOnClickListener {
             requireActivity().onBackPressed()
         }
 
-        // Setup clear search button
         binding.clearSearchButton.setOnClickListener {
             binding.filterEditText.text.clear()
         }
 
-        // Setup radio group listener
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val radioButton = group.findViewById<RadioButton>(checkedId)
             val industry = radioButton.tag as? IndustryNested
