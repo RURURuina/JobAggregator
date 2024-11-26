@@ -26,12 +26,11 @@ class CitySelectViewModel(
     init {
         viewModelScope.launch {
             filterShared = filterInteractor.getFilter()
-           // getCitiesById("113")
-            getAllAreas()
+            filterShared?.countryId?.let {
+                getCitiesById(it)
+            } ?: getAllAreas()
         }
-
     }
-
 
     fun chooseArea() = { area: Area ->
         println(area)

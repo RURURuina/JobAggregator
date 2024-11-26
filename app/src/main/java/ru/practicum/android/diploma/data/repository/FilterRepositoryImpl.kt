@@ -13,7 +13,7 @@ class FilterRepositoryImpl(
     private val sharedStringConvertor: SharedStringConvertor
 ) : FilterRepository {
     override suspend fun getFilter(): FilterShared? {
-        return   withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             val str = sharedPreferences.getString(KEY, null)
             Log.d("FilterRepository", "getFilter: $str")
             sharedStringConvertor.getFilterShared(str)

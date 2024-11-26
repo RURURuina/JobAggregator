@@ -1,10 +1,11 @@
 package ru.practicum.android.diploma.data.convertors
 
+
+
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
-
 import ru.practicum.android.diploma.domain.models.entity.FilterShared
 
 class SharedStringConvertor(

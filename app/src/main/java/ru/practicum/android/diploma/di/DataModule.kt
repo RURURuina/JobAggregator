@@ -67,7 +67,8 @@ val dataModule = module {
 
     factory<SharedPreferences> {
         androidContext().getSharedPreferences(
-            SHARED_FILTER_KEY, Context.MODE_PRIVATE
+            SHARED_FILTER_KEY,
+            Context.MODE_PRIVATE
         )
     }
 }
