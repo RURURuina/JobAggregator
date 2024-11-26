@@ -8,32 +8,60 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.city.CitySelectInteractor
+import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.models.entity.Area
+import ru.practicum.android.diploma.domain.models.entity.FilterShared
 import ru.practicum.android.diploma.ui.city.model.CitySelectState
 import java.net.SocketTimeoutException
 
-class CitySelectViewModel(private val citySelectInteractor: CitySelectInteractor) : ViewModel() {
+class CitySelectViewModel(
+    private val citySelectInteractor: CitySelectInteractor,
+    private val filterInteractor: FilterInteractor
+) : ViewModel() {
     private val _citySelectState = MutableLiveData<CitySelectState>()
     val citySelectState: LiveData<CitySelectState> = _citySelectState
     private var areasList: MutableList<Area> = mutableListOf()
+    private var filterShared: FilterShared? = null
 
     init {
-        // получить айди страны
-        // если айди пустой, то вывести все ареи
-        getAllAreas()
-        // если не пустой, то вывести ареи принадлежащие этому айди
-        getCitiesById("2019") // тестовое айди, потом полученное внести "2019"
-
+        viewModelScope.launch {
+            filterShared = filterInteractor.getFilter()
+            filterShared?.countryId?.let {
+                getCitiesById(it)
+            } ?: getAllAreas()
+        }
     }
 
     fun chooseArea() = { area: Area ->
-        println(area)
         saveToFilter(area)
-        pushState(CitySelectState.Exit)
     }
 
     private fun saveToFilter(area: Area) {
-        // что то, что сохранит в фильтр данные
+        viewModelScope.launch {
+            filterShared?.let { filterShared ->
+                filterInteractor.saveFilter(
+                    filterShared.copy(
+                        countryId = area.parentId,
+                        countryName = area.parentName,
+                        regionId = area.id,
+                        regionName = area.name,
+                    )
+                )
+            } ?: filterInteractor.saveFilter(
+                FilterShared(
+                    countryId = area.parentId,
+                    countryName = area.parentName,
+                    regionId = area.id,
+                    regionName = area.name,
+                    industryName = null,
+                    industryId = null,
+                    salary = null,
+                    onlySalaryFlag = false
+                )
+            )
+            // что то, что сохранит в фильтр данные
+        }
+        pushState(CitySelectState.Exit)
     }
 
     private fun getCitiesById(id: String) {

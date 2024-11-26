@@ -7,6 +7,7 @@ data class AreaData(
     val id: String?,
     @SerializedName("parent_id")
     val parentId: String?,
+    val parentName: String?,
     val name: String?,
     val url: String?,
 )
@@ -15,6 +16,7 @@ fun AreaData.map(): Area {
     return Area(
         this.id,
         this.parentId,
+        this.parentName,
         this.name,
         this.url
     )
