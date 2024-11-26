@@ -1,28 +1,61 @@
 package ru.practicum.android.diploma.presentation.industry
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.api.industries.IndustriesInteractor
+import ru.practicum.android.diploma.domain.models.entity.FilterShared
 import ru.practicum.android.diploma.domain.models.entity.IndustryNested
 import ru.practicum.android.diploma.ui.industry.models.IndustryFragmentState
 import ru.practicum.android.diploma.util.Resource
 
-class IndustryViewModel(private val interactor: IndustriesInteractor) : ViewModel() {
+class IndustryViewModel(
+    private val interactor: IndustriesInteractor,
+    private val filterInteractor: FilterInteractor
+) : ViewModel() {
     private var unFilteredList: List<IndustryNested> = emptyList()
     private var filterJob: Job? = null
-
+    private var filterShared: FilterShared? = null
     private val _industriesState = MutableLiveData<IndustryFragmentState>()
     val industries: LiveData<IndustryFragmentState> = _industriesState
-
-    private val _selectedIndustry = MutableLiveData<IndustryNested>()
-    val selectedIndustry: LiveData<IndustryNested> = _selectedIndustry
+    private var selectedIndustry: IndustryNested? = null
 
     init {
+        getFilter()
         getIndustries()
+    }
+
+    fun saveFilter() {
+        viewModelScope.launch {
+            filterInteractor.saveFilter(
+                FilterShared(
+                    countryId = filterShared?.countryId,
+                    countryName = filterShared?.countryName,
+                    regionId = filterShared?.regionId,
+                    regionName = filterShared?.regionName,
+                    industryName = selectedIndustry?.name,
+                    industryId = selectedIndustry?.id,
+                    salary = null,
+                    onlySalaryFlag = false
+                )
+            )
+        }
+        pushState(IndustryFragmentState.Exit)
+    }
+
+    private fun getFilter() {
+        viewModelScope.launch {
+            filterShared = filterInteractor.getFilter()
+            selectedIndustry = IndustryNested(
+                filterShared?.industryId,
+                filterShared?.industryName
+            )
+        }
     }
 
     private fun getIndustries() {
@@ -34,7 +67,7 @@ class IndustryViewModel(private val interactor: IndustriesInteractor) : ViewMode
                             industry.industries ?: emptyList()
                         } ?: emptyList()
 
-                        pushState(IndustryFragmentState.Content(unFilteredList))
+                        pushState(IndustryFragmentState.Content(unFilteredList, selectedIndustry))
                     }
 
                     is Resource.Error -> {
@@ -45,8 +78,13 @@ class IndustryViewModel(private val interactor: IndustriesInteractor) : ViewMode
         }
     }
 
-    fun setSelectedIndustry(industry: IndustryNested) {
-        _selectedIndustry.value = industry
+    fun setSelectedIndustry(industry: IndustryNested?, isChecked: Boolean) {
+        selectedIndustry = if (isChecked) {
+            industry
+        } else {
+            null
+        }
+        Log.d("setSelectedIndustry :", industry.toString())
     }
 
     fun filterIndustries(query: String) {
@@ -59,7 +97,7 @@ class IndustryViewModel(private val interactor: IndustriesInteractor) : ViewMode
                     industry.name?.contains(query, ignoreCase = true) == true
                 }
             }
-            pushState(IndustryFragmentState.Content(filteredList))
+            pushState(IndustryFragmentState.Filter(filteredList, selectedIndustry))
         }
     }
 

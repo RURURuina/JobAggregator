@@ -47,6 +47,7 @@ val viewModelModule = module {
     viewModel {
         IndustryViewModel(
             interactor = get(),
+            filterInteractor = get()
         )
     }
 }

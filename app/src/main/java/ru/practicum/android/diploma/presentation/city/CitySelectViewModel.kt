@@ -37,31 +37,22 @@ class CitySelectViewModel(
     }
 
     private fun saveToFilter(area: Area) {
+        // что то, что сохранит в фильтр данные
         viewModelScope.launch {
-            filterShared?.let { filterShared ->
-                filterInteractor.saveFilter(
-                    filterShared.copy(
-                        countryId = area.parentId,
-                        countryName = area.parentName,
-                        regionId = area.id,
-                        regionName = area.name,
-                    )
-                )
-            } ?: filterInteractor.saveFilter(
+            filterInteractor.saveFilter(
                 FilterShared(
                     countryId = area.parentId,
                     countryName = area.parentName,
                     regionId = area.id,
                     regionName = area.name,
-                    industryName = null,
-                    industryId = null,
-                    salary = null,
-                    onlySalaryFlag = false
+                    industryName = filterShared?.industryName,
+                    industryId = filterShared?.industryId,
+                    salary = filterShared?.salary,
+                    onlySalaryFlag = filterShared?.onlySalaryFlag
                 )
             )
-            // что то, что сохранит в фильтр данные
+            pushState(CitySelectState.Exit)
         }
-        pushState(CitySelectState.Exit)
     }
 
     private fun getCitiesById(id: String) {
