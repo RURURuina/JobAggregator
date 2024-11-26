@@ -50,7 +50,7 @@ class FiltrationFragment : Fragment() {
             findNavController().navigate(R.id.action_filtrationFragment_to_selectRegionFragment)
         }
 
-        binding?.indistryBtn?.setOnClickListener {
+        binding.industryBtn.setOnClickListener {
             findNavController().navigate(R.id.action_filtrationFragment_to_industryFragment)
         }
     }

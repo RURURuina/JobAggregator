@@ -16,11 +16,6 @@ class RootActivity : AppCompatActivity() {
     private var navController: NavController? = null
     private var bottomNavigationView: BottomNavigationView? = null
 
-    /*ключ для передачи id вакансии между фрагментами через safeArgs*/
-    companion object {
-        const val VACANCY_TRANSFER_KEY = "vacancy_id"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prepareBinding()
@@ -59,5 +54,10 @@ class RootActivity : AppCompatActivity() {
 
     fun bottomNavigationVisibility(isVisibile: Boolean) {
         binding?.bottomNavigation?.isVisible = isVisibile
+    }
+
+    /*ключ для передачи id вакансии между фрагментами через safeArgs*/
+    companion object {
+        const val VACANCY_TRANSFER_KEY = "vacancy_id"
     }
 }

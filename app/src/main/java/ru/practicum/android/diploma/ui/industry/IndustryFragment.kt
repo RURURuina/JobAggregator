@@ -57,15 +57,6 @@ class IndustryFragment : Fragment() {
         binding.clearSearchButton.setOnClickListener {
             binding.filterEditText.text.clear()
         }
-
-//        binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
-//            val radioButton = group.findViewById<RadioButton>(checkedId)
-//            val industry = radioButton.tag as? IndustryNested
-//            industry?.let {
-//                viewModel.setSelectedIndustry(it, radioButton.isChecked)
-//                binding.selectButton.isVisible = radioButton.isChecked
-//            }
-//        }
     }
 
     private fun setupObservers() {
@@ -145,7 +136,6 @@ class IndustryFragment : Fragment() {
                 )
                 // Обработчик изменения состояния для каждого CustomRadioLayout
                 setOnCheckedChangeListener { buttonView, isChecked ->
-                    val industry1 = buttonView.tag as? IndustryNested
                     if (isChecked) {
                         // Отключаем все остальные RadioButton
                         radioLayouts.forEach { layout ->
@@ -166,7 +156,6 @@ class IndustryFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-
         _binding = null
     }
 }

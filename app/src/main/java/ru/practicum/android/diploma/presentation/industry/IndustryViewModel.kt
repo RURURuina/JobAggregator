@@ -25,10 +25,8 @@ class IndustryViewModel(
     val industries: LiveData<IndustryFragmentState> = _industriesState
     private var selectedIndustry: IndustryNested? = null
 
-    /*5.461*/
     init {
         getFilter()
-        setItem()
         getIndustries()
     }
 
@@ -48,16 +46,6 @@ class IndustryViewModel(
             )
         }
         pushState(IndustryFragmentState.Exit)
-    }
-
-
-    private fun setItem() {
-//    filterShared?.let { filterShared ->
-//        _selectedIndustry.value = IndustryNested(
-//            id = filterShared.industryId,
-//            name = filterShared.industryName
-//        )
-//    }
     }
 
     private fun getFilter() {

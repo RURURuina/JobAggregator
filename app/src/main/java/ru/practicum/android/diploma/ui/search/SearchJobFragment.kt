@@ -26,7 +26,8 @@ import ru.practicum.android.diploma.ui.search.models.VacanciesState
 import ru.practicum.android.diploma.util.ResponseStatusCode
 
 class SearchJobFragment : Fragment() {
-    private var binding: FragmentSearchJobBinding? = null
+    private var _binding: FragmentSearchJobBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: SearchJobViewModel by viewModel()
     private val vacancyAdapter = VacancyAdapter()
     private var scrollListener: RecyclerView.OnScrollListener? = null
@@ -36,9 +37,9 @@ class SearchJobFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        binding = FragmentSearchJobBinding.inflate(layoutInflater)
-        return binding?.root
+    ): View {
+        _binding = FragmentSearchJobBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,7 +52,7 @@ class SearchJobFragment : Fragment() {
     }
 
     private fun prepareFilterButton() {
-        binding?.filterImageButton?.setOnClickListener {
+        binding.filterImageButton.setOnClickListener {
             findNavController().navigate(R.id.action_searchJobFragment_to_filtrationFragment)
         }
     }
@@ -64,7 +65,7 @@ class SearchJobFragment : Fragment() {
     }
 
     private fun initEditText() {
-        binding?.searchEditText?.addTextChangedListener(object : TextWatcher {
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // функция не используется
             }
@@ -80,20 +81,20 @@ class SearchJobFragment : Fragment() {
                 if (s?.isEmpty() == true) {
                     viewModel.clearVacancies()
                 }
-                binding?.searchLayout?.isVisible = s.isNullOrEmpty()
+                binding.searchLayout.isVisible = s.isNullOrEmpty()
             }
         })
 
-        binding?.clearSearchButton?.setOnClickListener {
-            binding?.searchEditText?.text?.clear()
-            binding?.progressBar?.isVisible = false
-            binding?.bottomProgressBar?.isVisible = false
+        binding.clearSearchButton.setOnClickListener {
+            binding.searchEditText.text?.clear()
+            binding.progressBar.isVisible = false
+            binding.bottomProgressBar.isVisible = false
             viewModel.clearVacancies()
         }
     }
 
     private fun initRecyclerView() {
-        binding?.vacanciesRecyclerView?.apply {
+        binding.vacanciesRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = vacancyAdapter
 
@@ -103,12 +104,12 @@ class SearchJobFragment : Fragment() {
                     super.onScrolled(recyclerView, dx, dy)
                     if (dy > 0) {
                         val pos =
-                            (binding!!.vacanciesRecyclerView.layoutManager as LinearLayoutManager)
+                            (binding.vacanciesRecyclerView.layoutManager as LinearLayoutManager)
                                 .findLastVisibleItemPosition()
                         val itemsCount = vacancyAdapter.itemCount
                         if (pos >= itemsCount - 1) {
                             viewModel.loadNextPage()
-                            binding?.bottomProgressBar?.isVisible = true
+                            binding.bottomProgressBar.isVisible = true
                         }
                     }
                 }
@@ -122,14 +123,14 @@ class SearchJobFragment : Fragment() {
         viewModel.vacanciesState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 VacanciesState.Loading -> {
-                    val itemsCount = binding?.vacanciesRecyclerView?.childCount ?: 0
+                    val itemsCount = binding.vacanciesRecyclerView.childCount
                     if (itemsCount > 0) {
-                        binding?.bottomProgressBar?.isVisible = true
+                        binding.bottomProgressBar.isVisible = true
                     } else {
                         showTopProgressBar()
                     }
                     keyBoardVisibility(false)
-                    binding?.messageChip?.isVisible = false
+                    binding.messageChip.isVisible = false
                 }
 
                 is VacanciesState.Error -> {
@@ -142,10 +143,10 @@ class SearchJobFragment : Fragment() {
                     hideCentralProgressBar()
                     updateRecyclerView(state.vacancies)
                     keyBoardVisibility(false)
-                    binding?.bottomProgressBar?.isVisible = false
-                    binding?.messageChip?.isVisible = true
+                    binding.bottomProgressBar.isVisible = false
+                    binding.messageChip.isVisible = true
                     state.totalCount?.let {
-                        binding?.messageChip?.text =
+                        binding.messageChip.text =
                             context?.resources?.getQuantityString(
                                 R.plurals.plurals_vacancies,
                                 state.totalCount,
@@ -158,12 +159,12 @@ class SearchJobFragment : Fragment() {
                     hideCentralProgressBar()
                     showEmptyState()
                     keyBoardVisibility(false)
-                    binding?.messageChip?.isVisible = false
+                    binding.messageChip.isVisible = false
                 }
 
                 is VacanciesState.Hidden -> {
                     clearRecyclerView()
-                    binding?.messageChip?.isVisible = false
+                    binding.messageChip.isVisible = false
                 }
             }
         }
@@ -175,58 +176,58 @@ class SearchJobFragment : Fragment() {
     }
 
     private fun updateSearchIcon(isEmpty: Boolean) {
-        binding?.clearSearchButton?.setImageResource(
+        binding.clearSearchButton.setImageResource(
             if (isEmpty) R.drawable.search_24px else R.drawable.close_24px
         )
     }
 
     private fun showHiddenState() {
-        binding?.searchLayout?.visibility = View.VISIBLE
-        binding?.errorLayout?.visibility = View.GONE
-        binding?.noJobsLayout?.visibility = View.GONE
+        binding.searchLayout.visibility = View.VISIBLE
+        binding.errorLayout.visibility = View.GONE
+        binding.noJobsLayout.visibility = View.GONE
     }
 
     private fun showTopProgressBar() {
-        binding?.progressBar?.visibility = View.VISIBLE
-        binding?.searchLayout?.visibility = View.GONE
-        binding?.errorLayout?.visibility = View.GONE
-        binding?.noJobsLayout?.visibility = View.GONE
-        binding?.vacanciesRecyclerView?.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
+        binding.searchLayout.visibility = View.GONE
+        binding.errorLayout.visibility = View.GONE
+        binding.noJobsLayout.visibility = View.GONE
+        binding.vacanciesRecyclerView.visibility = View.GONE
     }
 
     private fun hideCentralProgressBar() {
-        binding?.progressBar?.visibility = View.GONE
+        binding.progressBar.visibility = View.GONE
     }
 
     private fun showError(responseState: ResponseStatusCode?) {
         when (responseState) {
             ResponseStatusCode.Error -> {
-                val recycleVieVisible = binding?.vacanciesRecyclerView?.isVisible ?: false
+                val recycleVieVisible = binding.vacanciesRecyclerView.isVisible
                 if (recycleVieVisible) {
                     showResponseErrToast()
                 } else {
-                    binding?.messageChip?.isVisible = false
-                    binding?.searchLayout?.visibility = View.GONE
-                    binding?.noJobsLayout?.visibility = View.GONE
-                    binding?.vacanciesRecyclerView?.visibility = View.GONE
-                    binding?.errorTv?.setText(R.string.server_error)
-                    binding?.errorImage?.setImageResource(R.drawable.server_error_on_search_screen)
-                    binding?.errorLayout?.visibility = View.VISIBLE
+                    binding.messageChip.isVisible = false
+                    binding.searchLayout.visibility = View.GONE
+                    binding.noJobsLayout.visibility = View.GONE
+                    binding.vacanciesRecyclerView.visibility = View.GONE
+                    binding.errorTv.setText(R.string.server_error)
+                    binding.errorImage.setImageResource(R.drawable.server_error_on_search_screen)
+                    binding.errorLayout.visibility = View.VISIBLE
                 }
             }
 
             ResponseStatusCode.NoInternet -> {
-                val recycleVieVisible = binding?.vacanciesRecyclerView?.isVisible ?: false
+                val recycleVieVisible = binding.vacanciesRecyclerView.isVisible
                 if (recycleVieVisible) {
                     showNoInternetToast()
                 } else {
-                    binding?.messageChip?.isVisible = false
-                    binding?.searchLayout?.visibility = View.GONE
-                    binding?.noJobsLayout?.visibility = View.GONE
-                    binding?.vacanciesRecyclerView?.visibility = View.GONE
-                    binding?.errorTv?.setText(R.string.no_internet)
-                    binding?.errorImage?.setImageResource(R.drawable.no_internet_placeholder)
-                    binding?.errorLayout?.visibility = View.VISIBLE
+                    binding.messageChip.isVisible = false
+                    binding.searchLayout.visibility = View.GONE
+                    binding.noJobsLayout.visibility = View.GONE
+                    binding.vacanciesRecyclerView.visibility = View.GONE
+                    binding.errorTv.setText(R.string.no_internet)
+                    binding.errorImage.setImageResource(R.drawable.no_internet_placeholder)
+                    binding.errorLayout.visibility = View.VISIBLE
                 }
             }
 
@@ -235,18 +236,18 @@ class SearchJobFragment : Fragment() {
     }
 
     private fun showEmptyState() {
-        binding?.vacanciesRecyclerView?.visibility = View.GONE
-        binding?.searchLayout?.visibility = View.GONE
-        binding?.errorLayout?.visibility = View.GONE
-        binding?.noJobsLayout?.visibility = View.VISIBLE
+        binding.vacanciesRecyclerView.visibility = View.GONE
+        binding.searchLayout.visibility = View.GONE
+        binding.errorLayout.visibility = View.GONE
+        binding.noJobsLayout.visibility = View.VISIBLE
 
     }
 
     private fun updateRecyclerView(vacancies: List<Vacancy>) {
-        binding?.vacanciesRecyclerView?.visibility = View.VISIBLE
-        binding?.noJobsLayout?.visibility = View.GONE
-        binding?.searchLayout?.visibility = View.GONE
-        binding?.errorLayout?.visibility = View.GONE
+        binding.vacanciesRecyclerView.visibility = View.VISIBLE
+        binding.noJobsLayout.visibility = View.GONE
+        binding.searchLayout.visibility = View.GONE
+        binding.errorLayout.visibility = View.GONE
         vacancyAdapter.submitList(vacancies)
         onItemClick?.let {
             vacancyAdapter.onItemClick = it
@@ -256,21 +257,21 @@ class SearchJobFragment : Fragment() {
     private fun showNoInternetToast() {
         Toast.makeText(context, getString(R.string.no_internet_toast), Toast.LENGTH_LONG)
             .show()
-        binding?.bottomProgressBar?.isVisible = false
+        binding.bottomProgressBar.isVisible = false
     }
 
     private fun showResponseErrToast() {
         Toast.makeText(context, getString(R.string.response_error_toast), Toast.LENGTH_LONG)
             .show()
-        binding?.bottomProgressBar?.isVisible = false
+        binding.bottomProgressBar.isVisible = false
     }
 
     private fun keyBoardVisibility(visibile: Boolean) {
         val inputMethodManager =
             requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
         when (visibile) {
-            true -> inputMethodManager?.showSoftInput(binding?.searchEditText, 0)
-            else -> inputMethodManager?.hideSoftInputFromWindow(binding?.searchEditText?.windowToken, 0)
+            true -> inputMethodManager?.showSoftInput(binding.searchEditText, 0)
+            else -> inputMethodManager?.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
         }
 
     }

@@ -78,7 +78,7 @@
             android:gravity="start"/>
 
         <ImageButton
-            android:id="@+id/indistry_btn"
+            android:id="@+id/industry_btn"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/arrow_forward_24px"
