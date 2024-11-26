@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.region
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,8 +29,14 @@ class SelectRegionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: android.os.Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navBarVisible(false)
-        binding.button.setOnClickListener {
+        binding.regionLayout.setOnClickListener {
             findNavController().navigate(R.id.action_selectRegionFragment_to_citySelectFragment)
+        }
+        binding.countryLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_selectRegionFragment_to_selectCountryFragment)
+        }
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
