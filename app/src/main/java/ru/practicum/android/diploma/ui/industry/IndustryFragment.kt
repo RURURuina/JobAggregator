@@ -51,7 +51,7 @@ class IndustryFragment : Fragment() {
 
     private fun setupUI() {
         binding.back.setOnClickListener {
-            findNavController().popBackStack()
+           viewModel.saveFilter()
         }
 
         binding.clearSearchButton.setOnClickListener {
@@ -76,13 +76,20 @@ class IndustryFragment : Fragment() {
                         state.listIndastries,
                         state.checkedIndustry
                     )
-//                    if (binding.filterEditText.text.isNullOrBlank()) {
-//                        binding.filterEditText.setText(state.checkedIndustry?.name)
-//                    }
+                    if (binding.filterEditText.text.toString() != state.checkedIndustry?.name) {
+                        binding.filterEditText.setText(state.checkedIndustry?.name)
+                    }
                 }
 
                 IndustryFragmentState.Exit -> {
                     findNavController().popBackStack()
+                }
+
+                is IndustryFragmentState.Filter -> {
+                    updateRadioGroup(
+                        state.listIndastries,
+                        state.checkedIndustry
+                    )
                 }
             }
         }
@@ -125,7 +132,7 @@ class IndustryFragment : Fragment() {
 
     private fun updateRadioGroup(industries: List<IndustryNested>, checkedIndustry: IndustryNested?) {
         binding.radioGroup.removeAllViews()
-        Log.d("updateRadioGroup", checkedIndustry.toString() )
+        Log.d("updateRadioGroup", checkedIndustry.toString())
         // Список для хранения всех CustomRadioLayout
         val radioLayouts = mutableListOf<CustomRadioLayout>()
 

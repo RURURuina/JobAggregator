@@ -109,7 +109,7 @@ class IndustryViewModel(
                     industry.name?.contains(query, ignoreCase = true) == true
                 }
             }
-            pushState(IndustryFragmentState.Content(filteredList, selectedIndustry))
+            pushState(IndustryFragmentState.Filter(filteredList, selectedIndustry))
         }
     }
 
