@@ -49,8 +49,8 @@ class CitySelectViewModel(
         viewModelScope.launch {
             filterInteractor.saveFilter(
                 FilterShared(
-                    countryId = area.parentId,
-                    countryName = area.parentName,
+                    countryId = area.parentId ?: filterShared?.countryId,
+                    countryName = area.parentName ?: filterShared?.countryName,
                     regionId = area.id,
                     regionName = area.name,
                     industryName = filterShared?.industryName,
