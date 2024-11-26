@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.domain.api.FavoritesInteractor
+import ru.practicum.android.diploma.domain.api.favorite.FavoritesInteractor
 import ru.practicum.android.diploma.domain.api.hh.HhInteractor
 import ru.practicum.android.diploma.domain.api.sharing.VacancySharingInteractor
 import ru.practicum.android.diploma.domain.models.entity.Vacancy

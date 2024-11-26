@@ -3,24 +3,32 @@ package ru.practicum.android.diploma.di
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import ru.practicum.android.diploma.data.convertors.FavoriteVacancyDbConverter
+import ru.practicum.android.diploma.data.convertors.SharedStringConvertor
 import ru.practicum.android.diploma.data.convertors.VacancyDtoConvertor
 import ru.practicum.android.diploma.data.repository.CitySelectRepositoryImpl
 import ru.practicum.android.diploma.data.repository.FavoritesVacancyRepositoryImpl
+import ru.practicum.android.diploma.data.repository.FilterRepositoryImpl
 import ru.practicum.android.diploma.data.repository.HhRepositoryImpl
 import ru.practicum.android.diploma.data.repository.IndustriesRepositoryImpl
 import ru.practicum.android.diploma.data.repository.VacancySharingRepositoryImpl
-import ru.practicum.android.diploma.domain.api.FavoritesVacancyRepository
 import ru.practicum.android.diploma.domain.api.city.CitySelectRepository
-import ru.practicum.android.diploma.domain.api.industries.IndustriesRepository
+import ru.practicum.android.diploma.domain.api.favorite.FavoritesVacancyRepository
+import ru.practicum.android.diploma.domain.api.filter.FilterRepository
 import ru.practicum.android.diploma.domain.api.hh.HhRepository
+import ru.practicum.android.diploma.domain.api.industries.IndustriesRepository
 import ru.practicum.android.diploma.domain.api.sharing.VacancySharingRepository
 
 val repositoryModule = module {
     single<VacancyDtoConvertor> {
         VacancyDtoConvertor()
     }
+
     single<FavoriteVacancyDbConverter> {
         FavoriteVacancyDbConverter(gson = get())
+    }
+
+    single<SharedStringConvertor> {
+        SharedStringConvertor(gson = get())
     }
 
     single<HhRepository> {
@@ -49,5 +57,12 @@ val repositoryModule = module {
     }
     single<CitySelectRepository> {
         CitySelectRepositoryImpl(networkClient = get())
+    }
+
+    single<FilterRepository> {
+        FilterRepositoryImpl(
+            sharedPreferences = get(),
+            sharedStringConvertor = get()
+        )
     }
 }
