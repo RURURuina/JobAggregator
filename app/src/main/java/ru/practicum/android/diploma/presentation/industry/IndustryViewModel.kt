@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.presentation.industry
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,7 @@ class IndustryViewModel(
     val industries: LiveData<IndustryFragmentState> = _industriesState
     private var selectedIndustry: IndustryNested? = null
 
+    /*5.461*/
     init {
         getFilter()
         setItem()
@@ -32,7 +34,7 @@ class IndustryViewModel(
 
     fun saveFilter() {
         viewModelScope.launch {
-                filterInteractor.saveFilter(
+            filterInteractor.saveFilter(
                 FilterShared(
                     countryId = filterShared?.countryId,
                     countryName = filterShared?.countryName,
@@ -49,60 +51,69 @@ class IndustryViewModel(
     }
 
 
-private fun setItem() {
+    private fun setItem() {
 //    filterShared?.let { filterShared ->
 //        _selectedIndustry.value = IndustryNested(
 //            id = filterShared.industryId,
 //            name = filterShared.industryName
 //        )
 //    }
-}
-
-private fun getFilter() {
-    viewModelScope.launch {
-        filterShared = filterInteractor.getFilter()
     }
-}
 
-private fun getIndustries() {
-    viewModelScope.launch {
-        interactor.getIndustriesList().collect { result ->
-            when (result) {
-                is Resource.Success -> {
-                    unFilteredList = result.data?.flatMap { industry ->
-                        industry.industries ?: emptyList()
-                    } ?: emptyList()
+    private fun getFilter() {
+        viewModelScope.launch {
+            filterShared = filterInteractor.getFilter()
+            selectedIndustry = IndustryNested(
+                filterShared?.industryId,
+                filterShared?.industryName
+            )
+        }
+    }
 
-                    pushState(IndustryFragmentState.Content(unFilteredList))
-                }
+    private fun getIndustries() {
+        viewModelScope.launch {
+            interactor.getIndustriesList().collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        unFilteredList = result.data?.flatMap { industry ->
+                            industry.industries ?: emptyList()
+                        } ?: emptyList()
 
-                is Resource.Error -> {
-                    // Handle error state
+                        pushState(IndustryFragmentState.Content(unFilteredList, selectedIndustry))
+                    }
+
+                    is Resource.Error -> {
+                        // Handle error state
+                    }
                 }
             }
         }
     }
-}
 
-fun setSelectedIndustry(industry: IndustryNested) {
-    selectedIndustry = industry
-}
-
-fun filterIndustries(query: String) {
-    filterJob?.cancel() // Отменяем предыдущую операцию фильтрации
-    filterJob = viewModelScope.launch {
-        val filteredList = if (query.isEmpty()) {
-            unFilteredList
+    fun setSelectedIndustry(industry: IndustryNested?, isChecked: Boolean) {
+        selectedIndustry = if (isChecked) {
+            industry
         } else {
-            unFilteredList.filter { industry ->
-                industry.name?.contains(query, ignoreCase = true) == true
-            }
+            null
         }
-        pushState(IndustryFragmentState.Content(filteredList))
+        Log.d("setSelectedIndustry :", industry.toString())
     }
-}
 
-private fun pushState(state: IndustryFragmentState) {
-    _industriesState.value = state
-}
+    fun filterIndustries(query: String) {
+        filterJob?.cancel() // Отменяем предыдущую операцию фильтрации
+        filterJob = viewModelScope.launch {
+            val filteredList = if (query.isEmpty()) {
+                unFilteredList
+            } else {
+                unFilteredList.filter { industry ->
+                    industry.name?.contains(query, ignoreCase = true) == true
+                }
+            }
+            pushState(IndustryFragmentState.Content(filteredList, selectedIndustry))
+        }
+    }
+
+    private fun pushState(state: IndustryFragmentState) {
+        _industriesState.value = state
+    }
 }

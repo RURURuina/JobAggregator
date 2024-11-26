@@ -4,12 +4,13 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.RadioButton
 import android.widget.RadioGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -57,20 +58,29 @@ class IndustryFragment : Fragment() {
             binding.filterEditText.text.clear()
         }
 
-        binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            val radioButton = group.findViewById<RadioButton>(checkedId)
-            val industry = radioButton.tag as? IndustryNested
-            industry?.let {
-                viewModel.setSelectedIndustry(it)
-                binding.selectButton.visibility = View.VISIBLE
-            }
-        }
+//        binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
+//            val radioButton = group.findViewById<RadioButton>(checkedId)
+//            val industry = radioButton.tag as? IndustryNested
+//            industry?.let {
+//                viewModel.setSelectedIndustry(it, radioButton.isChecked)
+//                binding.selectButton.isVisible = radioButton.isChecked
+//            }
+//        }
     }
 
     private fun setupObservers() {
         viewModel.industries.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is IndustryFragmentState.Content -> updateRadioGroup(state.listIndastries)
+                is IndustryFragmentState.Content -> {
+                    updateRadioGroup(
+                        state.listIndastries,
+                        state.checkedIndustry
+                    )
+//                    if (binding.filterEditText.text.isNullOrBlank()) {
+//                        binding.filterEditText.setText(state.checkedIndustry?.name)
+//                    }
+                }
+
                 IndustryFragmentState.Exit -> {
                     findNavController().popBackStack()
                 }
@@ -113,9 +123,9 @@ class IndustryFragment : Fragment() {
         )
     }
 
-    private fun updateRadioGroup(industries: List<IndustryNested>) {
+    private fun updateRadioGroup(industries: List<IndustryNested>, checkedIndustry: IndustryNested?) {
         binding.radioGroup.removeAllViews()
-
+        Log.d("updateRadioGroup", checkedIndustry.toString() )
         // Список для хранения всех CustomRadioLayout
         val radioLayouts = mutableListOf<CustomRadioLayout>()
 
@@ -128,6 +138,7 @@ class IndustryFragment : Fragment() {
                 )
                 // Обработчик изменения состояния для каждого CustomRadioLayout
                 setOnCheckedChangeListener { buttonView, isChecked ->
+                    val industry1 = buttonView.tag as? IndustryNested
                     if (isChecked) {
                         // Отключаем все остальные RadioButton
                         radioLayouts.forEach { layout ->
@@ -135,17 +146,12 @@ class IndustryFragment : Fragment() {
                                 layout.setChecked(false)
                             }
                         }
-                        // Обновляем UI
-                        val industry = buttonView.tag as? IndustryNested
-                        industry?.let {
-                            viewModel.setSelectedIndustry(it)
-                            binding.selectButton.visibility = View.VISIBLE
-                        }
                     }
+                    binding.selectButton.isVisible = isChecked
+                    viewModel.setSelectedIndustry(industry, isChecked)
                 }
-                this.setChecked(industry.id == "")
+                this.setChecked(industry.id == checkedIndustry?.id)
             }
-
             radioLayouts.add(customRadioLayout)
             binding.radioGroup.addView(customRadioLayout)
         }
