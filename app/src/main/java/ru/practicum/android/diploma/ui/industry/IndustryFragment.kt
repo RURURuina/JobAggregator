@@ -51,7 +51,7 @@ class IndustryFragment : Fragment() {
 
     private fun setupUI() {
         binding.back.setOnClickListener {
-           viewModel.saveFilter()
+            viewModel.saveFilter()
         }
 
         binding.clearSearchButton.setOnClickListener {

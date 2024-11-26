@@ -64,9 +64,9 @@ class CitySelectFragment : Fragment() {
                     keyBoardVisibility(false)
                 }
 
-                 CitySelectState.Error -> {
-                     binding.errorLayout.isVisible = true
-                     keyBoardVisibility(false)
+                CitySelectState.Error -> {
+                    binding.errorLayout.isVisible = true
+                    keyBoardVisibility(false)
                 }
 
                 CitySelectState.Exit -> {
