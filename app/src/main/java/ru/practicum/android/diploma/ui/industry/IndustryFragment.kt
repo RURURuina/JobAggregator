@@ -39,6 +39,13 @@ class IndustryFragment : Fragment() {
         setupUI()
         setupObservers()
         setupSearchFilter()
+        prepareSaveButton()
+    }
+
+    private fun prepareSaveButton() {
+        binding.selectButton.setOnClickListener {
+            viewModel.saveFilter()
+        }
     }
 
     private fun setupUI() {
@@ -64,6 +71,9 @@ class IndustryFragment : Fragment() {
         viewModel.industries.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is IndustryFragmentState.Content -> updateRadioGroup(state.listIndastries)
+                IndustryFragmentState.Exit -> {
+                    findNavController().popBackStack()
+                }
             }
         }
     }
@@ -116,7 +126,6 @@ class IndustryFragment : Fragment() {
                     RadioGroup.LayoutParams.MATCH_PARENT,
                     RadioGroup.LayoutParams.WRAP_CONTENT
                 )
-
                 // Обработчик изменения состояния для каждого CustomRadioLayout
                 setOnCheckedChangeListener { buttonView, isChecked ->
                     if (isChecked) {
@@ -134,6 +143,7 @@ class IndustryFragment : Fragment() {
                         }
                     }
                 }
+                this.setChecked(industry.id == "")
             }
 
             radioLayouts.add(customRadioLayout)
@@ -143,6 +153,7 @@ class IndustryFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         _binding = null
     }
 }
