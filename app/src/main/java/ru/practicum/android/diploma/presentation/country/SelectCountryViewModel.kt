@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.presentation.country
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -64,6 +65,8 @@ class SelectCountryViewModel(private val hhInteractor: HhInteractor, private val
                     } ?: renderState(CountrySelectState.Error)
                 }
             } catch (e: SocketTimeoutException) {
+                Log.e("SocketTimeoutException", "Timeout error occured", e)
+                renderState(CountrySelectState.Error)
                 this.coroutineContext.job.cancel()
             }
         }

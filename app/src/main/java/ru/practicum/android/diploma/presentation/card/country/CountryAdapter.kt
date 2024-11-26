@@ -7,7 +7,7 @@ import ru.practicum.android.diploma.databinding.TextItemBinding
 import ru.practicum.android.diploma.domain.models.entity.Country
 
 class CountryAdapter : ListAdapter<Country, CountryViewHolder>(CountryDiffCallback()) {
-    var onItemClick = {_: Country -> }
+    var onItemClick = { _: Country -> }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryViewHolder {
         val binding = TextItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CountryViewHolder(binding)

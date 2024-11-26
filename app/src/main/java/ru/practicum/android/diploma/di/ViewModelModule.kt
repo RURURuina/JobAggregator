@@ -10,7 +10,6 @@ import ru.practicum.android.diploma.presentation.industry.IndustryViewModel
 import ru.practicum.android.diploma.presentation.search.SearchJobViewModel
 import ru.practicum.android.diploma.presentation.team.TeamViewModel
 
-
 val viewModelModule = module {
     viewModel {
         SearchJobViewModel(
