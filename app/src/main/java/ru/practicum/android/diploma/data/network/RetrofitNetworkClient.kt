@@ -5,10 +5,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.practicum.android.diploma.data.dto.request.CitiesByAreaIdRequest
+import ru.practicum.android.diploma.data.dto.request.CountriesRequest
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
 import ru.practicum.android.diploma.data.dto.response.CityResponse
 import ru.practicum.android.diploma.data.dto.response.IndustriesResponse
+import ru.practicum.android.diploma.data.dto.response.CountriesResponse
 import ru.practicum.android.diploma.data.dto.response.Response
 import ru.practicum.android.diploma.data.dto.response.VacancyResponse
 import ru.practicum.android.diploma.data.dto.vacancy.AreaData
@@ -108,6 +110,22 @@ class RetrofitNetworkClient(
                     }
                     val response = CityResponse(null, null, list)
                     response.apply { resultCode = ResponseStatusCode.Ok }
+                } catch (e: HttpException) {
+                    println(e)
+                    Response().apply { resultCode = ResponseStatusCode.Error }
+                }
+            }
+        }
+    }
+
+    override suspend fun getCountries(dto: CountriesRequest): Response {
+        return if (!isConnected()) {
+            Response().apply { resultCode = ResponseStatusCode.NoInternet }
+        } else {
+            withContext(Dispatchers.IO) {
+                try {
+                    val response = hhService.searchCountries()
+                    CountriesResponse(response).apply { resultCode = ResponseStatusCode.Ok }
                 } catch (e: HttpException) {
                     println(e)
                     Response().apply { resultCode = ResponseStatusCode.Error }
