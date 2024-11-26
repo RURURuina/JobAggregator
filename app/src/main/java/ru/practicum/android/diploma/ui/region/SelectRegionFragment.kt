@@ -115,15 +115,18 @@ class SelectRegionFragment : Fragment() {
     }
 
     private fun prepareBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (isEnabled) {
-                        viewModel.leaveView()
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(
+                viewLifecycleOwner,
+                object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        if (isEnabled) {
+                            viewModel.leaveView()
+                        }
                     }
                 }
-            }
-        )
+            )
     }
 
     override fun onDetach() {

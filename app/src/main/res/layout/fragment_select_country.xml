@@ -62,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +72,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/no_city_found"
+            android:contentDescription="@string/cant_get_cities_list"
             android:src="@drawable/failed_get_list_placeholder" />
 
         <TextView
@@ -82,7 +82,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="@string/no_city_found" />
+            android:text="@string/cant_get_cities_list" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
