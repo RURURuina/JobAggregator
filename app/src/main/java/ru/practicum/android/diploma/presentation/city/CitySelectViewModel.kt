@@ -12,6 +12,7 @@ import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.models.entity.Area
 import ru.practicum.android.diploma.domain.models.entity.FilterShared
 import ru.practicum.android.diploma.ui.city.model.CitySelectState
+import ru.practicum.android.diploma.util.debounce
 import java.net.SocketTimeoutException
 
 class CitySelectViewModel(
@@ -22,6 +23,13 @@ class CitySelectViewModel(
     val citySelectState: LiveData<CitySelectState> = _citySelectState
     private var areasList: MutableList<Area> = mutableListOf()
     private var filterShared: FilterShared? = null
+    val debounceFilter = debounce<String>(
+        delayMillis = DEBOUNCE_FILTER_TIME,
+        coroutineScope = viewModelScope,
+        useLastParam = true
+    ) { filterText ->
+        filterRegions(filterText)
+    }
 
     init {
         viewModelScope.launch {
@@ -60,8 +68,12 @@ class CitySelectViewModel(
             try {
                 citySelectInteractor.getCitiesByAreaId(id).collect { resource ->
                     resource?.data?.let { listAreas ->
-                        areasList.addAll(listAreas)
-                        pushState(CitySelectState.Success(areasList))
+                        if (listAreas.isEmpty()) {
+                            pushState(CitySelectState.Error)
+                        } else {
+                            areasList.addAll(listAreas)
+                            pushState(CitySelectState.Success(listAreas))
+                        }
                     } ?: pushState(CitySelectState.Error)
                 }
             } catch (e: SocketTimeoutException) {
@@ -77,8 +89,12 @@ class CitySelectViewModel(
             try {
                 citySelectInteractor.getAllArea().collect { resource ->
                     resource?.data?.let { listAreas ->
-                        areasList.addAll(listAreas)
-                        pushState(CitySelectState.Success(listAreas))
+                        if (listAreas.isEmpty()) {
+                            pushState(CitySelectState.Empty)
+                        } else {
+                            areasList.addAll(listAreas)
+                            pushState(CitySelectState.Success(listAreas))
+                        }
                     } ?: pushState(CitySelectState.Error)
                 }
             } catch (e: SocketTimeoutException) {
@@ -102,7 +118,7 @@ class CitySelectViewModel(
         pushState(CitySelectState.Error)
     }
 
-    fun filterRegions(text: String) {
+    private fun filterRegions(text: String) {
         val filteredRegions = areasList.filter { area: Area ->
             area.name?.lowercase()?.contains(text.lowercase()) == true
         }
@@ -115,5 +131,9 @@ class CitySelectViewModel(
                 CitySelectState.Success(filteredRegions)
             )
         }
+    }
+
+    private companion object {
+        private const val DEBOUNCE_FILTER_TIME = 2000L
     }
 }

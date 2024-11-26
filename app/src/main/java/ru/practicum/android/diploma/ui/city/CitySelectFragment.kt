@@ -104,7 +104,7 @@ class CitySelectFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.filterRegions(s.toString())
+                viewModel.debounceFilter(s.toString())
                 updateSearchIcon(s.isNullOrBlank())
             }
 
