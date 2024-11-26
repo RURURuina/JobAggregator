@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.ui.region
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +37,8 @@ class SelectRegionFragment : Fragment() {
         binding.backBtn.setOnClickListener {
             findNavController().popBackStack()
         }
-    }
 
+    }
     override fun onDetach() {
         super.onDetach()
         navBarVisible(false)

@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.ui.country
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

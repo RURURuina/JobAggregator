@@ -40,7 +40,8 @@ val viewModelModule = module {
     }
     viewModel {
         SelectCountryViewModel(
-            hhInteractor = get()
+            hhInteractor = get(),
+            filterInteractor = get()
         )
     }
 
