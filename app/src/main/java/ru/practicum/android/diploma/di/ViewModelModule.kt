@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.di
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import ru.practicum.android.diploma.presentation.city.CitySelectViewModel
+import ru.practicum.android.diploma.presentation.country.SelectCountryViewModel
 import ru.practicum.android.diploma.presentation.details.DetailsFragmentViewModel
 import ru.practicum.android.diploma.presentation.favorites.FavoriteJobViewModel
 import ru.practicum.android.diploma.presentation.industry.IndustryViewModel
@@ -33,6 +34,12 @@ val viewModelModule = module {
     viewModel {
         CitySelectViewModel(
             citySelectInteractor = get(),
+            filterInteractor = get()
+        )
+    }
+    viewModel {
+        SelectCountryViewModel(
+            hhInteractor = get(),
             filterInteractor = get()
         )
     }

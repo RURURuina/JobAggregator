@@ -28,11 +28,17 @@ class SelectRegionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: android.os.Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navBarVisible(false)
-        binding.button.setOnClickListener {
+        binding.regionLayout.setOnClickListener {
             findNavController().navigate(R.id.action_selectRegionFragment_to_citySelectFragment)
         }
-    }
+        binding.countryLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_selectRegionFragment_to_selectCountryFragment)
+        }
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
+    }
     override fun onDetach() {
         super.onDetach()
         navBarVisible(false)

@@ -29,7 +29,6 @@ class FilterRepositoryImpl(
                 .apply()
         }
     }
-
     private companion object {
         const val KEY = "Filter"
     }

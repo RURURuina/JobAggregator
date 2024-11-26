@@ -34,6 +34,10 @@
     <string name="no_internet_toast">Проверьте подключение к интернету</string>
     <string name="response_error_toast">Произошла ошибка</string>
     <string name="key_skill_mask"><![CDATA[<ul> <li>%1$s.</li>]]></string>
+    <string name="choose_country">Выбор страны</string>
+    <string name="choose_work_place">Выбор места работы</string>
+    <string name="country">Страна</string>
+    <string name="region">Регион</string>
 
     <plurals name="plurals_vacancies">
         <item quantity="zero">Найдено %1$d вакансий</item>
