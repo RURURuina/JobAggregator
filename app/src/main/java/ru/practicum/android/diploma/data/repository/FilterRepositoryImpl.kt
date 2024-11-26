@@ -15,7 +15,6 @@ class FilterRepositoryImpl(
     override suspend fun getTempFilter(): FilterShared? {
         return withContext(Dispatchers.IO) {
             val str = sharedPreferences.getString(KEY_TEMP, null)
-            Log.d("FilterRepository", "getTempFilter: $str")
             sharedStringConvertor.getFilterShared(str)
         }
     }
@@ -23,7 +22,6 @@ class FilterRepositoryImpl(
     override suspend fun saveTempFilter(filterShared: FilterShared?) {
         withContext(Dispatchers.IO) {
             val str = sharedStringConvertor.getStringForShared(filterShared)
-            Log.d("FilterRepository", "saveTempFilter: $str")
             sharedPreferences.edit()
                 .putString(KEY_TEMP, str)
                 .apply()
@@ -33,7 +31,6 @@ class FilterRepositoryImpl(
     override suspend fun getFilter(): FilterShared? {
         return withContext(Dispatchers.IO) {
             val str = sharedPreferences.getString(KEY_FILTER, null)
-            Log.d("FilterRepository", "getFilter: $str")
             sharedStringConvertor.getFilterShared(str)
         }
     }
@@ -41,7 +38,6 @@ class FilterRepositoryImpl(
     override suspend fun saveFilter(filterShared: FilterShared?) {
         withContext(Dispatchers.IO) {
             val str = sharedStringConvertor.getStringForShared(filterShared)
-            Log.d("FilterRepository", "KEY_FILTER: $str")
             sharedPreferences.edit()
                 .putString(KEY_TEMP, str)
                 .apply()
