@@ -1,13 +1,15 @@
 package ru.practicum.android.diploma.di
 
 import org.koin.dsl.module
-import ru.practicum.android.diploma.domain.api.FavoritesInteractor
 import ru.practicum.android.diploma.domain.api.city.CitySelectInteractor
+import ru.practicum.android.diploma.domain.api.favorite.FavoritesInteractor
+import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.api.hh.HhInteractor
 import ru.practicum.android.diploma.domain.api.industries.IndustriesInteractor
 import ru.practicum.android.diploma.domain.api.sharing.VacancySharingInteractor
 import ru.practicum.android.diploma.domain.impl.CitySelectInteractorImpl
 import ru.practicum.android.diploma.domain.impl.FavoritesInteractorImpl
+import ru.practicum.android.diploma.domain.impl.FilterInteractorImpl
 import ru.practicum.android.diploma.domain.impl.HhInteractorImpl
 import ru.practicum.android.diploma.domain.impl.IndustriesInteractorImpl
 import ru.practicum.android.diploma.domain.impl.VacancySharingInteractorImpl
@@ -36,6 +38,11 @@ val interactorModule = module {
     single<CitySelectInteractor> {
         CitySelectInteractorImpl(
             citySelectRepository = get()
+        )
+    }
+    single<FilterInteractor> {
+        FilterInteractorImpl(
+            filterRepository = get()
         )
     }
 }

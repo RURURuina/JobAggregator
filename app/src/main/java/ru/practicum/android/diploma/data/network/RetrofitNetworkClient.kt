@@ -8,8 +8,8 @@ import ru.practicum.android.diploma.data.dto.request.CitiesByAreaIdRequest
 import ru.practicum.android.diploma.data.dto.request.CountriesRequest
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
-import ru.practicum.android.diploma.data.dto.response.IndustriesResponse
 import ru.practicum.android.diploma.data.dto.response.CityResponse
+import ru.practicum.android.diploma.data.dto.response.IndustriesResponse
 import ru.practicum.android.diploma.data.dto.response.CountriesResponse
 import ru.practicum.android.diploma.data.dto.response.Response
 import ru.practicum.android.diploma.data.dto.response.VacancyResponse
@@ -106,9 +106,9 @@ class RetrofitNetworkClient(
                 try {
                     val list: MutableList<AreaData> = mutableListOf()
                     hhService.getAllArea().map { cityResponse ->
-                        list.addAll(cityResponse.areas)
+                        cityResponse.areas.map { areaData -> list.add(areaData.copy(parentName = cityResponse.name)) }
                     }
-                    val response = CityResponse(list)
+                    val response = CityResponse(null, null, list)
                     response.apply { resultCode = ResponseStatusCode.Ok }
                 } catch (e: HttpException) {
                     println(e)

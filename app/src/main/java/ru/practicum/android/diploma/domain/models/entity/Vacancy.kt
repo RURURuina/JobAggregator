@@ -66,6 +66,7 @@ data class IndustryNested(
 data class Area(
     val id: String?,
     val parentId: String?,
+    val parenName: String?,
     val name: String?,
     val url: String?,
 )

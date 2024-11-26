@@ -33,6 +33,7 @@ val viewModelModule = module {
     viewModel {
         CitySelectViewModel(
             citySelectInteractor = get(),
+            filterInteractor = get()
         )
     }
 
