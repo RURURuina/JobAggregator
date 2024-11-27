@@ -1,10 +1,12 @@
 package ru.practicum.android.diploma.ui.filtration
 
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.core.bundle.Bundle
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -29,47 +31,92 @@ class FiltrationFragment : Fragment() {
         return this.binding.root
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        navBarVisible(true)
-        _binding = null
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: android.os.Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navBarVisible(false)
-        prepareRegionButton()
-        prepareIndustryButton()
-        prepareBackBtn()
+
+        // Загрузка сохраненного фильтра
+        viewModel.loadSavedFilter()
+
+        setupObservers()
         prepareTextWatcher()
-        prepareClearBtn()
+        setupListeners()
+        prepareButtons()
 
     }
 
-    private fun prepareIndustryButton() {
-        binding.industryLayout.setOnClickListener {
-            findNavController().navigate(R.id.action_filtrationFragment_to_industryFragment)
+    private fun setupObservers() {
+        viewModel.filterState.observe(viewLifecycleOwner) { filter ->
+            filter?.let {
+                // Заполнение полей сохраненными значениями
+                if (it.regionName != null && it.countryName != null) {
+                    binding.workPlace.text = it.countryName + "," + it.regionName
+                }
+                binding.industry.setText(it.industryName ?: "")
+                binding.etInputSalary.setText(it.salary ?: "")
+                binding.checkBox.isChecked = it.onlySalaryFlag ?: false
+            }
+            setApplyResetButtonsVis(false)
         }
     }
 
-    private fun prepareBackBtn() {
-        binding.backBtn.setOnClickListener {
-            findNavController().popBackStack()
+    private fun setApplyResetButtonsVis(vis: Boolean) {
+        if (vis) {
+            binding.submitButton.visibility = View.VISIBLE
+            binding.resetButton.visibility = View.VISIBLE
+        } else {
+            binding.submitButton.visibility = View.GONE
+            binding.resetButton.visibility = View.GONE
         }
     }
 
-    private fun prepareClearBtn() {
+    private fun setupListeners() {
+        // Слушатель изменения зарплаты
+        binding.etInputSalary.doAfterTextChanged { text ->
+            setApplyResetButtonsVis(true)
+        }
+
+        // Слушатель чекбокса
+        binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            setApplyResetButtonsVis(true)
+        }
+        // Кнопка очистить
         binding.clearSalaryButton.setOnClickListener {
             binding.etInputSalary.setText("")
         }
+
+        // Кнопка назад
+        binding.backBtn.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        // Кнопка применить
+        binding.submitButton.setOnClickListener {
+            val filter = viewModel.createFilterFromUI(
+                salary = binding.etInputSalary.text.toString(),
+                onlySalaryFlag = binding.checkBox.isChecked
+            )
+            viewModel.saveFilter(filter)
+        }
+
+        // Кнопка сбросить
+        binding.resetButton.setOnClickListener {
+            val filter = viewModel.createFilterFromUI(
+                salary = "",
+                onlySalaryFlag = false
+            )
+            viewModel.saveFilter(filter)
+            viewModel.loadSavedFilter()
+        }
     }
 
-    private fun prepareRegionButton() {
+    private fun prepareButtons() {
+        // Кнопки выбора региона и отрасли
         binding.workPlaceLayout.setOnClickListener {
             findNavController().navigate(R.id.action_filtrationFragment_to_selectRegionFragment)
         }
 
-        binding.industryBtn.setOnClickListener {
+        binding.industryLayout.setOnClickListener {
             findNavController().navigate(R.id.action_filtrationFragment_to_industryFragment)
         }
     }
@@ -78,6 +125,11 @@ class FiltrationFragment : Fragment() {
         (activity as RootActivity).bottomNavigationVisibility(isVisible)
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        navBarVisible(true)
+        _binding = null
+    }
     private fun prepareTextWatcher() {
         binding.etInputSalary.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
