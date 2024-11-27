@@ -7,11 +7,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.models.entity.FilterShared
-import ru.practicum.android.diploma.domain.models.entity.Salary
 
 class FiltrationViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
     private val _filterState = MutableLiveData<FilterShared?>()
-    val filterState : LiveData<FilterShared?> = _filterState
+    val filterState: LiveData<FilterShared?> = _filterState
 
     fun loadSavedFilter() {
         viewModelScope.launch {
@@ -26,7 +25,7 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
         }
     }
 
-    fun createFilterFromUI(salary: String?, onlySalaryFlag: Boolean?) : FilterShared {
+    fun createFilterFromUI(salary: String?, onlySalaryFlag: Boolean?): FilterShared {
         val currentFilter = _filterState.value ?: FilterShared(
             countryName = null,
             countryId = null,

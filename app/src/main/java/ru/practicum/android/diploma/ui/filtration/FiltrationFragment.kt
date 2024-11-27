@@ -44,7 +44,7 @@ class FiltrationFragment : Fragment() {
         viewModel.filterState.observe(viewLifecycleOwner) { filter ->
             filter?.let {
                 // Заполнение полей сохраненными значениями
-                if(it.regionName != null && it.countryName != null)  {
+                if (it.regionName != null && it.countryName != null) {
                     binding.regionText.text = it.countryName + "," + it.regionName
                 }
                 binding.industryText.setText(it.industryName ?: "")
@@ -55,11 +55,11 @@ class FiltrationFragment : Fragment() {
         }
     }
 
-    private fun setApplyResetButtonsVis(vis: Boolean){
-        if(vis){
+    private fun setApplyResetButtonsVis(vis: Boolean) {
+        if (vis) {
             binding.applyButton.visibility = View.VISIBLE
             binding.resetText.visibility = View.VISIBLE
-        } else{
+        } else {
             binding.applyButton.visibility = View.GONE
             binding.resetText.visibility = View.GONE
         }
@@ -81,8 +81,8 @@ class FiltrationFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        //Кнопка применить
-        binding.applyButton.setOnClickListener{
+        // Кнопка применить
+        binding.applyButton.setOnClickListener {
             val filter = viewModel.createFilterFromUI(
                 salary = binding.inputSalary.text.toString(),
                 onlySalaryFlag = binding.checkBox.isChecked
@@ -90,8 +90,8 @@ class FiltrationFragment : Fragment() {
             viewModel.saveFilter(filter)
         }
 
-        //Кнопка сбросить
-        binding.resetText.setOnClickListener{
+        // Кнопка сбросить
+        binding.resetText.setOnClickListener {
             val filter = viewModel.createFilterFromUI(
                 salary = "",
                 onlySalaryFlag = false
