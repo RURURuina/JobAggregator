@@ -148,7 +148,7 @@ class SearchJobViewModel(
     }
 
     private fun handleSuccess(result: Resource<List<Vacancy>>?) {
-        val newVacancies = result?.data ?: emptyList()
+        val newVacancies = result?.data.orEmpty()
         isLastPage = currentPage == maxPage - 1
         if (newVacancies.isNotEmpty()) {
             vacanciesList.addAll(newVacancies)

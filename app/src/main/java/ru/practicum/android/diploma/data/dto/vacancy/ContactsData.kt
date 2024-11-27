@@ -18,9 +18,9 @@ fun ContactsData.map(): Contacts {
 }
 
 private fun phonesMap(oldList: List<PhonesData>?): List<Phone>? {
-    oldList?.let {
+    return oldList?.let {
         val list = mutableListOf<Phone>()
         oldList.map { list.add(it.map()) }
-        return list
-    } ?: return null
+        list
+    }
 }

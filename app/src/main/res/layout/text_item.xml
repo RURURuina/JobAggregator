@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -41,11 +42,11 @@
             style="@style/textSize16"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Описание"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/leftBorder"
+            app:layout_constraintRight_toLeftOf="@id/secondRightBorder"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/secondRightBorder"/>
+            tools:text="Описание" />
 
         <ImageView
             android:layout_width="24dp"
