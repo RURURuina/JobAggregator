@@ -159,7 +159,8 @@ class SearchJobFragment : Fragment() {
                     hideCentralProgressBar()
                     showEmptyState()
                     keyBoardVisibility(false)
-                    binding.messageChip.isVisible = false
+                    binding.messageChip.isVisible = true
+                    binding.messageChip.text = context?.getString(R.string.no_such_vacancies)
                 }
 
                 is VacanciesState.Hidden -> {
