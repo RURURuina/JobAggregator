@@ -15,7 +15,8 @@ import ru.practicum.android.diploma.presentation.team.TeamViewModel
 val viewModelModule = module {
     viewModel {
         SearchJobViewModel(
-            hhInteractor = get()
+            hhInteractor = get(),
+            filterInteractor = get()
         )
     }
     viewModel {

@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.bundle.Bundle
 import androidx.core.bundle.bundleOf
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -166,6 +167,12 @@ class SearchJobFragment : Fragment() {
                     clearRecyclerView()
                     binding.messageChip.isVisible = false
                 }
+            }
+        }
+
+        viewModel.savedFilter.observe(viewLifecycleOwner) { filter ->
+            if (filter != null) {
+                binding.filterImageButton.setColorFilter(ContextCompat.getColor(requireContext(), R.color.blue))
             }
         }
     }

@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.api.hh.HhInteractor
+import ru.practicum.android.diploma.domain.models.entity.FilterShared
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.search.models.VacanciesState
 import ru.practicum.android.diploma.util.Resource
@@ -15,10 +17,15 @@ import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.debounce
 import java.net.SocketTimeoutException
 
-class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
-    // Кто будет выполнять задание на обработку ошибок, то сообщение будет на стр 132
+class SearchJobViewModel(
+    private val hhInteractor: HhInteractor,
+
+    private val filterInteractor: FilterInteractor) : ViewModel() {
     private val _vacanciesState = MutableLiveData<VacanciesState>()
+
     val vacanciesState: LiveData<VacanciesState> = _vacanciesState
+    private val _savedFilter = MutableLiveData<FilterShared?>()
+    val savedFilter: LiveData<FilterShared?> = _savedFilter
 
     // переменные для работы с paggination
     private var currentPage = 0
@@ -41,6 +48,10 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         useLastParam = true
     ) {
         loadVacancies()
+    }
+
+    init {
+        getFilter()
     }
 
     fun clearVacancies() {
@@ -109,7 +120,11 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         return hashMapOf(
             "text" to currentQuery,
             "page" to currentPage.toString(),
-            "per_page" to PAGE_SIZE.toString()
+            "per_page" to PAGE_SIZE.toString(),
+            "area" to _savedFilter.value?.regionId.toString(),
+            "industry" to _savedFilter.value?.industryId.toString(),
+            "salary" to _savedFilter.value?.salary.toString(),
+            "only_with_salary" to _savedFilter.value?.onlySalaryFlag.toString()
         )
     }
 
@@ -156,6 +171,14 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     private fun handleError(responseCode: ResponseStatusCode?) {
         pushVacanciesState(VacanciesState.Error(responseCode))
     }
+
+    private fun getFilter() {
+       viewModelScope.launch {
+           _savedFilter.value = filterInteractor.getFilter()
+       }
+    }
+
+
     companion object {
         private const val DEBOUNCE_SEARCH_TIME = 2000L
         private const val DEBOUNCE_PAGE_TIME = 300L
