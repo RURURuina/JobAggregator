@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.bundle.Bundle
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -41,6 +42,7 @@ class FiltrationFragment : Fragment() {
         prepareIndustryButton()
         prepareBackBtn()
         prepareTextWatcher()
+        prepareClearBtn()
 
     }
 
@@ -53,6 +55,12 @@ class FiltrationFragment : Fragment() {
     private fun prepareBackBtn() {
         binding.backBtn.setOnClickListener {
             findNavController().popBackStack()
+        }
+    }
+
+    private fun prepareClearBtn() {
+        binding.clearSalaryButton.setOnClickListener {
+            binding.etInputSalary.setText("")
         }
     }
 
@@ -71,13 +79,14 @@ class FiltrationFragment : Fragment() {
     }
 
     private fun prepareTextWatcher() {
-        binding.inputSalary.addTextChangedListener(object : TextWatcher {
+        binding.etInputSalary.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.hint.isActivated = s?.isBlank() != true
+                binding.clearSalaryButton.isVisible = s?.isBlank() != true
+                binding.hintTitle.isActivated = s?.isBlank() != true
             }
 
             override fun afterTextChanged(s: Editable?) {
