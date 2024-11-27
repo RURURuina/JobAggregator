@@ -209,6 +209,7 @@
             android:inputType="numberDecimal"
             android:textColorHint="?attr/editTextHintColor"
             android:textSize="16sp"
+            android:theme="@style/ThemeOfSearchEditText"
             app:layout_constraintBottom_toBottomOf="@id/input_salary_layout"
             app:layout_constraintEnd_toEndOf="@id/input_salary_layout"
             app:layout_constraintStart_toStartOf="@id/input_salary_layout"
