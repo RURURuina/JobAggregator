@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.api.industries.IndustriesInteractor
@@ -60,21 +61,26 @@ class IndustryViewModel(
 
     private fun getIndustries() {
         viewModelScope.launch {
-            interactor.getIndustriesList().collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        unFilteredList = result.data?.flatMap { industry ->
-                            industry.industries ?: emptyList()
-                        } ?: emptyList()
+            interactor.getIndustriesList()
+                .onStart { pushState(IndustryFragmentState.Loading) }
+                .collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            unFilteredList = result.data?.flatMap { industry ->
+                                industry.industries ?: emptyList()
+                            } ?: emptyList()
+                            if (unFilteredList.isEmpty()) {
+                                pushState(IndustryFragmentState.Empty)
+                            } else {
+                                pushState(IndustryFragmentState.Content(unFilteredList, selectedIndustry))
+                            }
+                        }
 
-                        pushState(IndustryFragmentState.Content(unFilteredList, selectedIndustry))
-                    }
-
-                    is Resource.Error -> {
-                        // Handle error state
+                        is Resource.Error -> {
+                            pushState(IndustryFragmentState.Error)
+                        }
                     }
                 }
-            }
         }
     }
 
