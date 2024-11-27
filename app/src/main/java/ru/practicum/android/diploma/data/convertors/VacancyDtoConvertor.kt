@@ -42,10 +42,10 @@ class VacancyDtoConvertor {
     }
 
     private fun List<KeySkillData>?.mapToListKeySkill(): List<KeySkill>? {
-        this?.let { oldList: List<KeySkillData> ->
+        return  this?.let { oldList: List<KeySkillData> ->
             val list = mutableListOf<KeySkill>()
             oldList.map { keySkillData: KeySkillData -> list.add(keySkillData.map()) }
-            return list
+             list
         } ?: return null
     }
 
