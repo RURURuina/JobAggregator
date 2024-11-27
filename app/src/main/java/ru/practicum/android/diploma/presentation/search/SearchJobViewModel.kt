@@ -20,7 +20,8 @@ import java.net.SocketTimeoutException
 class SearchJobViewModel(
     private val hhInteractor: HhInteractor,
 
-    private val filterInteractor: FilterInteractor) : ViewModel() {
+    private val filterInteractor: FilterInteractor
+) : ViewModel() {
     private val _vacanciesState = MutableLiveData<VacanciesState>()
 
     val vacanciesState: LiveData<VacanciesState> = _vacanciesState
@@ -129,7 +130,6 @@ class SearchJobViewModel(
         }
     }
 
-
     private fun handleResult(result: Resource<List<Vacancy>>?) {
         when (result) {
             is Resource.Success -> {
@@ -175,9 +175,9 @@ class SearchJobViewModel(
     }
 
     fun getFilter() {
-       viewModelScope.launch {
-           _savedFilter.value = filterInteractor.getFilter()
-       }
+        viewModelScope.launch {
+            _savedFilter.value = filterInteractor.getFilter()
+        }
     }
 
     companion object {
