@@ -37,7 +37,7 @@ class SelectCountryFragment : Fragment() {
         observeViewModel()
         onItemClick = viewModel.chooseCountry()
         initRecyclerView()
-        binding.preview.setOnClickListener {
+        binding.backBtn.setOnClickListener {
             findNavController().popBackStack()
         }
     }

@@ -112,6 +112,9 @@ class SelectRegionFragment : Fragment() {
         binding.selectButton.setOnClickListener {
             viewModel.saveExit()
         }
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun prepareBackPress() {
