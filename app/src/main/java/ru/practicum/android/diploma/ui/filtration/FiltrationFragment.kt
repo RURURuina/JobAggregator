@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.ui.filtration
 
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -130,10 +129,11 @@ class FiltrationFragment : Fragment() {
         navBarVisible(true)
         _binding = null
     }
+
     private fun prepareTextWatcher() {
         binding.etInputSalary.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
+                // Не используется
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -142,9 +142,8 @@ class FiltrationFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-
+                // Не используется
             }
-
         })
     }
 
