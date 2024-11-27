@@ -7,6 +7,7 @@ import ru.practicum.android.diploma.presentation.country.SelectCountryViewModel
 import ru.practicum.android.diploma.presentation.details.DetailsFragmentViewModel
 import ru.practicum.android.diploma.presentation.favorites.FavoriteJobViewModel
 import ru.practicum.android.diploma.presentation.industry.IndustryViewModel
+import ru.practicum.android.diploma.presentation.region.SelectRegionViewModel
 import ru.practicum.android.diploma.presentation.search.SearchJobViewModel
 import ru.practicum.android.diploma.presentation.team.TeamViewModel
 
@@ -47,6 +48,12 @@ val viewModelModule = module {
     viewModel {
         IndustryViewModel(
             interactor = get(),
+            filterInteractor = get()
+        )
+    }
+
+    viewModel {
+        SelectRegionViewModel(
             filterInteractor = get()
         )
     }

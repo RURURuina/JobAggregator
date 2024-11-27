@@ -55,4 +55,5 @@
     <string name="select_city">Выбор региона</string>
     <string name="enter_city_name">Введите регион</string>
     <string name="no_city_found">Такого региона нет</string>
+    <string name="cant_get_cities_list">Не удалось получить список</string>
 </resources>

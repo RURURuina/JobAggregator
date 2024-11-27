@@ -12,10 +12,25 @@ class FilterRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
     private val sharedStringConvertor: SharedStringConvertor
 ) : FilterRepository {
+    override suspend fun getTempFilter(): FilterShared? {
+        return withContext(Dispatchers.IO) {
+            val str = sharedPreferences.getString(KEY_TEMP, null)
+            sharedStringConvertor.getFilterShared(str)
+        }
+    }
+
+    override suspend fun saveTempFilter(filterShared: FilterShared?) {
+        withContext(Dispatchers.IO) {
+            val str = sharedStringConvertor.getStringForShared(filterShared)
+            sharedPreferences.edit()
+                .putString(KEY_TEMP, str)
+                .apply()
+        }
+    }
+
     override suspend fun getFilter(): FilterShared? {
         return withContext(Dispatchers.IO) {
-            val str = sharedPreferences.getString(KEY, null)
-            Log.d("FilterRepository", "getFilter: $str")
+            val str = sharedPreferences.getString(KEY_FILTER, null)
             sharedStringConvertor.getFilterShared(str)
         }
     }
@@ -23,13 +38,15 @@ class FilterRepositoryImpl(
     override suspend fun saveFilter(filterShared: FilterShared?) {
         withContext(Dispatchers.IO) {
             val str = sharedStringConvertor.getStringForShared(filterShared)
-            Log.d("FilterRepository", "saveFilter: $str")
             sharedPreferences.edit()
-                .putString(KEY, str)
+                .putString(KEY_TEMP, str)
                 .apply()
         }
     }
+
     private companion object {
-        const val KEY = "Filter"
+        const val KEY_TEMP = "Filter_temp"
+        const val KEY_FILTER = "Filter"
     }
+
 }
