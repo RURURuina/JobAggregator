@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.ui.filtration
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +40,7 @@ class FiltrationFragment : Fragment() {
         prepareRegionButton()
         prepareIndustryButton()
         prepareBackBtn()
+        prepareTextWatcher()
 
     }
 
@@ -65,6 +68,23 @@ class FiltrationFragment : Fragment() {
 
     private fun navBarVisible(isVisible: Boolean) {
         (activity as RootActivity).bottomNavigationVisibility(isVisible)
+    }
+
+    private fun prepareTextWatcher() {
+        binding.inputSalary.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.hint.isActivated = s?.isBlank() != true
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
     }
 
 }
