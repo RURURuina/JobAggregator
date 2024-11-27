@@ -37,11 +37,19 @@ class FiltrationFragment : Fragment() {
         navBarVisible(false)
         prepareRegionButton()
         prepareIndustryButton()
+        prepareBackBtn()
+
     }
 
     private fun prepareIndustryButton() {
         binding.industryLayout.setOnClickListener {
             findNavController().navigate(R.id.action_filtrationFragment_to_industryFragment)
+        }
+    }
+
+    private fun prepareBackBtn() {
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
