@@ -120,13 +120,15 @@ class SearchJobViewModel(
         return hashMapOf(
             "text" to currentQuery,
             "page" to currentPage.toString(),
-            "per_page" to PAGE_SIZE.toString(),
-            "area" to _savedFilter.value?.regionId.toString(),
-            "industry" to _savedFilter.value?.industryId.toString(),
-            "salary" to _savedFilter.value?.salary.toString(),
-            "only_with_salary" to _savedFilter.value?.onlySalaryFlag.toString()
-        )
+            "per_page" to PAGE_SIZE.toString()
+        ).apply {
+            _savedFilter.value?.regionId?.let { put("area", it) }
+            _savedFilter.value?.industryId?.let { put("industry", it) }
+            _savedFilter.value?.salary?.let { put("salary", it.toString()) }
+            _savedFilter.value?.onlySalaryFlag?.let { put("only_with_salary", it.toString()) }
+        }
     }
+
 
     private fun handleResult(result: Resource<List<Vacancy>>?) {
         when (result) {
@@ -172,12 +174,11 @@ class SearchJobViewModel(
         pushVacanciesState(VacanciesState.Error(responseCode))
     }
 
-    private fun getFilter() {
+    fun getFilter() {
        viewModelScope.launch {
            _savedFilter.value = filterInteractor.getFilter()
        }
     }
-
 
     companion object {
         private const val DEBOUNCE_SEARCH_TIME = 2000L

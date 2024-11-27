@@ -52,6 +52,11 @@ class SearchJobFragment : Fragment() {
         prepareFilterButton()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getFilter()
+    }
+
     private fun prepareFilterButton() {
         binding.filterImageButton.setOnClickListener {
             findNavController().navigate(R.id.action_searchJobFragment_to_filtrationFragment)
