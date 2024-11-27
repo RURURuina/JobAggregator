@@ -50,7 +50,7 @@ class IndustryFragment : Fragment() {
     }
 
     private fun setupUI() {
-        binding.back.setOnClickListener {
+        binding.backBtn.setOnClickListener {
             viewModel.saveFilter()
         }
 
@@ -63,13 +63,7 @@ class IndustryFragment : Fragment() {
         viewModel.industries.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is IndustryFragmentState.Content -> {
-                    updateRadioGroup(
-                        state.listIndastries,
-                        state.checkedIndustry
-                    )
-                    if (binding.filterEditText.text.toString() != state.checkedIndustry?.name) {
-                        binding.filterEditText.setText(state.checkedIndustry?.name)
-                    }
+                    showContent(state.listIndastries, state.checkedIndustry)
                 }
 
                 IndustryFragmentState.Exit -> {
@@ -77,13 +71,64 @@ class IndustryFragment : Fragment() {
                 }
 
                 is IndustryFragmentState.Filter -> {
-                    updateRadioGroup(
-                        state.listIndastries,
-                        state.checkedIndustry
-                    )
+                    if (state.listIndastries.isEmpty()) {
+                        showEmptyPlaceholder()
+                    } else {
+                        showIndustryFilter(state.listIndastries, state.checkedIndustry)
+                    }
                 }
+
+                IndustryFragmentState.Empty -> showEmptyPlaceholder()
+                IndustryFragmentState.Error -> showErrorPlaceholder()
+                IndustryFragmentState.Loading -> showLoading()
             }
         }
+    }
+
+    private fun showEmptyPlaceholder() {
+        binding.emptyLayout.visibility = View.VISIBLE
+        binding.errorLayout.visibility = View.GONE
+        binding.loadingLayout.visibility = View.GONE
+        binding.contentLayout.visibility = View.GONE
+    }
+
+    private fun showErrorPlaceholder() {
+        binding.errorLayout.visibility = View.VISIBLE
+        binding.emptyLayout.visibility = View.GONE
+        binding.loadingLayout.visibility = View.GONE
+        binding.contentLayout.visibility = View.GONE
+    }
+
+    private fun showLoading() {
+        binding.loadingLayout.visibility = View.VISIBLE
+        binding.errorLayout.visibility = View.GONE
+        binding.emptyLayout.visibility = View.GONE
+        binding.contentLayout.visibility = View.GONE
+    }
+
+    private fun showContent(industries: List<IndustryNested>, checkedIndustry: IndustryNested?) {
+        binding.contentLayout.visibility = View.VISIBLE
+        binding.errorLayout.visibility = View.GONE
+        binding.emptyLayout.visibility = View.GONE
+        binding.loadingLayout.visibility = View.GONE
+        updateRadioGroup(
+            industries,
+            checkedIndustry
+        )
+        if (binding.filterEditText.text.toString() != checkedIndustry?.name) {
+            binding.filterEditText.setText(checkedIndustry?.name)
+        }
+    }
+
+    private fun showIndustryFilter(industries: List<IndustryNested>, checkedIndustry: IndustryNested?) {
+        binding.contentLayout.visibility = View.VISIBLE
+        binding.errorLayout.visibility = View.GONE
+        binding.emptyLayout.visibility = View.GONE
+        binding.loadingLayout.visibility = View.GONE
+        updateRadioGroup(
+            industries,
+            checkedIndustry
+        )
     }
 
     private fun setupSearchFilter() {
