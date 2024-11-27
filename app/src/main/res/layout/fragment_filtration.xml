@@ -38,7 +38,8 @@
         android:layout_marginTop="16dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/region_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/work_place"
@@ -67,7 +68,8 @@
         android:layout_marginHorizontal="4dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/industry_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/industry"
@@ -141,4 +143,45 @@
             android:buttonTint="@color/blue"/>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/apply_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blue"
+        android:layout_marginHorizontal="16dp"
+        app:cardCornerRadius="12dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/apply"
+            style="@style/textSize16"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="20dp"/>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/reset_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reset"
+        android:textAlignment="center"
+        style="@style/textSize16"
+        android:textAllCaps="false"
+        android:textColor="@color/red"
+        android:layout_gravity="center"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="20dp"
+        android:layout_marginBottom="24dp"/>
+
 </LinearLayout>
