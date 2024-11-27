@@ -47,7 +47,8 @@ class SearchJobViewModel(
         delayMillis = DEBOUNCE_PAGE_TIME,
         coroutineScope = viewModelScope,
         useLastParam = true
-    ) {
+    ) { page ->
+        currentPage = page + 1
         loadVacancies()
     }
 
@@ -113,7 +114,7 @@ class SearchJobViewModel(
     fun loadNextPage() {
         if (!isLoading && !isLastPage && currentQuery.isNotBlank()) {
             isLoading = true
-            loadPerPageDebounce(currentPage++)
+            loadPerPageDebounce(currentPage)
         }
     }
 
@@ -132,22 +133,19 @@ class SearchJobViewModel(
 
     private fun handleResult(result: Resource<List<Vacancy>>?) {
         when (result) {
-            is Resource.Success -> {
-                result.currentPage?.let {
-                    currentPage = result.currentPage
-                }
-                result.pagesCount?.let {
-                    maxPage = result.pagesCount
-                }
-                handleSuccess(result)
-            }
-
+            is Resource.Success -> handleSuccess(result)
             is Resource.Error -> handleError(result.responseCode)
             else -> handleError(result?.responseCode)
         }
     }
 
     private fun handleSuccess(result: Resource<List<Vacancy>>?) {
+        result?.currentPage?.let {
+            currentPage = result.currentPage
+        }
+        result?.pagesCount?.let {
+            maxPage = result.pagesCount
+        }
         val newVacancies = result?.data.orEmpty()
         isLastPage = currentPage == maxPage - 1
         if (newVacancies.isNotEmpty()) {
