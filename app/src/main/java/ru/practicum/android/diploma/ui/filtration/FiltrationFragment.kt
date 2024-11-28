@@ -31,14 +31,11 @@ class FiltrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navBarVisible(false)
-
         // Загрузка сохраненного фильтра
         viewModel.loadSavedFilter()
-
         setupObservers()
         setupListeners()
         prepareButtons()
-
     }
 
     private fun setupObservers() {
@@ -47,7 +44,8 @@ class FiltrationFragment : Fragment() {
             val regionName = filter?.regionName?.let { regionName ->
                 ", $regionName"
             }.orEmpty()
-            binding.workPlace.text = "${filter?.countryName.orEmpty()}$regionName"
+            val countryName = filter?.countryName.orEmpty()
+            binding.workPlace.text = "$countryName$regionName"
 
             binding.industry.text = filter?.industryName.orEmpty()
             if (binding.etInputSalary.text.toString() != filter?.salary.orEmpty()) {
@@ -56,14 +54,13 @@ class FiltrationFragment : Fragment() {
             binding.checkBox.isChecked = filter?.onlySalaryFlag ?: false
 
             val isAnyFieldFilled: Boolean =
-                filter?.countryName?.isNotEmpty() == true ||
+                (filter?.countryName?.isNotEmpty() == true ||
                     filter?.regionName?.isNotEmpty() == true ||
                     filter?.industryName?.isNotEmpty() == true ||
                     filter?.salary?.isNotEmpty() == true ||
-                    filter?.onlySalaryFlag == true
+                    filter?.onlySalaryFlag == true)
 
             setApplyResetButtonsVis(isAnyFieldFilled)
-
             changeArrowBtnToCrossBtn()
         }
     }
@@ -87,7 +84,7 @@ class FiltrationFragment : Fragment() {
         }
         // Кнопка очистить
         binding.clearSalaryButton.setOnClickListener {
-            binding.etInputSalary.setText("")
+            binding.etInputSalary.setText(null.orEmpty())
         }
 
         // Кнопка назад
