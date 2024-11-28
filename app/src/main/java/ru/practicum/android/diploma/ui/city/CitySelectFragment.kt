@@ -20,6 +20,7 @@ import ru.practicum.android.diploma.presentation.card.text.TextCardAdapter
 import ru.practicum.android.diploma.presentation.city.CitySelectViewModel
 import ru.practicum.android.diploma.ui.city.model.CitySelectState
 import ru.practicum.android.diploma.ui.root.RootActivity
+import ru.practicum.android.diploma.ui.root.RootActivity.Companion.COUNTRY_TRANSFER_KEY
 
 class CitySelectFragment : Fragment() {
     private val viewModel: CitySelectViewModel by viewModel()
@@ -39,6 +40,7 @@ class CitySelectFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: android.os.Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navBarVisible(false)
+        getAreas()
         initEditText()
         observeVieModel()
         onItemClick = viewModel.chooseArea()
@@ -46,6 +48,10 @@ class CitySelectFragment : Fragment() {
         binding.preview.setOnClickListener {
             findNavController().popBackStack()
         }
+    }
+
+    private fun getAreas() {
+        viewModel.getAreas(arguments?.getString(COUNTRY_TRANSFER_KEY))
     }
 
     private fun observeVieModel() {

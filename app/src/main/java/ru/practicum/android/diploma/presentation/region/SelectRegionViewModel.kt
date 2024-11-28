@@ -23,7 +23,8 @@ class SelectRegionViewModel(
             pushState(
                 SelectRegionFragmentState.Content(
                     filterShared?.countryName,
-                    filterShared?.regionName
+                    filterShared?.regionName,
+                    filterShared?.countryId
                 )
             )
         }
@@ -32,14 +33,16 @@ class SelectRegionViewModel(
     fun clearCountry() {
         filterShared = filterShared?.copy(
             countryName = null,
-            countryId = null
+            countryId = null,
+            apply = null
         )
     }
 
     fun clearArea() {
         filterShared = filterShared?.copy(
             regionId = null,
-            regionName = null
+            regionName = null,
+            apply = null
         )
     }
 
@@ -50,7 +53,7 @@ class SelectRegionViewModel(
         }
     }
 
-    fun leaveView() {
+    fun exitView() {
         pushState(SelectRegionFragmentState.Exit)
     }
 
