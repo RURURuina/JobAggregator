@@ -73,7 +73,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/country"
-            android:textColor="@color/black"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/work_place"
             app:layout_constraintEnd_toEndOf="@id/rightBorder"
@@ -82,15 +81,11 @@
 
         <TextView
             android:id="@+id/work_place"
-            style="@style/textSize16"
+            style="@style/editTextHintsStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="start"
             android:hint="@string/work_place"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/rightBorder"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
@@ -142,8 +137,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/industry"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/industry"
             app:layout_constraintLeft_toLeftOf="@id/left_border"
@@ -152,12 +145,10 @@
 
         <TextView
             android:id="@+id/industry"
-            style="@style/textSize16"
+            style="@style/editTextHintsStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/industry"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/left_border"
             app:layout_constraintRight_toRightOf="@id/right_border"
@@ -250,7 +241,6 @@
             android:layout_weight="1"
             android:gravity="start"
             android:text="@string/do_not_show_without_salary"
-            android:textColor="?attr/colorOnBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/check_box"
             app:layout_constraintStart_toStartOf="parent"
@@ -292,20 +282,15 @@
         app:layout_constraintTop_toTopOf="@id/bottomBorder">
 
         <TextView
-            style="@style/textSize16"
+            style="@style/cardBtnStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="20dp"
-            android:text="@string/submit"
-            android:textAllCaps="false"
-            android:textColor="@color/white_universal" />
+            android:text="@string/submit" />
     </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/reset_button"
-        style="@style/textSize16"
+        style="@style/cardBtnStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -313,10 +298,7 @@
         android:layout_marginBottom="24dp"
         android:backgroundTint="?attr/android:windowBackground"
         android:gravity="center"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="20dp"
         android:text="@string/reset"
-        android:textAllCaps="false"
         android:textColor="@color/red"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
