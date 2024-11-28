@@ -88,8 +88,9 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="@string/work_place"
+            android:hint="@string/work_place"
             android:textColor="@color/black"
+            android:textColorHint="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/rightBorder"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
@@ -156,7 +157,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/industry"
             android:textColor="@color/black"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/left_border"
             app:layout_constraintRight_toRightOf="@id/right_border"
@@ -268,6 +269,14 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bottomBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_end="150dp" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/submit_button"
         android:layout_width="match_parent"
@@ -279,7 +288,8 @@
         app:cardCornerRadius="12dp"
         app:layout_constraintBottom_toTopOf="@id/submit_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/bottomBorder">
 
         <TextView
             style="@style/textSize16"

@@ -14,12 +14,15 @@ sealed class Resource<T>(
         pagesCount: Int? = null,
         foundedCount: Int? = null
     ) : Resource<T>(
-        data,
-        responseCode,
-        currentPage,
-        pagesCount,
-        foundedCount
+        data = data,
+        responseCode = responseCode,
+        currentPage = currentPage,
+        pagesCount = pagesCount,
+        foundedCount = foundedCount
     )
 
-    class Error<T>(responseCode: ResponseStatusCode, data: T? = null) : Resource<T>(data, responseCode)
+    class Error<T>(responseCode: ResponseStatusCode, data: T? = null) : Resource<T>(
+        data = data,
+        responseCode = responseCode
+    )
 }

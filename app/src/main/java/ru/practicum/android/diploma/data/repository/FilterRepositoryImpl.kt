@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.data.repository
 
 import android.content.SharedPreferences
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.data.convertors.SharedStringConvertor

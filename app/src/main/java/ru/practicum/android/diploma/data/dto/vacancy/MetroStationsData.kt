@@ -18,9 +18,9 @@ private fun MetroStationsData.map(): MetroStations {
 }
 
 fun List<MetroStationsData>?.map(): List<MetroStations>? {
-    this?.let {
+    return this?.let {
         val list = mutableListOf<MetroStations>()
         this.map { list.add(it.map()) }
-        return list
-    } ?: return null
+        list
+    }
 }
