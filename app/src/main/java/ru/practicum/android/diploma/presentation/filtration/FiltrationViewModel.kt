@@ -24,38 +24,31 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
     }
 
     fun changeSalary(salary: String?) {
-        filterShared?.let { oldFilter ->
-            filterShared = oldFilter.copy(salary = salary)
-        } ?: {
-            filterShared = FilterShared(
-                null,
-                countryId = null,
-                regionName = null,
-                regionId = null,
-                industryName = null, industryId = null,
-                salary = salary,
-                onlySalaryFlag = null,
-                apply = null
-            )
-        }
+        filterShared = FilterShared(
+            countryName = filterShared?.countryName,
+            countryId = filterShared?.countryId,
+            regionName = filterShared?.regionName,
+            regionId = filterShared?.regionId,
+            industryName = filterShared?.industryName,
+            industryId = filterShared?.countryId,
+            salary = salary,
+            onlySalaryFlag = filterShared?.onlySalaryFlag,
+            apply = filterShared?.apply
+        )
     }
 
     fun checkingOnlySalaryFlag(onlySalaryFlag: Boolean) {
-        filterShared?.let { oldFilter ->
-            filterShared = oldFilter.copy(onlySalaryFlag = onlySalaryFlag)
-        } ?: {
-            filterShared = FilterShared(
-                null,
-                countryId = null,
-                regionName = null,
-                regionId = null,
-                industryName = null,
-                industryId = null,
-                salary = "0",
-                onlySalaryFlag = onlySalaryFlag,
-                apply = null
-            )
-        }
+        filterShared = FilterShared(
+            countryName = filterShared?.countryName,
+            countryId = filterShared?.countryId,
+            regionName = filterShared?.regionName,
+            regionId = filterShared?.regionId,
+            industryName = filterShared?.industryName,
+            industryId = filterShared?.countryId,
+            salary = filterShared?.salary,
+            onlySalaryFlag = onlySalaryFlag,
+            apply = filterShared?.apply
+        )
     }
 
     fun saveFilter() {
@@ -72,22 +65,32 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
     }
 
     fun resetWorkPlace() {
-        filterShared?.let { oldFilter ->
-            filterShared = oldFilter.copy(
-                countryId = null,
-                countryName = null,
-                regionId = null,
-                regionName = null
-            )
-        }
+        filterShared = FilterShared(
+            countryId = null,
+            countryName = null,
+            regionId = null,
+            regionName = null,
+            industryName = filterShared?.industryName,
+            industryId = filterShared?.countryId,
+            salary = filterShared?.salary,
+            onlySalaryFlag = filterShared?.onlySalaryFlag,
+            apply = filterShared?.apply
+        )
     }
 
+
     fun resetIndustry() {
-        filterShared?.let { oldFilter ->
-            filterShared = oldFilter.copy(
-                industryId = null,
-                industryName = null
-            )
-        }
+        filterShared = FilterShared(
+            countryName = filterShared?.countryName,
+            countryId = filterShared?.countryId,
+            regionName = filterShared?.regionName,
+            regionId = filterShared?.regionId,
+            industryId = null,
+            industryName = null,
+            salary = filterShared?.salary,
+            onlySalaryFlag = filterShared?.onlySalaryFlag,
+            apply = filterShared?.apply
+        )
     }
+
 }
