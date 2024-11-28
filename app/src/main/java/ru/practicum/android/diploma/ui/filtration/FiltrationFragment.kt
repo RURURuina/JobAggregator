@@ -121,5 +121,3 @@ class FiltrationFragment : Fragment() {
         _binding = null
     }
 }
-
-
