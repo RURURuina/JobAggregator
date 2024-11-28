@@ -54,11 +54,11 @@ class FiltrationFragment : Fragment() {
             binding.checkBox.isChecked = filter?.onlySalaryFlag ?: false
 
             val isAnyFieldFilled: Boolean =
-                (filter?.countryName?.isNotEmpty() == true ||
+                filter?.countryName?.isNotEmpty() == true ||
                     filter?.regionName?.isNotEmpty() == true ||
                     filter?.industryName?.isNotEmpty() == true ||
                     filter?.salary?.isNotEmpty() == true ||
-                    filter?.onlySalaryFlag == true)
+                    filter?.onlySalaryFlag == true
 
             setApplyResetButtonsVis(isAnyFieldFilled)
             changeArrowBtnToCrossBtn()

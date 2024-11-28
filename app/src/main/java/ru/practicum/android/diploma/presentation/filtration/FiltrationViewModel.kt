@@ -78,7 +78,6 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
         )
     }
 
-
     fun resetIndustry() {
         filterShared = FilterShared(
             countryName = filterShared?.countryName,
