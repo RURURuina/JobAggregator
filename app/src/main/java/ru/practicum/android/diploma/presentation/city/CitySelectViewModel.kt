@@ -56,7 +56,8 @@ class CitySelectViewModel(
                     industryName = filterShared?.industryName,
                     industryId = filterShared?.industryId,
                     salary = filterShared?.salary,
-                    onlySalaryFlag = filterShared?.onlySalaryFlag
+                    onlySalaryFlag = filterShared?.onlySalaryFlag,
+                    apply = filterShared?.apply
                 )
             )
             pushState(CitySelectState.Exit)

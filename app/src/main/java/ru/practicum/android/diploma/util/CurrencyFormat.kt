@@ -44,9 +44,9 @@ private fun String?.currencySymbol(): String {
 }
 
 private fun Int?.formattedFrom(): String {
-    return this?.let { "от ${it.numberFormater()}" } ?: ""
+    return this?.let { "от ${it.numberFormater()}" }.orEmpty()
 }
 
 private fun Int?.formattedTo(): String {
-    return this?.let { " до ${it.numberFormater()}" } ?: ""
+    return this?.let { " до ${it.numberFormater()}" }.orEmpty()
 }

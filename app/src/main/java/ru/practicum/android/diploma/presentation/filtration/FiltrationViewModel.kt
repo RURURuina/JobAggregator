@@ -11,34 +11,63 @@ import ru.practicum.android.diploma.domain.models.entity.FilterShared
 class FiltrationViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
     private val _filterState = MutableLiveData<FilterShared?>()
     val filterState: LiveData<FilterShared?> = _filterState
+    private var filterShared: FilterShared? = null
+        set(value) {
+            _filterState.value = value
+            field = value
+        }
 
     fun loadSavedFilter() {
         viewModelScope.launch {
-            _filterState.value = filterInteractor.getFilter()
+            filterShared = filterInteractor.getFilter()
         }
     }
 
-    fun saveFilter(filterShared: FilterShared) {
+    fun changeSalary(salary: String?) {
+        filterShared?.let { oldFilter ->
+            filterShared = oldFilter.copy(salary = salary)
+        } ?: {
+            filterShared = FilterShared(
+                null,
+                countryId = null,
+                regionName = null,
+                regionId = null,
+                industryName = null, industryId = null,
+                salary = salary,
+                onlySalaryFlag = null,
+                apply = null
+            )
+        }
+    }
+
+    fun checkingOnlySalaryFlag(onlySalaryFlag: Boolean) {
+        filterShared?.let { oldFilter ->
+            filterShared = oldFilter.copy(onlySalaryFlag = onlySalaryFlag)
+        } ?: {
+            filterShared = FilterShared(
+                null,
+                countryId = null,
+                regionName = null,
+                regionId = null,
+                industryName = null,
+                industryId = null,
+                salary = "0",
+                onlySalaryFlag = onlySalaryFlag,
+                null
+            )
+        }
+    }
+
+    fun saveFilter() {
+        viewModelScope.launch {
+            filterInteractor.saveFilter(filterShared?.copy(apply = true))
+        }
+    }
+
+    fun resetFilter() {
+        filterShared = null
         viewModelScope.launch {
             filterInteractor.saveFilter(filterShared)
-            _filterState.value = filterShared
         }
-    }
-
-    fun createFilterFromUI(salary: String?, onlySalaryFlag: Boolean?): FilterShared {
-        val currentFilter = _filterState.value ?: FilterShared(
-            countryName = null,
-            countryId = null,
-            regionName = null,
-            regionId = null,
-            industryName = null,
-            industryId = null,
-            salary = null,
-            onlySalaryFlag = null
-        )
-        return currentFilter.copy(
-            salary = salary,
-            onlySalaryFlag = onlySalaryFlag
-        )
     }
 }

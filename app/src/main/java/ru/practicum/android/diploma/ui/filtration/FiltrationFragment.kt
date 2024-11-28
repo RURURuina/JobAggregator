@@ -1,7 +1,5 @@
 package ru.practicum.android.diploma.ui.filtration
 
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +36,6 @@ class FiltrationFragment : Fragment() {
         viewModel.loadSavedFilter()
 
         setupObservers()
-        prepareTextWatcher()
         setupListeners()
         prepareButtons()
 
@@ -46,38 +43,39 @@ class FiltrationFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.filterState.observe(viewLifecycleOwner) { filter ->
-            filter?.let {
-                // Заполнение полей сохраненными значениями
-                if (it.regionName != null && it.countryName != null) {
-                    binding.workPlace.text = it.countryName + "," + it.regionName
-                }
-                binding.industry.setText(it.industryName ?: "")
-                binding.etInputSalary.setText(it.salary ?: "")
-                binding.checkBox.isChecked = it.onlySalaryFlag ?: false
+            // Заполнение полей сохраненными значениями
+            val regionName = filter?.regionName?.let { regionName ->
+                ", $regionName"
+            }.orEmpty()
+            binding.workPlace.text = "${filter?.countryName.orEmpty()}$regionName"
+
+            binding.industry.text = filter?.industryName.orEmpty()
+            if (binding.etInputSalary.text.toString() != filter?.salary.orEmpty()) {
+                binding.etInputSalary.setText(filter?.salary.orEmpty())
             }
-            setApplyResetButtonsVis(false)
+            binding.checkBox.isChecked = filter?.onlySalaryFlag ?: false
+
+            setApplyResetButtonsVis(filter?.apply == true)
+
         }
     }
 
     private fun setApplyResetButtonsVis(vis: Boolean) {
-        if (vis) {
-            binding.submitButton.visibility = View.VISIBLE
-            binding.resetButton.visibility = View.VISIBLE
-        } else {
-            binding.submitButton.visibility = View.GONE
-            binding.resetButton.visibility = View.GONE
-        }
+        binding.submitButton.isVisible = !vis
+        binding.resetButton.isVisible = vis
     }
 
     private fun setupListeners() {
         // Слушатель изменения зарплаты
         binding.etInputSalary.doAfterTextChanged { text ->
-            setApplyResetButtonsVis(true)
+            viewModel.changeSalary(text.toString())
+            binding.clearSalaryButton.isVisible = text?.isBlank() != true
+            binding.hintTitle.isActivated = text?.isBlank() != true
         }
 
         // Слушатель чекбокса
         binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
-            setApplyResetButtonsVis(true)
+            viewModel.checkingOnlySalaryFlag(isChecked)
         }
         // Кнопка очистить
         binding.clearSalaryButton.setOnClickListener {
@@ -91,21 +89,14 @@ class FiltrationFragment : Fragment() {
 
         // Кнопка применить
         binding.submitButton.setOnClickListener {
-            val filter = viewModel.createFilterFromUI(
-                salary = binding.etInputSalary.text.toString(),
-                onlySalaryFlag = binding.checkBox.isChecked
-            )
-            viewModel.saveFilter(filter)
+            viewModel.saveFilter()
+            findNavController().popBackStack()
         }
 
         // Кнопка сбросить
         binding.resetButton.setOnClickListener {
-            val filter = viewModel.createFilterFromUI(
-                salary = "",
-                onlySalaryFlag = false
-            )
-            viewModel.saveFilter(filter)
-            viewModel.loadSavedFilter()
+            viewModel.resetFilter()
+            findNavController().popBackStack()
         }
     }
 
@@ -129,22 +120,6 @@ class FiltrationFragment : Fragment() {
         navBarVisible(true)
         _binding = null
     }
-
-    private fun prepareTextWatcher() {
-        binding.etInputSalary.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Не используется
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.clearSalaryButton.isVisible = s?.isBlank() != true
-                binding.hintTitle.isActivated = s?.isBlank() != true
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // Не используется
-            }
-        })
-    }
-
 }
+
+
