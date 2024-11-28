@@ -64,7 +64,6 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
         }
     }
 
-
     fun resetFilter() {
         filterShared = null
         viewModelScope.launch {
