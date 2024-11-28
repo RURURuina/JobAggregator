@@ -95,12 +95,10 @@
 
         <TextView
             android:id="@+id/country"
-            style="@style/textSize16"
+            style="@style/editTextHintsStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/country"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/leftBorder"
             app:layout_constraintRight_toRightOf="@id/rightBorder"
@@ -150,12 +148,10 @@
 
         <TextView
             android:id="@+id/area"
-            style="@style/textSize16"
+            style="@style/editTextHintsStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/region"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/left_border"
             app:layout_constraintRight_toRightOf="@id/right_border"
@@ -203,15 +199,10 @@
         app:layout_constraintTop_toBottomOf="@id/bottomBorder">
 
         <TextView
-            style="@style/textSize16"
+            style="@style/cardBtnStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="20dp"
-            android:text="@string/select"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
+            android:text="@string/select" />
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
