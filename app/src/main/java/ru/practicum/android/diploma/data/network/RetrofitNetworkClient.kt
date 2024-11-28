@@ -9,8 +9,8 @@ import ru.practicum.android.diploma.data.dto.request.CountriesRequest
 import ru.practicum.android.diploma.data.dto.request.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.request.VacancyByIdRequest
 import ru.practicum.android.diploma.data.dto.response.CityResponse
-import ru.practicum.android.diploma.data.dto.response.IndustriesResponse
 import ru.practicum.android.diploma.data.dto.response.CountriesResponse
+import ru.practicum.android.diploma.data.dto.response.IndustriesResponse
 import ru.practicum.android.diploma.data.dto.response.Response
 import ru.practicum.android.diploma.data.dto.response.VacancyResponse
 import ru.practicum.android.diploma.data.dto.vacancy.AreaData
@@ -81,11 +81,11 @@ class RetrofitNetworkClient(
     }
 
     override suspend fun getCitiesBiAreaId(dto: CitiesByAreaIdRequest): Response {
-        if (!isConnected()) {
+        return if (!isConnected()) {
             // если нет интернета возврат -1
-            return Response().apply { resultCode = ResponseStatusCode.NoInternet }
+            Response().apply { resultCode = ResponseStatusCode.NoInternet }
         } else {
-            return withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
                     val response = hhService.getCitiesByAreaId(dto.areaId)
                     response.apply { resultCode = ResponseStatusCode.Ok }
@@ -98,11 +98,11 @@ class RetrofitNetworkClient(
     }
 
     override suspend fun getAllArea(): Response {
-        if (!isConnected()) {
+        return if (!isConnected()) {
             // если нет интернета возврат -1
-            return Response().apply { resultCode = ResponseStatusCode.NoInternet }
+            Response().apply { resultCode = ResponseStatusCode.NoInternet }
         } else {
-            return withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
                     val list: MutableList<AreaData> = mutableListOf()
                     hhService.getAllArea().map { cityResponse ->

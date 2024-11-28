@@ -43,11 +43,11 @@ class RootActivity : AppCompatActivity() {
     }
 
     private fun prepareBottomNavView() {
-        binding?.let {
-            bottomNavigationView = it.bottomNavigation
-            navController?.let {
-                bottomNavigationView?.setupWithNavController(it)
-                it.navInflater
+        binding?.let { bindingRoot ->
+            bottomNavigationView = bindingRoot.bottomNavigation
+            navController?.let { navController ->
+                bottomNavigationView?.setupWithNavController(navController)
+                navController.navInflater
             }
         }
     }

@@ -4,7 +4,7 @@ import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.util.ResponseStatusCode
 
 sealed interface VacanciesState {
-    object Loading : VacanciesState
+    data object Loading : VacanciesState
 
     // Состояние загрузки - видно progress bar
     // Добавил в Success новые переменные для работы с paggination

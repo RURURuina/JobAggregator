@@ -48,7 +48,8 @@ class SelectCountryViewModel(private val hhInteractor: HhInteractor, private val
                     industryName = null,
                     industryId = null,
                     salary = null,
-                    onlySalaryFlag = false
+                    onlySalaryFlag = false,
+                    apply = null
                 )
             )
 
@@ -59,7 +60,7 @@ class SelectCountryViewModel(private val hhInteractor: HhInteractor, private val
         viewModelScope.launch {
             try {
                 hhInteractor.searchCountries().collect { resource ->
-                    resource?.data?.let { listCountries ->
+                    resource.data?.let { listCountries ->
                         countriesList.addAll(listCountries)
                         renderState(CountrySelectState.Success(listCountries))
                     } ?: renderState(CountrySelectState.Error)
