@@ -55,7 +55,7 @@ class FiltrationFragment : Fragment() {
             }
             binding.checkBox.isChecked = filter?.onlySalaryFlag ?: false
 
-            setApplyResetButtonsVis(filter?.apply ==true)
+            setApplyResetButtonsVis(filter?.apply == true)
 
         }
     }
