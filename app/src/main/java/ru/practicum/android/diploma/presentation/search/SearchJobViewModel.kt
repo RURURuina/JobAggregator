@@ -124,10 +124,11 @@ class SearchJobViewModel(
             "page" to currentPage.toString(),
             "per_page" to PAGE_SIZE.toString()
         ).apply {
+            val salary = _savedFilter.value?.salary ?: "0"
             if (_savedFilter.value?.apply == true) {
                 _savedFilter.value?.regionId?.let { put("area", it) }
                 _savedFilter.value?.industryId?.let { put("industry", it) }
-                _savedFilter.value?.salary?.let { put("salary", it.toString()) }
+                _savedFilter.value?.salary?.let { put("salary", salary) }
                 _savedFilter.value?.onlySalaryFlag?.let { put("only_with_salary", it.toString()) }
             }
         }
