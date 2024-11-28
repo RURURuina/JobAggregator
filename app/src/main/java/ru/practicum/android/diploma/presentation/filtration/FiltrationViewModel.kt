@@ -53,7 +53,7 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
                 industryId = null,
                 salary = "0",
                 onlySalaryFlag = onlySalaryFlag,
-                null
+                apply = null
             )
         }
     }
@@ -68,6 +68,26 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
         filterShared = null
         viewModelScope.launch {
             filterInteractor.saveFilter(filterShared)
+        }
+    }
+
+    fun resetWorkPlace() {
+        filterShared?.let { oldFilter ->
+            filterShared = oldFilter.copy(
+                countryId = null,
+                countryName = null,
+                regionId = null,
+                regionName = null
+            )
+        }
+    }
+
+    fun resetIndustry() {
+        filterShared?.let { oldFilter ->
+            filterShared = oldFilter.copy(
+                industryId = null,
+                industryName = null
+            )
         }
     }
 }

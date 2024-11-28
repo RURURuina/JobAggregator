@@ -55,14 +55,22 @@ class FiltrationFragment : Fragment() {
             }
             binding.checkBox.isChecked = filter?.onlySalaryFlag ?: false
 
-            setApplyResetButtonsVis(filter?.apply == true)
+            val isAnyFieldFilled: Boolean =
+                filter?.countryName?.isNotEmpty() == true ||
+                    filter?.regionName?.isNotEmpty() == true ||
+                    filter?.industryName?.isNotEmpty() == true ||
+                    filter?.salary?.isNotEmpty() == true ||
+                    filter?.onlySalaryFlag == true
 
+            setApplyResetButtonsVis(isAnyFieldFilled)
+
+            changeArrowBtnToCrossBtn()
         }
     }
 
-    private fun setApplyResetButtonsVis(vis: Boolean) {
-        binding.submitButton.isVisible = !vis
-        binding.resetButton.isVisible = vis
+    private fun setApplyResetButtonsVis(isAnyFieldFilled: Boolean) {
+        binding.submitButton.isVisible = isAnyFieldFilled
+        binding.resetButton.isVisible = isAnyFieldFilled
     }
 
     private fun setupListeners() {
@@ -98,6 +106,16 @@ class FiltrationFragment : Fragment() {
             viewModel.resetFilter()
             findNavController().popBackStack()
         }
+
+        // Кнопка сбросить место работы
+        binding.workPlaceBtn.setOnClickListener {
+            viewModel.resetWorkPlace()
+        }
+
+        // Кнопка сбросить отрасль
+        binding.industryBtn.setOnClickListener {
+            viewModel.resetIndustry()
+        }
     }
 
     private fun prepareButtons() {
@@ -113,6 +131,19 @@ class FiltrationFragment : Fragment() {
 
     private fun navBarVisible(isVisible: Boolean) {
         (activity as RootActivity).bottomNavigationVisibility(isVisible)
+    }
+
+    private fun changeArrowBtnToCrossBtn() {
+        if (binding.workPlace.text.isNotEmpty()) {
+            binding.workPlaceBtn.setImageResource(R.drawable.close_24px)
+        } else {
+            binding.workPlaceBtn.setImageResource(R.drawable.arrow_forward_24px)
+        }
+        if (binding.industry.text.isNotEmpty()) {
+            binding.industryBtn.setImageResource(R.drawable.close_24px)
+        } else {
+            binding.industryBtn.setImageResource(R.drawable.arrow_forward_24px)
+        }
     }
 
     override fun onDetach() {
