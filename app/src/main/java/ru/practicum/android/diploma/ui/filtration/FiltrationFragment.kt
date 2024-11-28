@@ -132,13 +132,17 @@ class FiltrationFragment : Fragment() {
 
     private fun changeArrowBtnToCrossBtn() {
         if (binding.workPlace.text.isNotEmpty()) {
+            binding.workPlaceTitle.isVisible = true
             binding.workPlaceBtn.setImageResource(R.drawable.close_24px)
         } else {
+            binding.workPlaceTitle.isVisible = false
             binding.workPlaceBtn.setImageResource(R.drawable.arrow_forward_24px)
         }
         if (binding.industry.text.isNotEmpty()) {
+            binding.industryTitle.isVisible = true
             binding.industryBtn.setImageResource(R.drawable.close_24px)
         } else {
+            binding.industryTitle.isVisible = false
             binding.industryBtn.setImageResource(R.drawable.arrow_forward_24px)
         }
     }
