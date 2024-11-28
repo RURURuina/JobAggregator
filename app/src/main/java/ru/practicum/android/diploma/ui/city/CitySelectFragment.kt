@@ -98,7 +98,7 @@ class CitySelectFragment : Fragment() {
     }
 
     private fun initEditText() {
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+        binding.etSearchRegionEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // функция не используется
             }
@@ -118,7 +118,7 @@ class CitySelectFragment : Fragment() {
         })
 
         binding.clearSearchButton.setOnClickListener {
-            binding.searchEditText.text?.clear()
+            binding.etSearchRegionEditText.text?.clear()
         }
     }
 
@@ -136,8 +136,8 @@ class CitySelectFragment : Fragment() {
         val inputMethodManager =
             requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
         when (visibile) {
-            true -> inputMethodManager?.showSoftInput(binding.searchEditText, 0)
-            else -> inputMethodManager?.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
+            true -> inputMethodManager?.showSoftInput(binding.etSearchRegionEditText, 0)
+            else -> inputMethodManager?.hideSoftInputFromWindow(binding.etSearchRegionEditText.windowToken, 0)
         }
     }
 }
