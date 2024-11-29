@@ -168,7 +168,7 @@ class SearchJobFragment : Fragment() {
                     binding.messageChip.text = context?.getString(R.string.no_such_vacancies)
                 }
 
-                is VacanciesState.Hidden -> {
+                is VacanciesState.Start -> {
                     clearRecyclerView()
                     binding.messageChip.isVisible = false
                 }

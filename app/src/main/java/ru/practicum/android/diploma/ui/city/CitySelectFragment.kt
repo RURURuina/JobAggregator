@@ -57,7 +57,7 @@ class CitySelectFragment : Fragment() {
     private fun observeVieModel() {
         viewModel.citySelectState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is CitySelectState.Success -> {
+                is CitySelectState.Content -> {
                     updateRecyclerView(state.cities)
                     binding.noCityLayout.isVisible = false
                     binding.errorLayout.isVisible = false

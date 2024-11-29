@@ -57,7 +57,7 @@ class SearchJobViewModel(
     }
 
     fun clearVacancies() {
-        pushVacanciesState(VacanciesState.Hidden)
+        pushVacanciesState(VacanciesState.Start)
         currentPage = 0
         maxPage = 0
         currentQuery = ""
