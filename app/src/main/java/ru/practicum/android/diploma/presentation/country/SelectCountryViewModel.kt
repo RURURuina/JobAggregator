@@ -14,7 +14,10 @@ import ru.practicum.android.diploma.domain.models.entity.FilterShared
 import ru.practicum.android.diploma.ui.country.model.CountrySelectState
 import java.net.SocketTimeoutException
 
-class SelectCountryViewModel(private val hhInteractor: HhInteractor, private val filterInteractor: FilterInteractor) :
+class SelectCountryViewModel(
+    private val hhInteractor: HhInteractor,
+    private val filterInteractor: FilterInteractor
+) :
     ViewModel() {
     private val _countrySelectState = MutableLiveData<CountrySelectState>()
     val countrySelectState: LiveData<CountrySelectState> = _countrySelectState
@@ -52,10 +55,10 @@ class SelectCountryViewModel(private val hhInteractor: HhInteractor, private val
                     apply = null
                 )
             )
-
             renderState(CountrySelectState.Exit)
         }
     }
+
     private fun getCountries() {
         viewModelScope.launch {
             try {
@@ -72,6 +75,7 @@ class SelectCountryViewModel(private val hhInteractor: HhInteractor, private val
             }
         }
     }
+
     private fun renderState(state: CountrySelectState) {
         _countrySelectState.postValue(state)
     }
