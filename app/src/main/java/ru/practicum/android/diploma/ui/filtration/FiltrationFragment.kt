@@ -88,7 +88,7 @@ class FiltrationFragment : Fragment() {
         }
 
         // Кнопка назад
-        binding.backBtn.setOnClickListener {
+        binding.headerLayout.setOnClickListener {
             findNavController().navigateUp()
         }
 

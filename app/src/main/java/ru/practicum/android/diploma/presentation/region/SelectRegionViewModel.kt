@@ -16,17 +16,20 @@ class SelectRegionViewModel(
     private val _state = MutableLiveData<SelectRegionFragmentState>()
     val state: LiveData<SelectRegionFragmentState> = _state
     private var filterShared: FilterShared? = null
-
-    fun startViewModel() {
-        viewModelScope.launch {
-            filterShared = filterInteractor.getFilter()
+        set(value) {
             pushState(
                 SelectRegionFragmentState.Content(
-                    filterShared?.countryName,
-                    filterShared?.regionName,
-                    filterShared?.countryId
+                    value?.countryName,
+                    value?.regionName,
+                    value?.countryId
                 )
             )
+            field = value
+        }
+
+    fun getFilter() {
+        viewModelScope.launch {
+            filterShared = filterInteractor.getFilter()
         }
     }
 
@@ -48,13 +51,9 @@ class SelectRegionViewModel(
 
     fun saveExit() {
         viewModelScope.launch {
-            filterInteractor.saveFilter(filterShared)
+            filterInteractor.saveFilter(filterShared?.copy(apply = true))
             pushState(SelectRegionFragmentState.Exit)
         }
-    }
-
-    fun exitView() {
-        pushState(SelectRegionFragmentState.Exit)
     }
 
     private fun pushState(state: SelectRegionFragmentState) {

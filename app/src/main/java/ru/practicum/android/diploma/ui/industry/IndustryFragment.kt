@@ -50,7 +50,7 @@ class IndustryFragment : Fragment() {
     }
 
     private fun setupUI() {
-        binding.backBtn.setOnClickListener {
+        binding.back.setOnClickListener {
             viewModel.saveFilter()
         }
 

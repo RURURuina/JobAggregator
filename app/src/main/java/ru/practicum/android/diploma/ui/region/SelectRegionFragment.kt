@@ -34,14 +34,11 @@ class SelectRegionFragment : Fragment() {
         navBarVisible(false)
         prepareButtons()
         observeVieModel()
-        initViewModel()
-    }
-
-    private fun initViewModel() {
-        viewModel.startViewModel()
+        viewModel.getFilter()
     }
 
     private fun fillAreaLayout(areaName: String?, countryId: String?) {
+        val bundle = bundleOf(COUNTRY_TRANSFER_KEY to countryId.toString())
         binding.area.text = areaName
         binding.areaTitle.isVisible = areaName != null
         binding.areaButton.setImageResource(
@@ -56,10 +53,11 @@ class SelectRegionFragment : Fragment() {
                 binding.area.text = null
                 // то что сохранит во вьюмодели
                 viewModel.clearArea()
-            } else {
-                val bundle = bundleOf(COUNTRY_TRANSFER_KEY to countryId)
-                findNavController().navigate(R.id.action_selectRegionFragment_to_citySelectFragment, bundle)
             }
+            binding.selectButton.isVisible = true
+        }
+        binding.regionLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_selectRegionFragment_to_citySelectFragment, bundle)
         }
     }
 
@@ -96,6 +94,7 @@ class SelectRegionFragment : Fragment() {
             } else {
                 findNavController().navigate(R.id.action_selectRegionFragment_to_selectCountryFragment)
             }
+            binding.selectButton.isVisible = true
         }
     }
 
@@ -108,13 +107,10 @@ class SelectRegionFragment : Fragment() {
         }
 
         binding.backLay.setOnClickListener {
-            requireActivity().onBackPressed()
+            findNavController().popBackStack()
         }
         binding.selectButton.setOnClickListener {
             viewModel.saveExit()
-        }
-        binding.backBtn.setOnClickListener {
-            findNavController().popBackStack()
         }
     }
 

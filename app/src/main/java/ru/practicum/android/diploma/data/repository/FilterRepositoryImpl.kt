@@ -38,7 +38,7 @@ class FilterRepositoryImpl(
         withContext(Dispatchers.IO) {
             val str = sharedStringConvertor.getStringForShared(filterShared)
             sharedPreferences.edit()
-                .putString(KEY_TEMP, str)
+                .putString(KEY_FILTER, str)
                 .apply()
         }
     }

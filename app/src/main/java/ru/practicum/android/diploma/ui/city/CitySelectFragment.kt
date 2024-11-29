@@ -37,7 +37,7 @@ class CitySelectFragment : Fragment() {
         return this.binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: android.os.Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navBarVisible(false)
         getAreas()
