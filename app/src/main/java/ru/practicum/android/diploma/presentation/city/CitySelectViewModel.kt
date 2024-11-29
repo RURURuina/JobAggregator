@@ -31,10 +31,10 @@ class CitySelectViewModel(
         filterRegions(filterText)
     }
 
-    init {
+    fun getAreas(countryId: String?) {
         viewModelScope.launch {
             filterShared = filterInteractor.getFilter()
-            filterShared?.countryId?.let {
+            countryId?.let {
                 getCitiesById(it)
             } ?: getAllAreas()
         }
@@ -57,7 +57,7 @@ class CitySelectViewModel(
                     industryId = filterShared?.industryId,
                     salary = filterShared?.salary,
                     onlySalaryFlag = filterShared?.onlySalaryFlag,
-                    apply = filterShared?.apply
+                    apply = null
                 )
             )
             pushState(CitySelectState.Exit)
@@ -73,7 +73,7 @@ class CitySelectViewModel(
                             pushState(CitySelectState.Error)
                         } else {
                             areasList.addAll(listAreas)
-                            pushState(CitySelectState.Success(listAreas))
+                            pushState(CitySelectState.Content(listAreas))
                         }
                     } ?: pushState(CitySelectState.Error)
                 }
@@ -94,7 +94,7 @@ class CitySelectViewModel(
                             pushState(CitySelectState.Empty)
                         } else {
                             areasList.addAll(listAreas)
-                            pushState(CitySelectState.Success(listAreas))
+                            pushState(CitySelectState.Content(listAreas))
                         }
                     } ?: pushState(CitySelectState.Error)
                 }
@@ -129,7 +129,7 @@ class CitySelectViewModel(
             )
         } else {
             pushState(
-                CitySelectState.Success(filteredRegions)
+                CitySelectState.Content(filteredRegions)
             )
         }
     }

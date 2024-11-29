@@ -22,5 +22,5 @@ sealed interface VacanciesState {
     ) : VacanciesState // состояние ошибки - видно placeHolder ошибки
 
     data object Empty : VacanciesState // Состояние "Не найдено" - видно placeHolder
-    data object Hidden : VacanciesState // Состояние отсутствие запроса - показан стартовый placeHolder
+    data object Start : VacanciesState // Состояние отсутствие запроса - показан стартовый placeHolder
 }

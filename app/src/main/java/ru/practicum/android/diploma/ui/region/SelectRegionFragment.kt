@@ -3,8 +3,8 @@ package ru.practicum.android.diploma.ui.region
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.core.bundle.Bundle
+import androidx.core.bundle.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -14,6 +14,7 @@ import ru.practicum.android.diploma.databinding.FragmentSelectRegionBinding
 import ru.practicum.android.diploma.presentation.region.SelectRegionViewModel
 import ru.practicum.android.diploma.ui.region.model.SelectRegionFragmentState
 import ru.practicum.android.diploma.ui.root.RootActivity
+import ru.practicum.android.diploma.ui.root.RootActivity.Companion.COUNTRY_TRANSFER_KEY
 
 class SelectRegionFragment : Fragment() {
     private val viewModel: SelectRegionViewModel by viewModel()
@@ -33,15 +34,11 @@ class SelectRegionFragment : Fragment() {
         navBarVisible(false)
         prepareButtons()
         observeVieModel()
-        initViewModel()
-        prepareBackPress()
+        viewModel.getFilter()
     }
 
-    private fun initViewModel() {
-        viewModel.startViewModel()
-    }
-
-    private fun fillAreaLayout(areaName: String?) {
+    private fun fillAreaLayout(areaName: String?, countryId: String?) {
+        val bundle = bundleOf(COUNTRY_TRANSFER_KEY to countryId.toString())
         binding.area.text = areaName
         binding.areaTitle.isVisible = areaName != null
         binding.areaButton.setImageResource(
@@ -56,9 +53,11 @@ class SelectRegionFragment : Fragment() {
                 binding.area.text = null
                 // то что сохранит во вьюмодели
                 viewModel.clearArea()
-            } else {
-                findNavController().navigate(R.id.action_selectRegionFragment_to_citySelectFragment)
             }
+            binding.selectButton.isVisible = true
+        }
+        binding.regionLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_selectRegionFragment_to_citySelectFragment, bundle)
         }
     }
 
@@ -67,7 +66,7 @@ class SelectRegionFragment : Fragment() {
             when (state) {
                 is SelectRegionFragmentState.Content -> {
                     fillCountryLayout(state.countryName)
-                    fillAreaLayout(state.areaName)
+                    fillAreaLayout(state.areaName, state.countryId)
                 }
 
                 SelectRegionFragmentState.Exit -> {
@@ -95,6 +94,7 @@ class SelectRegionFragment : Fragment() {
             } else {
                 findNavController().navigate(R.id.action_selectRegionFragment_to_selectCountryFragment)
             }
+            binding.selectButton.isVisible = true
         }
     }
 
@@ -107,29 +107,11 @@ class SelectRegionFragment : Fragment() {
         }
 
         binding.backLay.setOnClickListener {
-            requireActivity().onBackPressed()
+            findNavController().popBackStack()
         }
         binding.selectButton.setOnClickListener {
             viewModel.saveExit()
         }
-        binding.backBtn.setOnClickListener {
-            findNavController().popBackStack()
-        }
-    }
-
-    private fun prepareBackPress() {
-        requireActivity()
-            .onBackPressedDispatcher
-            .addCallback(
-                viewLifecycleOwner,
-                object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() {
-                        if (isEnabled) {
-                            viewModel.leaveView()
-                        }
-                    }
-                }
-            )
     }
 
     override fun onDetach() {
