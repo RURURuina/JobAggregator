@@ -14,6 +14,7 @@ import ru.practicum.android.diploma.domain.models.entity.FilterShared
 import ru.practicum.android.diploma.domain.models.entity.IndustryNested
 import ru.practicum.android.diploma.ui.industry.models.IndustryFragmentState
 import ru.practicum.android.diploma.util.Resource
+import ru.practicum.android.diploma.util.ResponseStatusCode
 
 class IndustryViewModel(
     private val interactor: IndustriesInteractor,
@@ -78,7 +79,11 @@ class IndustryViewModel(
                         }
 
                         is Resource.Error -> {
-                            pushState(IndustryFragmentState.Error)
+                            if (result.responseCode == ResponseStatusCode.NoInternet) {
+                                pushState(IndustryFragmentState.NoInternet)
+                            } else {
+                                pushState(IndustryFragmentState.Error)
+                            }
                         }
                     }
                 }
@@ -104,7 +109,7 @@ class IndustryViewModel(
                     industry.name?.contains(query, ignoreCase = true) == true
                 }
             }
-            pushState(IndustryFragmentState.Filter(filteredList, selectedIndustry))
+            pushState(IndustryFragmentState.Content(filteredList, selectedIndustry))
         }
     }
 
