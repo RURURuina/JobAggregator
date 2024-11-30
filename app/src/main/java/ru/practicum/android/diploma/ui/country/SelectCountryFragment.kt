@@ -69,6 +69,10 @@ class SelectCountryFragment : Fragment() {
                 CountrySelectState.Exit -> {
                     findNavController().popBackStack()
                 }
+
+                CountrySelectState.NoInternet -> {
+                    binding.noInternetLay.isVisible = true
+                }
             }
         }
     }

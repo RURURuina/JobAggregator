@@ -66,7 +66,7 @@ class SelectCountryViewModel(
                     resource.data?.let { listCountries ->
                         countriesList.addAll(listCountries)
                         renderState(CountrySelectState.Success(listCountries))
-                    } ?: renderState(CountrySelectState.Error)
+                    } ?: renderState(CountrySelectState.NoInternet)
                 }
             } catch (e: SocketTimeoutException) {
                 Log.e("SocketTimeoutException", "Timeout error occured", e)

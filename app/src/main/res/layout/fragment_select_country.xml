@@ -85,4 +85,33 @@
             android:text="@string/cant_get_cities_list" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/no_internet_lay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/error_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/no_internet"
+            android:src="@drawable/no_internet_placeholder" />
+
+        <TextView
+            android:id="@+id/error_tv"
+            style="@style/textSize22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="@string/no_internet" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
