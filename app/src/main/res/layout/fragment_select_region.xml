@@ -1,14 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.region.SelectRegionFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="11 экран в фигме"
-        android:textSize="40dp"/>
 
-</FrameLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/firstBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="200dp"
+        app:layout_constraintTop_toBottomOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bottomBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="83dp"
+        app:layout_constraintTop_toBottomOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/back_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/country_layout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginVertical="8dp"
+            android:layout_marginStart="4dp"
+            android:background="@color/transparent"
+            android:src="@drawable/arrow_back_24px" />
+
+        <TextView
+            style="@style/textSize22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/choose_work_place" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/country_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/region_layout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/back_lay">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/rightBorder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="52dp"
+            app:layout_constraintTop_toBottomOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/leftBorder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp"
+            app:layout_constraintTop_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/country_title"
+            style="@style/textSize12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/country"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/country"
+            app:layout_constraintLeft_toLeftOf="@id/leftBorder"
+            app:layout_constraintRight_toRightOf="@id/rightBorder"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/country"
+            style="@style/editTextHintsStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/country"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/leftBorder"
+            app:layout_constraintRight_toRightOf="@id/rightBorder"
+            app:layout_constraintTop_toBottomOf="@id/country_title" />
+
+        <ImageButton
+            android:id="@+id/country_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginVertical="6dp"
+            android:background="@color/transparent"
+            android:src="@drawable/arrow_forward_24px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/rightBorder"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/region_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/firstBorder"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/country_layout">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/right_border"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="52dp"
+            app:layout_constraintTop_toBottomOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/left_border"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp"
+            app:layout_constraintTop_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/area"
+            style="@style/editTextHintsStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/region"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/left_border"
+            app:layout_constraintRight_toRightOf="@id/right_border"
+            app:layout_constraintTop_toBottomOf="@id/area_title" />
+
+        <TextView
+            android:id="@+id/area_title"
+            style="@style/textSize12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/region"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/area"
+            app:layout_constraintLeft_toLeftOf="@id/left_border"
+            app:layout_constraintRight_toRightOf="@id/right_border"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/area_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginVertical="6dp"
+            android:background="@color/transparent"
+            android:src="@drawable/arrow_forward_24px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/right_border"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/select_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/blue"
+        android:visibility="gone"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bottomBorder">
+
+        <TextView
+            style="@style/cardBtnStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select" />
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

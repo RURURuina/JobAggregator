@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.api.hh.HhInteractor
+import ru.practicum.android.diploma.domain.models.entity.FilterShared
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.ui.search.models.VacanciesState
 import ru.practicum.android.diploma.util.Resource
@@ -15,16 +17,16 @@ import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.debounce
 import java.net.SocketTimeoutException
 
-class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
-    // Кто будет выполнять задание на обработку ошибок, то сообщение будет на стр 132
-    companion object {
-        private const val DEBOUNCE_SEARCH_TIME = 2000L
-        private const val DEBOUNCE_PAGE_TIME = 300L
-        private const val PAGE_SIZE = 20 // кол-во элементов на странице для отображения в RV
-    }
+class SearchJobViewModel(
+    private val hhInteractor: HhInteractor,
 
+    private val filterInteractor: FilterInteractor
+) : ViewModel() {
     private val _vacanciesState = MutableLiveData<VacanciesState>()
+
     val vacanciesState: LiveData<VacanciesState> = _vacanciesState
+    private val _savedFilter = MutableLiveData<FilterShared?>()
+    val savedFilter: LiveData<FilterShared?> = _savedFilter
 
     // переменные для работы с paggination
     private var currentPage = 0
@@ -45,12 +47,17 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         delayMillis = DEBOUNCE_PAGE_TIME,
         coroutineScope = viewModelScope,
         useLastParam = true
-    ) {
+    ) { page ->
+        currentPage = page + 1
         loadVacancies()
     }
 
+    init {
+        getFilter()
+    }
+
     fun clearVacancies() {
-        pushVacanciesState(VacanciesState.Hidden)
+        pushVacanciesState(VacanciesState.Start)
         currentPage = 0
         maxPage = 0
         currentQuery = ""
@@ -107,7 +114,7 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
     fun loadNextPage() {
         if (!isLoading && !isLastPage && currentQuery.isNotBlank()) {
             isLoading = true
-            loadPerPageDebounce(currentPage++)
+            loadPerPageDebounce(currentPage)
         }
     }
 
@@ -116,28 +123,33 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
             "text" to currentQuery,
             "page" to currentPage.toString(),
             "per_page" to PAGE_SIZE.toString()
-        )
+        ).apply {
+            val salary = _savedFilter.value?.salary ?: "0"
+            if (_savedFilter.value?.apply == true) {
+                _savedFilter.value?.regionId?.let { put("area", it) }
+                _savedFilter.value?.industryId?.let { put("industry", it) }
+                _savedFilter.value?.salary?.let { put("salary", salary) }
+                _savedFilter.value?.onlySalaryFlag?.let { put("only_with_salary", it.toString()) }
+            }
+        }
     }
 
     private fun handleResult(result: Resource<List<Vacancy>>?) {
         when (result) {
-            is Resource.Success -> {
-                result.currentPage?.let {
-                    currentPage = result.currentPage
-                }
-                result.pagesCount?.let {
-                    maxPage = result.pagesCount
-                }
-                handleSuccess(result)
-            }
-
+            is Resource.Success -> handleSuccess(result)
             is Resource.Error -> handleError(result.responseCode)
             else -> handleError(result?.responseCode)
         }
     }
 
     private fun handleSuccess(result: Resource<List<Vacancy>>?) {
-        val newVacancies = result?.data ?: emptyList()
+        result?.currentPage?.let {
+            currentPage = result.currentPage
+        }
+        result?.pagesCount?.let {
+            maxPage = result.pagesCount
+        }
+        val newVacancies = result?.data.orEmpty()
         isLastPage = currentPage == maxPage - 1
         if (newVacancies.isNotEmpty()) {
             vacanciesList.addAll(newVacancies)
@@ -163,4 +175,15 @@ class SearchJobViewModel(private val hhInteractor: HhInteractor) : ViewModel() {
         pushVacanciesState(VacanciesState.Error(responseCode))
     }
 
+    fun getFilter() {
+        viewModelScope.launch {
+            _savedFilter.value = filterInteractor.getFilter()
+        }
+    }
+
+    companion object {
+        private const val DEBOUNCE_SEARCH_TIME = 2000L
+        private const val DEBOUNCE_PAGE_TIME = 300L
+        private const val PAGE_SIZE = 20 // кол-во элементов на странице для отображения в RV
+    }
 }

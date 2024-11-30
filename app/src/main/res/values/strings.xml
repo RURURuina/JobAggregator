@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">Practicum-Android-Diploma</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="main_but">Главная</string>
+    <string name="main_button">Главная</string>
     <string name="favorite_but">Избранное</string>
     <string name="team_but">Команда</string>
     <string name="search_jobs">Поиск вакансий</string>
+    <string name="no_such_vacancies">Таких вакансий нет</string>
     <string name="enter_request">Введите запрос</string>
     <string name="no_internet">Нет интернета</string>
     <string name="server_error">Ошибка сервера</string>
@@ -34,6 +35,10 @@
     <string name="no_internet_toast">Проверьте подключение к интернету</string>
     <string name="response_error_toast">Произошла ошибка</string>
     <string name="key_skill_mask"><![CDATA[<ul> <li>%1$s.</li>]]></string>
+    <string name="choose_country">Выбор страны</string>
+    <string name="choose_work_place">Выбор места работы</string>
+    <string name="country">Страна</string>
+    <string name="region">Регион</string>
 
     <plurals name="plurals_vacancies">
         <item quantity="zero">Найдено %1$d вакансий</item>
@@ -46,5 +51,14 @@
 
     <string name="industry_selection">Выбор отрасли</string>
     <string name="select">Выбрать</string>
+    <string name="submit">Применить</string>
     <string name="clear">Очистить</string>
+    <string name="enter_industries">Введите отрасль</string>
+    <string name="select_city">Выбор региона</string>
+    <string name="enter_city_name">Введите регион</string>
+    <string name="no_city_found">Такого региона нет</string>
+    <string name="no_industry_found">Такой отрасли нет</string>
+    <string name="apply">Применить</string>
+    <string name="reset">Сбросить</string>
+    <string name="cant_get_cities_list">Не удалось получить список</string>
 </resources>

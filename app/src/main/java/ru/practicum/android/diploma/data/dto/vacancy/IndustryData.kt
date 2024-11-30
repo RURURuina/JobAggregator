@@ -18,9 +18,9 @@ fun IndustryData.map(): Industry {
 }
 
 private fun List<IndustryNestedData>?.map(): List<IndustryNested>? {
-    this?.let {
+    return this?.let {
         val list = mutableListOf<IndustryNested>()
         this.map { list.add(it.map()) }
-        return list
-    } ?: return null
+        list
+    }
 }

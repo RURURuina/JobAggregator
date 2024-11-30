@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.map
 import ru.practicum.android.diploma.data.convertors.FavoriteVacancyDbConverter
 import ru.practicum.android.diploma.data.db.FavoritesVacancyDao
 import ru.practicum.android.diploma.data.db.FavoritesVacancyEntity
-import ru.practicum.android.diploma.domain.api.FavoritesVacancyRepository
+import ru.practicum.android.diploma.domain.api.favorite.FavoritesVacancyRepository
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
 
 class FavoritesVacancyRepositoryImpl(

@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.google.gson.Gson
 import okhttp3.Headers
@@ -16,6 +18,7 @@ import ru.practicum.android.diploma.data.network.HhApiService
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 
+private const val SHARED_FILTER_KEY = "FILTER"
 val dataModule = module {
     factory { Gson() }
 
@@ -25,7 +28,7 @@ val dataModule = module {
         val headers = Headers
             .Builder()
             .add("Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
-            .add("HH-User-Agent: Get a job! (morozov@rtr.spb.ru)").build()
+            .add("HH-User-Agent: YpDiplomaProject/1.0 (4habibulin@gmail.com)").build()
 
         val interceptorHttp = HttpLoggingInterceptor().apply {
             this.level = HttpLoggingInterceptor.Level.BODY
@@ -61,4 +64,11 @@ val dataModule = module {
         ).build()
     }
     single { get<AppDatabase>().favoritesVacancyDao() }
+
+    factory<SharedPreferences> {
+        androidContext().getSharedPreferences(
+            SHARED_FILTER_KEY,
+            Context.MODE_PRIVATE
+        )
+    }
 }

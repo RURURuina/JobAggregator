@@ -4,7 +4,7 @@
         android:background="@color/transparent"
         android:id="@+id/searchJobFragment"
         android:icon="@drawable/main_icon"
-        android:title="@string/main_but"
+        android:title="@string/main_button"
         android:enabled="true"/>
     <item
         android:background="@color/transparent"

@@ -13,13 +13,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavoriteJobBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
-import ru.practicum.android.diploma.presentation.card.adapters.VacancyAdapter
+import ru.practicum.android.diploma.presentation.card.vacancy.VacancyAdapter
 import ru.practicum.android.diploma.presentation.favorites.FavoriteJobViewModel
 import ru.practicum.android.diploma.ui.favorites.models.FavoritesState
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
 
 class FavoriteJobFragment : Fragment() {
-    private var binding: FragmentFavoriteJobBinding? = null
+    private var _binding: FragmentFavoriteJobBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: FavoriteJobViewModel by viewModel()
     private var vacancyAdapter: VacancyAdapter? = null
     private var onItemClick: ((Vacancy) -> Unit)? = null
@@ -28,17 +29,15 @@ class FavoriteJobFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        binding = FragmentFavoriteJobBinding.inflate(layoutInflater)
-        return binding?.root
+    ): View {
+        _binding = FragmentFavoriteJobBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        init()
+        initAdapter()
         prepareOnItemClick()
-
         viewModel.getVacancies()
         viewModel.favoritesState.observe(viewLifecycleOwner) { state ->
             render(state)
@@ -48,13 +47,13 @@ class FavoriteJobFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         vacancyAdapter = null
-        binding?.favoritesRv?.adapter = null
+        binding.favoritesRv.adapter = null
     }
 
-    private fun init() {
+    private fun initAdapter() {
         vacancyAdapter = VacancyAdapter()
-        binding?.favoritesRv?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding?.favoritesRv?.adapter = vacancyAdapter
+        binding.favoritesRv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.favoritesRv.adapter = vacancyAdapter
     }
 
     private fun prepareOnItemClick() {
@@ -75,9 +74,9 @@ class FavoriteJobFragment : Fragment() {
     }
 
     private fun showFavorites(favoriteList: List<Vacancy>) {
-        binding?.progressBar?.visibility = View.GONE
-        binding?.favoritesListPlaceholder?.visibility = View.GONE
-        binding?.favoritesRv?.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
+        binding.favoritesListPlaceholder.visibility = View.GONE
+        binding.favoritesRv.visibility = View.VISIBLE
         vacancyAdapter?.submitList(favoriteList)
         onItemClick?.let {
             vacancyAdapter?.onItemClick = it
@@ -85,22 +84,22 @@ class FavoriteJobFragment : Fragment() {
     }
 
     private fun showLoading() {
-        binding?.progressBar?.visibility = View.VISIBLE
-        binding?.favoritesRv?.visibility = View.GONE
-        binding?.favoritesListPlaceholder?.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
+        binding.favoritesRv.visibility = View.GONE
+        binding.favoritesListPlaceholder.visibility = View.GONE
     }
 
     private fun showPlaceholder(@StringRes message: Int) {
-        binding?.progressBar?.visibility = View.GONE
-        binding?.favoritesRv?.visibility = View.GONE
+        binding.progressBar.visibility = View.GONE
+        binding.favoritesRv.visibility = View.GONE
 
         val drawableRes = when (message) {
             R.string.empty_list -> R.drawable.empty_favorites_list_placeholder
             else -> R.drawable.nothing_found_placeholder
         }
 
-        binding?.favoritesListPlaceholderImage?.setImageResource(drawableRes)
-        binding?.favoritesListPlaceholderText?.text = getString(message)
-        binding?.favoritesListPlaceholder?.visibility = View.VISIBLE
+        binding.favoritesListPlaceholderImage.setImageResource(drawableRes)
+        binding.favoritesListPlaceholderText.text = getString(message)
+        binding.favoritesListPlaceholder.visibility = View.VISIBLE
     }
 }

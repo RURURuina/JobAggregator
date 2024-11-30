@@ -4,7 +4,7 @@ import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.util.ResponseStatusCode
 
 sealed interface VacanciesState {
-    object Loading : VacanciesState
+    data object Loading : VacanciesState
 
     // Состояние загрузки - видно progress bar
     // Добавил в Success новые переменные для работы с paggination
@@ -22,5 +22,5 @@ sealed interface VacanciesState {
     ) : VacanciesState // состояние ошибки - видно placeHolder ошибки
 
     data object Empty : VacanciesState // Состояние "Не найдено" - видно placeHolder
-    data object Hidden : VacanciesState // Состояние отсутствие запроса - показан стартовый placeHolder
+    data object Start : VacanciesState // Состояние отсутствие запроса - показан стартовый placeHolder
 }
