@@ -75,19 +75,21 @@ class IndustryFragment : Fragment() {
                     findNavController().popBackStack()
                 }
 
-                is IndustryFragmentState.Filter -> {
-                    if (state.listIndastries.isEmpty()) {
-                        showEmptyPlaceholder()
-                    } else {
-                        showIndustryFilter(state.listIndastries, state.checkedIndustry)
-                    }
-                }
-
                 IndustryFragmentState.Empty -> showEmptyPlaceholder()
                 IndustryFragmentState.Error -> showErrorPlaceholder()
                 IndustryFragmentState.Loading -> showLoading()
+                IndustryFragmentState.NoInternet -> showNoInternet()
+
             }
         }
+    }
+
+    private fun showNoInternet() {
+        binding.emptyLayout.visibility = View.GONE
+        binding.errorLayout.visibility = View.GONE
+        binding.loadingLayout.visibility = View.GONE
+        binding.contentLayout.visibility = View.GONE
+        binding.noInternetLay.visibility = View.VISIBLE
     }
 
     private fun showEmptyPlaceholder() {
@@ -95,6 +97,7 @@ class IndustryFragment : Fragment() {
         binding.errorLayout.visibility = View.GONE
         binding.loadingLayout.visibility = View.GONE
         binding.contentLayout.visibility = View.GONE
+        binding.noInternetLay.visibility = View.GONE
     }
 
     private fun showErrorPlaceholder() {
@@ -102,6 +105,7 @@ class IndustryFragment : Fragment() {
         binding.emptyLayout.visibility = View.GONE
         binding.loadingLayout.visibility = View.GONE
         binding.contentLayout.visibility = View.GONE
+        binding.noInternetLay.visibility = View.GONE
     }
 
     private fun showLoading() {
@@ -109,6 +113,7 @@ class IndustryFragment : Fragment() {
         binding.errorLayout.visibility = View.GONE
         binding.emptyLayout.visibility = View.GONE
         binding.contentLayout.visibility = View.GONE
+        binding.noInternetLay.visibility = View.GONE
     }
 
     private fun showContent(industries: List<IndustryNested>, checkedIndustry: IndustryNested?) {
@@ -116,20 +121,7 @@ class IndustryFragment : Fragment() {
         binding.errorLayout.visibility = View.GONE
         binding.emptyLayout.visibility = View.GONE
         binding.loadingLayout.visibility = View.GONE
-        updateRadioGroup(
-            industries,
-            checkedIndustry
-        )
-        if (binding.filterEditText.text.toString() != checkedIndustry?.name) {
-            binding.filterEditText.setText(checkedIndustry?.name)
-        }
-    }
-
-    private fun showIndustryFilter(industries: List<IndustryNested>, checkedIndustry: IndustryNested?) {
-        binding.contentLayout.visibility = View.VISIBLE
-        binding.errorLayout.visibility = View.GONE
-        binding.emptyLayout.visibility = View.GONE
-        binding.loadingLayout.visibility = View.GONE
+        binding.noInternetLay.visibility = View.GONE
         updateRadioGroup(
             industries,
             checkedIndustry
@@ -176,7 +168,6 @@ class IndustryFragment : Fragment() {
         Log.d("updateRadioGroup", checkedIndustry.toString())
         // Список для хранения всех CustomRadioLayout
         val radioLayouts = mutableListOf<CustomRadioLayout>()
-
         industries.forEach { industry ->
             val customRadioLayout = CustomRadioLayout(requireContext()).apply {
                 bind(industry)
