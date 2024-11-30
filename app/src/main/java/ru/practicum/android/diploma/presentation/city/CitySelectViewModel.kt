@@ -34,9 +34,11 @@ class CitySelectViewModel(
     fun getAreas(countryId: String?) {
         viewModelScope.launch {
             filterShared = filterInteractor.getFilter()
-            countryId?.let {
-                getCitiesById(it)
-            } ?: getAllAreas()
+            if (!countryId.isNullOrBlank() && countryId != "null") {
+                getCitiesById(countryId)
+            } else {
+                getAllAreas()
+            }
         }
     }
 
