@@ -92,6 +92,11 @@ class FiltrationFragment : Fragment() {
             findNavController().navigateUp()
         }
 
+        // Картинка нопки назад
+        binding.backBtn.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         // Кнопка применить
         binding.submitButton.setOnClickListener {
             viewModel.saveFilter()
