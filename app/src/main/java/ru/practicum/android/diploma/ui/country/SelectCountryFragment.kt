@@ -10,8 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
 import ru.practicum.android.diploma.domain.models.entity.Area
-import ru.practicum.android.diploma.domain.models.entity.Country
-import ru.practicum.android.diploma.presentation.card.country.CountryAdapter
+import ru.practicum.android.diploma.presentation.card.text.TextCardAdapter
 import ru.practicum.android.diploma.presentation.country.SelectCountryViewModel
 import ru.practicum.android.diploma.ui.country.model.CountrySelectState
 import ru.practicum.android.diploma.ui.root.RootActivity
@@ -20,7 +19,7 @@ class SelectCountryFragment : Fragment() {
     private val viewModel: SelectCountryViewModel by viewModel()
     private var _binding: FragmentSelectCountryBinding? = null
     private val binding get() = _binding!!
-    private val countryAdapter = CountryAdapter()
+    private val countryAdapter = TextCardAdapter()
     private var onItemClick: ((Area) -> Unit)? = null
 
     override fun onCreateView(
