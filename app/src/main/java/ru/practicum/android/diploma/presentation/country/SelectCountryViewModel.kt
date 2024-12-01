@@ -12,6 +12,8 @@ import ru.practicum.android.diploma.domain.api.hh.HhInteractor
 import ru.practicum.android.diploma.domain.models.entity.Country
 import ru.practicum.android.diploma.domain.models.entity.FilterShared
 import ru.practicum.android.diploma.ui.country.model.CountrySelectState
+import ru.practicum.android.diploma.util.Resource
+import ru.practicum.android.diploma.util.ResponseStatusCode
 import java.net.SocketTimeoutException
 
 class SelectCountryViewModel(
@@ -56,10 +58,25 @@ class SelectCountryViewModel(
         viewModelScope.launch {
             try {
                 hhInteractor.searchCountries().collect { resource ->
-                    resource.data?.let { listCountries ->
-                        countriesList.addAll(listCountries)
-                        renderState(CountrySelectState.Success(listCountries))
-                    } ?: renderState(CountrySelectState.NoInternet)
+                    when (resource) {
+                        is Resource.Error -> {
+                            if (resource.responseCode == ResponseStatusCode.NoInternet) {
+                                renderState(CountrySelectState.NoInternet)
+                            } else {
+                                renderState(CountrySelectState.Error)
+                            }
+                        }
+
+                        is Resource.Success -> {
+                            if (resource.data.isNullOrEmpty()) {
+                                renderState(CountrySelectState.Empty)
+                            } else {
+                                countriesList.addAll(resource.data)
+                                renderState(CountrySelectState.Success(resource.data))
+                            }
+                        }
+                    }
+
                 }
             } catch (e: SocketTimeoutException) {
                 Log.e("SocketTimeoutException", "Timeout error occured", e)
