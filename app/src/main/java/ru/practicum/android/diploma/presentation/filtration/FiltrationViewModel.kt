@@ -28,7 +28,7 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
         }
     }
 
-   private fun changeSalary(salary: String?) {
+    private fun changeSalary(salary: String?) {
         val total = if (salary.isNullOrEmpty()) {
             null
         } else {
@@ -46,6 +46,9 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             apply = null
         )
         _filterState.value = filterShared
+        viewModelScope.launch {
+            filterInteractor.saveFilter(filterShared)
+        }
     }
 
     fun checkingOnlySalaryFlag(onlySalaryFlag: Boolean) {
@@ -61,6 +64,9 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             apply = null
         )
         _filterState.value = filterShared
+        viewModelScope.launch {
+            filterInteractor.saveFilter(filterShared)
+        }
     }
 
     fun saveFilter() {
@@ -72,6 +78,7 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
 
     fun resetFilter() {
         filterShared = null
+        _filterState.value = filterShared
         viewModelScope.launch {
             filterInteractor.saveFilter(filterShared)
         }

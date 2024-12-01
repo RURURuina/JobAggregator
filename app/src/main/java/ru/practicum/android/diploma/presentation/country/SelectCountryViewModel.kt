@@ -50,7 +50,6 @@ class SelectCountryViewModel(
                     apply = null
                 )
             )
-            renderState(CountrySelectState.Exit)
         }
     }
 

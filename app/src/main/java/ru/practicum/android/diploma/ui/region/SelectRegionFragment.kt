@@ -28,15 +28,9 @@ class SelectRegionFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: android.os.Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         navBarVisible(false)
         prepareButtons()
         observeVieModel()
-        viewModel.getFilter()
-    }
-
-    override fun onResume() {
-        super.onResume()
         viewModel.getFilter()
     }
 
