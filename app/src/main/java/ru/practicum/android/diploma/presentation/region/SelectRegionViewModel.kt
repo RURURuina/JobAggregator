@@ -65,7 +65,7 @@ class SelectRegionViewModel(
     fun saveExit() {
         viewModelScope.launch {
             filterInteractor.saveTempFilter(null)
-            filterInteractor.saveFilter(filterShared?.copy(apply = true))
+            filterInteractor.saveFilter(filterShared?.copy(apply = null))
             pushState(SelectRegionFragmentState.Exit)
         }
     }

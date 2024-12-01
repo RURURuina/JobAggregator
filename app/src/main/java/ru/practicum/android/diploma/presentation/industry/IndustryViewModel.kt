@@ -44,7 +44,7 @@ class IndustryViewModel(
                     industryId = selectedIndustry?.id,
                     salary = filterShared?.salary,
                     onlySalaryFlag = filterShared?.onlySalaryFlag,
-                    apply = true
+                    apply = null
                 )
             )
         }
