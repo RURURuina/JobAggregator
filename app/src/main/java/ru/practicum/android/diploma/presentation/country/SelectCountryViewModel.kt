@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.api.hh.HhInteractor
 import ru.practicum.android.diploma.domain.models.entity.Country
@@ -32,7 +31,7 @@ class SelectCountryViewModel(
     fun chooseCountry() = { country: Country ->
         if (country.id == "other") {
             renderState(CountrySelectState.Success(countriesList))
-        }else{
+        } else {
             saveToFilter(country)
             renderState(CountrySelectState.Exit)
         }
