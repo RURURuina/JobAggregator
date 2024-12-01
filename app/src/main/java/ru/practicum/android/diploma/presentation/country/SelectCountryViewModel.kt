@@ -75,9 +75,6 @@ class SelectCountryViewModel(
                             }
                         }
                     }
-
-  } ?: renderState(CountrySelectState.Error)
-
                 }
             } catch (e: SocketTimeoutException) {
                 Log.e("SocketTimeoutException", "Timeout error occured", e)
