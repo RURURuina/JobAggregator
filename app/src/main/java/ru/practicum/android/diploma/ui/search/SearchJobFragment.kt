@@ -151,7 +151,7 @@ class SearchJobFragment : Fragment() {
                     keyBoardVisibility(false)
                     binding.bottomProgressBar.isVisible = false
                     binding.messageChip.isVisible = true
-                    state.totalCount?.let { count ->
+                    state.totalCount?.let {count ->
                         binding.messageChip.text =
                             requireContext().resources.getQuantityString(
                                 R.plurals.plurals_vacancies,
