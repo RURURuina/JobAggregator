@@ -130,7 +130,6 @@ class RetrofitNetworkClient(
                     val response = hhService.searchCountries()
                     val list = mutableListOf<AreaData>()
                     response.map { response ->
-                        println(response)
                         list.add(
                             AreaData(
                                 id = response.id,
