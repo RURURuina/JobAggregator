@@ -9,6 +9,7 @@ import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.api.hh.HhInteractor
+import ru.practicum.android.diploma.domain.models.entity.Area
 import ru.practicum.android.diploma.domain.models.entity.Country
 import ru.practicum.android.diploma.domain.models.entity.FilterShared
 import ru.practicum.android.diploma.ui.country.model.CountrySelectState
@@ -23,19 +24,19 @@ class SelectCountryViewModel(
     ViewModel() {
     private val _countrySelectState = MutableLiveData<CountrySelectState>()
     val countrySelectState: LiveData<CountrySelectState> = _countrySelectState
-    private var countriesList: MutableList<Country> = mutableListOf()
+    private var countriesList: MutableList<Area> = mutableListOf()
     private var filterShared: FilterShared? = null
 
     init {
         getCountries()
     }
 
-    fun chooseCountry() = { country: Country ->
+    fun chooseCountry() = { country: Area ->
         saveToFilter(country)
         renderState(CountrySelectState.Exit)
     }
 
-    private fun saveToFilter(country: Country) {
+    private fun saveToFilter(country: Area) {
         viewModelScope.launch {
             filterInteractor.saveTempFilter(
                 FilterShared(

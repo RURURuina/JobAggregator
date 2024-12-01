@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentSelectCountryBinding
+import ru.practicum.android.diploma.domain.models.entity.Area
 import ru.practicum.android.diploma.domain.models.entity.Country
 import ru.practicum.android.diploma.presentation.card.country.CountryAdapter
 import ru.practicum.android.diploma.presentation.country.SelectCountryViewModel
@@ -20,7 +21,7 @@ class SelectCountryFragment : Fragment() {
     private var _binding: FragmentSelectCountryBinding? = null
     private val binding get() = _binding!!
     private val countryAdapter = CountryAdapter()
-    private var onItemClick: ((Country) -> Unit)? = null
+    private var onItemClick: ((Area) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,7 +91,7 @@ class SelectCountryFragment : Fragment() {
         }
     }
 
-    private fun updateRecyclerView(countries: List<Country>) {
+    private fun updateRecyclerView(countries: List<Area>) {
         binding.recycleView.isVisible = true
         countryAdapter.submitList(countries)
         onItemClick?.let { countryAdapter.onItemClick = it }
