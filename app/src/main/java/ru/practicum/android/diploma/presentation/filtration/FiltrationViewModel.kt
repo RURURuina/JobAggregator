@@ -14,9 +14,9 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
     val filterState: LiveData<FilterShared?> = _filterState
     private var filterShared: FilterShared? = null
     val salaryDebounce = debounce<String?>(
-        DEBOUNCE_SALARY_INPUT,
-        viewModelScope,
-        true
+        delayMillis = DEBOUNCE_SALARY_INPUT,
+        coroutineScope = viewModelScope,
+        useLastParam = true
     ) { string ->
         changeSalary(string)
     }
@@ -94,7 +94,7 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             industryId = filterShared?.industryId,
             salary = filterShared?.salary,
             onlySalaryFlag = filterShared?.onlySalaryFlag,
-            apply = filterShared?.apply
+            apply = null
         )
         viewModelScope.launch {
             filterInteractor.saveFilter(filterShared)
@@ -112,7 +112,7 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             industryName = null,
             salary = filterShared?.salary,
             onlySalaryFlag = filterShared?.onlySalaryFlag,
-            apply = filterShared?.apply
+            apply = null
         )
         viewModelScope.launch {
             filterInteractor.saveFilter(filterShared)
