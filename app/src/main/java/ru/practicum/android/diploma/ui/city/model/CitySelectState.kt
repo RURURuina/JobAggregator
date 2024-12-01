@@ -7,4 +7,5 @@ sealed interface CitySelectState {
     data object Error : CitySelectState
     data object Empty : CitySelectState
     data object Exit : CitySelectState
+    data object NoInternet : CitySelectState
 }

@@ -106,7 +106,11 @@ class RetrofitNetworkClient(
                 try {
                     val list: MutableList<AreaData> = mutableListOf()
                     hhService.getAllArea().map { cityResponse ->
-                        cityResponse.areas.map { areaData -> list.add(areaData.copy(parentName = cityResponse.name)) }
+                        cityResponse.areas.map { areaData ->
+                            if (areaData.parentId != "1001") {
+                                list.add(areaData.copy(parentName = cityResponse.name))
+                            }
+                        }
                     }
                     val response = CityResponse(null, null, list)
                     response.apply { resultCode = ResponseStatusCode.Ok }

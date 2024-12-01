@@ -13,7 +13,7 @@ class FilterRepositoryImpl(
 ) : FilterRepository {
     override suspend fun getTempFilter(): FilterShared? {
         return withContext(Dispatchers.IO) {
-            val str = sharedPreferences.getString(KEY_TEMP, null)
+            val str = sharedPreferences.getString("KEY_TEMP", null)
             sharedStringConvertor.getFilterShared(str)
         }
     }
@@ -22,7 +22,7 @@ class FilterRepositoryImpl(
         withContext(Dispatchers.IO) {
             val str = sharedStringConvertor.getStringForShared(filterShared)
             sharedPreferences.edit()
-                .putString(KEY_TEMP, str)
+                .putString("KEY_TEMP", str)
                 .apply()
         }
     }

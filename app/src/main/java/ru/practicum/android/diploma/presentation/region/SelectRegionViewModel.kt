@@ -12,7 +12,7 @@ import ru.practicum.android.diploma.ui.region.model.SelectRegionFragmentState
 class SelectRegionViewModel(
     private val filterInteractor: FilterInteractor
 ) : ViewModel() {
-
+    private var firstStart = true
     private val _state = MutableLiveData<SelectRegionFragmentState>()
     val state: LiveData<SelectRegionFragmentState> = _state
     private var filterShared: FilterShared? = null
@@ -29,7 +29,14 @@ class SelectRegionViewModel(
 
     fun getFilter() {
         viewModelScope.launch {
-            filterShared = filterInteractor.getFilter()
+            if (firstStart) {
+                firstStart = false
+                filterShared = filterInteractor.getFilter()
+                filterInteractor.saveTempFilter(filterShared)
+            } else {
+                firstStart = false
+                filterShared = filterInteractor.getTempFilter()
+            }
         }
     }
 
@@ -39,6 +46,9 @@ class SelectRegionViewModel(
             countryId = null,
             apply = null
         )
+        viewModelScope.launch {
+            filterInteractor.saveTempFilter(filterShared)
+        }
     }
 
     fun clearArea() {
@@ -47,11 +57,15 @@ class SelectRegionViewModel(
             regionName = null,
             apply = null
         )
+        viewModelScope.launch {
+            filterInteractor.saveTempFilter(filterShared)
+        }
     }
 
     fun saveExit() {
         viewModelScope.launch {
-            filterInteractor.saveFilter(filterShared?.copy(apply = true))
+            filterInteractor.saveTempFilter(null)
+            filterInteractor.saveFilter(filterShared?.copy(apply = null))
             pushState(SelectRegionFragmentState.Exit)
         }
     }
