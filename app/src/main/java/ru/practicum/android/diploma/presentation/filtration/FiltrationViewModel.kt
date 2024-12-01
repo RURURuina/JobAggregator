@@ -41,7 +41,6 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             industryId = filterShared?.countryId,
             salary = total,
             onlySalaryFlag = filterShared?.onlySalaryFlag,
-            apply = null
         )
     }
 
@@ -55,12 +54,11 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             industryId = filterShared?.countryId,
             salary = filterShared?.salary,
             onlySalaryFlag = onlySalaryFlag,
-            apply = null
         )
     }
 
     fun saveFilter() {
-        filterShared = filterShared?.copy(apply = true)
+        filterShared = filterShared
     }
 
     fun resetFilter() {
@@ -77,7 +75,6 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             industryId = filterShared?.countryId,
             salary = filterShared?.salary,
             onlySalaryFlag = filterShared?.onlySalaryFlag,
-            apply = filterShared?.apply
         )
     }
 
@@ -91,7 +88,6 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             industryName = null,
             salary = filterShared?.salary,
             onlySalaryFlag = filterShared?.onlySalaryFlag,
-            apply = filterShared?.apply
         )
     }
 

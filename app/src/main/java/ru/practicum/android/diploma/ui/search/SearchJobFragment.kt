@@ -178,7 +178,7 @@ class SearchJobFragment : Fragment() {
 
         viewModel.savedFilter.observe(viewLifecycleOwner) { filter ->
             binding.filterImageButton.setImageResource(
-                if (filter?.apply == true) R.drawable.filter_on__24px else R.drawable.filter_off__24px
+                if (filter != null) R.drawable.filter_on__24px else R.drawable.filter_off__24px
             )
         }
     }

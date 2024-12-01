@@ -140,7 +140,7 @@ class IndustryFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.filterIndustries(s?.toString() ?: "")
+                viewModel.filterDebounce(s?.toString() ?: "")
             }
 
             override fun afterTextChanged(s: Editable?) {
