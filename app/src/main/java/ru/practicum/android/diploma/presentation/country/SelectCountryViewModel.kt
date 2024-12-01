@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.api.hh.HhInteractor
 import ru.practicum.android.diploma.domain.models.entity.Country
@@ -29,8 +30,12 @@ class SelectCountryViewModel(
     }
 
     fun chooseCountry() = { country: Country ->
-        saveToFilter(country)
-        renderState(CountrySelectState.Exit)
+        if (country.id == "other") {
+            renderState(CountrySelectState.Success(countriesList))
+        }else{
+            saveToFilter(country)
+            renderState(CountrySelectState.Exit)
+        }
     }
 
     private fun saveToFilter(country: Country) {
@@ -65,7 +70,21 @@ class SelectCountryViewModel(
                 hhInteractor.searchCountries().collect { resource ->
                     resource.data?.let { listCountries ->
                         countriesList.addAll(listCountries)
-                        renderState(CountrySelectState.Success(listCountries))
+                        val fixedCountries = listOf(
+                            listCountries.find { it.name == "Россия" },
+                            listCountries.find { it.name == "Украина" },
+                            listCountries.find { it.name == "Казахстан" },
+                            listCountries.find { it.name == "Азербайджан" },
+                            listCountries.find { it.name == "Беларусь" },
+                            listCountries.find { it.name == "Грузия" },
+                            listCountries.find { it.name == "Кыргызстан" },
+                            listCountries.find { it.name == "Узбекистан" }
+                        ).filterNotNull()
+                        val otherCountry = Country(
+                            id = "other",
+                            name = "Другие регионы"
+                        )
+                        renderState(CountrySelectState.Success(fixedCountries + otherCountry))
                     } ?: renderState(CountrySelectState.Error)
                 }
             } catch (e: SocketTimeoutException) {
