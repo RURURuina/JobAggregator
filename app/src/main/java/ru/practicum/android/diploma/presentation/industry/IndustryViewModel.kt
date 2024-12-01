@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
@@ -15,17 +14,24 @@ import ru.practicum.android.diploma.domain.models.entity.IndustryNested
 import ru.practicum.android.diploma.ui.industry.models.IndustryFragmentState
 import ru.practicum.android.diploma.util.Resource
 import ru.practicum.android.diploma.util.ResponseStatusCode
+import ru.practicum.android.diploma.util.debounce
 
 class IndustryViewModel(
     private val interactor: IndustriesInteractor,
     private val filterInteractor: FilterInteractor
 ) : ViewModel() {
     private var unFilteredList: List<IndustryNested> = emptyList()
-    private var filterJob: Job? = null
     private var filterShared: FilterShared? = null
     private val _industriesState = MutableLiveData<IndustryFragmentState>()
     val industries: LiveData<IndustryFragmentState> = _industriesState
     private var selectedIndustry: IndustryNested? = null
+    val filterDebounce = debounce<String>(
+        delayMillis = DEBOUNCE_FILTER_TIME,
+        coroutineScope = viewModelScope,
+        useLastParam = true
+    ) { searchText ->
+        filterIndustries(searchText.trim())
+    }
 
     init {
         getFilter()
@@ -99,9 +105,8 @@ class IndustryViewModel(
         Log.d("setSelectedIndustry :", industry.toString())
     }
 
-    fun filterIndustries(query: String) {
-        filterJob?.cancel() // Отменяем предыдущую операцию фильтрации
-        filterJob = viewModelScope.launch {
+    private fun filterIndustries(query: String) {
+        viewModelScope.launch {
             val filteredList = if (query.isEmpty()) {
                 unFilteredList
             } else {
@@ -109,11 +114,19 @@ class IndustryViewModel(
                     industry.name?.contains(query, ignoreCase = true) == true
                 }
             }
-            pushState(IndustryFragmentState.Content(filteredList, selectedIndustry))
+            if (filteredList.isEmpty()) {
+                pushState(IndustryFragmentState.Empty)
+            } else {
+                pushState(IndustryFragmentState.Content(filteredList, selectedIndustry))
+            }
         }
     }
 
     private fun pushState(state: IndustryFragmentState) {
         _industriesState.value = state
+    }
+
+    private companion object {
+        const val DEBOUNCE_FILTER_TIME = 1000L
     }
 }

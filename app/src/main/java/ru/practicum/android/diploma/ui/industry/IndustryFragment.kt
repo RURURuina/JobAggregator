@@ -90,6 +90,7 @@ class IndustryFragment : Fragment() {
         binding.loadingLayout.visibility = View.GONE
         binding.contentLayout.visibility = View.GONE
         binding.noInternetLay.visibility = View.VISIBLE
+        keyBoardVisibility(false)
     }
 
     private fun showEmptyPlaceholder() {
@@ -98,6 +99,7 @@ class IndustryFragment : Fragment() {
         binding.loadingLayout.visibility = View.GONE
         binding.contentLayout.visibility = View.GONE
         binding.noInternetLay.visibility = View.GONE
+        keyBoardVisibility(false)
     }
 
     private fun showErrorPlaceholder() {
@@ -106,6 +108,7 @@ class IndustryFragment : Fragment() {
         binding.loadingLayout.visibility = View.GONE
         binding.contentLayout.visibility = View.GONE
         binding.noInternetLay.visibility = View.GONE
+        keyBoardVisibility(false)
     }
 
     private fun showLoading() {
@@ -114,6 +117,7 @@ class IndustryFragment : Fragment() {
         binding.emptyLayout.visibility = View.GONE
         binding.contentLayout.visibility = View.GONE
         binding.noInternetLay.visibility = View.GONE
+        keyBoardVisibility(false)
     }
 
     private fun showContent(industries: List<IndustryNested>, checkedIndustry: IndustryNested?) {
@@ -126,6 +130,7 @@ class IndustryFragment : Fragment() {
             industries,
             checkedIndustry
         )
+        keyBoardVisibility(false)
     }
 
     private fun setupSearchFilter() {
@@ -135,12 +140,11 @@ class IndustryFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.filterIndustries(s?.toString() ?: "")
+                viewModel.filterDebounce(s?.toString() ?: "")
             }
 
             override fun afterTextChanged(s: Editable?) {
                 updateSearchIcon(s.isNullOrBlank())
-                keyBoardVisibility(!s.isNullOrBlank())
             }
         })
         binding.clearSearchButton.setOnClickListener {

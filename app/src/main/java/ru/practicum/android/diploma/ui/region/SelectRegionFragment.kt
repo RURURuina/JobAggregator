@@ -28,7 +28,6 @@ class SelectRegionFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: android.os.Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         navBarVisible(false)
         prepareButtons()
         observeVieModel()
@@ -54,7 +53,6 @@ class SelectRegionFragment : Fragment() {
                 findNavController().navigate(R.id.action_selectRegionFragment_to_citySelectFragment)
             }
         }
-        binding.selectButton.isVisible = true
     }
 
     private fun observeVieModel() {
@@ -63,7 +61,10 @@ class SelectRegionFragment : Fragment() {
                 is SelectRegionFragmentState.Content -> {
                     fillCountryLayout(state.countryName)
                     fillAreaLayout(state.areaName)
+                    binding.selectButton.isVisible =
+                        state.countryName.isNullOrBlank() != true || state.areaName.isNullOrBlank() != true
                 }
+
                 SelectRegionFragmentState.Exit -> {
                     findNavController().popBackStack()
                 }
@@ -71,7 +72,7 @@ class SelectRegionFragment : Fragment() {
         }
     }
 
-    private fun fillCountryLayout(countryName: String?,) {
+    private fun fillCountryLayout(countryName: String?) {
         binding.country.text = countryName
         binding.countryTitle.isVisible = countryName != null
         binding.countryBtn.setImageResource(
@@ -86,11 +87,11 @@ class SelectRegionFragment : Fragment() {
                 binding.country.text = null
                 // то что сохранит во вьюмодели
                 viewModel.clearCountry()
+                viewModel.clearArea()
             } else {
                 findNavController().navigate(R.id.action_selectRegionFragment_to_selectCountryFragment)
             }
         }
-        binding.selectButton.isVisible = true
     }
 
     private fun prepareButtons() {

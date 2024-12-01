@@ -52,10 +52,6 @@ class SearchJobViewModel(
         loadVacancies()
     }
 
-    init {
-        getFilter()
-    }
-
     fun clearVacancies() {
         pushVacanciesState(VacanciesState.Start)
         currentPage = 0
@@ -83,12 +79,12 @@ class SearchJobViewModel(
     }
 
     private fun loadVacancies() {
-        isLoading = true
-        val params = createParams()
-        if (currentPage == 0) {
-            pushVacanciesState(VacanciesState.Loading)
-        }
-        if (currentQuery.isNotEmpty()) {
+        if (currentQuery.isNotBlank()) {
+            isLoading = true
+            val params = createParams()
+            if (currentPage == 0) {
+                pushVacanciesState(VacanciesState.Loading)
+            }
             viewModelScope.launch {
                 isLoading = true
                 try {
@@ -124,13 +120,10 @@ class SearchJobViewModel(
             "page" to currentPage.toString(),
             "per_page" to PAGE_SIZE.toString()
         ).apply {
-            val salary = _savedFilter.value?.salary ?: "0"
-            if (_savedFilter.value?.apply == true) {
-                _savedFilter.value?.regionId?.let { put("area", it) }
-                _savedFilter.value?.industryId?.let { put("industry", it) }
-                _savedFilter.value?.salary?.let { put("salary", salary) }
-                _savedFilter.value?.onlySalaryFlag?.let { put("only_with_salary", it.toString()) }
-            }
+            _savedFilter.value?.regionId?.let { put("area", it) }
+            _savedFilter.value?.industryId?.let { put("industry", it) }
+            _savedFilter.value?.salary?.let { put("salary", it) }
+            _savedFilter.value?.onlySalaryFlag?.let { put("only_with_salary", it.toString()) }
         }
     }
 
@@ -177,7 +170,12 @@ class SearchJobViewModel(
 
     fun getFilter() {
         viewModelScope.launch {
-            _savedFilter.value = filterInteractor.getFilter()
+            val filter = filterInteractor.getFilter()
+            _savedFilter.value = filter
+            if (filter?.apply == true) {
+                loadVacancies()
+                filterInteractor.saveFilter(filter.copy(apply = null))
+            }
         }
     }
 

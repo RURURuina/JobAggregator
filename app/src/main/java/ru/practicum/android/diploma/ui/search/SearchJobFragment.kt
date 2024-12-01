@@ -19,6 +19,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchJobBinding
 import ru.practicum.android.diploma.domain.models.entity.Vacancy
+import ru.practicum.android.diploma.domain.models.entity.isNotEmptyCheck
 import ru.practicum.android.diploma.presentation.card.vacancy.VacancyAdapter
 import ru.practicum.android.diploma.presentation.search.SearchJobViewModel
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
@@ -150,12 +151,12 @@ class SearchJobFragment : Fragment() {
                     keyBoardVisibility(false)
                     binding.bottomProgressBar.isVisible = false
                     binding.messageChip.isVisible = true
-                    state.totalCount?.let {
+                    state.totalCount?.let { count ->
                         binding.messageChip.text =
-                            context?.resources?.getQuantityString(
+                            requireContext().resources.getQuantityString(
                                 R.plurals.plurals_vacancies,
-                                state.totalCount,
-                                state.totalCount
+                                count,
+                                count
                             )
                     }
                 }
@@ -177,7 +178,7 @@ class SearchJobFragment : Fragment() {
 
         viewModel.savedFilter.observe(viewLifecycleOwner) { filter ->
             binding.filterImageButton.setImageResource(
-                if (filter?.apply == true) R.drawable.filter_on__24px else R.drawable.filter_off__24px
+                if (filter.isNotEmptyCheck()) R.drawable.filter_on__24px else R.drawable.filter_off__24px
             )
         }
     }
@@ -285,7 +286,6 @@ class SearchJobFragment : Fragment() {
             true -> inputMethodManager?.showSoftInput(binding.searchEditText, 0)
             else -> inputMethodManager?.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
         }
-
     }
 
     override fun onDestroyView() {
