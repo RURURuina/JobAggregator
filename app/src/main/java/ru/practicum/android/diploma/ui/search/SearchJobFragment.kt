@@ -286,7 +286,6 @@ class SearchJobFragment : Fragment() {
             true -> inputMethodManager?.showSoftInput(binding.searchEditText, 0)
             else -> inputMethodManager?.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
         }
-
     }
 
     override fun onDestroyView() {
