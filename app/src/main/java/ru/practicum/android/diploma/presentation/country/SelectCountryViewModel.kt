@@ -47,7 +47,6 @@ class SelectCountryViewModel(
                     industryId = filterShared?.industryId,
                     salary = filterShared?.salary,
                     onlySalaryFlag = filterShared?.onlySalaryFlag,
-                    apply = null
                 )
             )
             renderState(CountrySelectState.Exit)
