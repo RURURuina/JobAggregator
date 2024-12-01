@@ -89,12 +89,12 @@ class FiltrationFragment : Fragment() {
 
         // Кнопка назад
         binding.headerLayout.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
 
         // Картинка нопки назад
         binding.backBtn.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
 
         // Кнопка применить
@@ -106,17 +106,6 @@ class FiltrationFragment : Fragment() {
         // Кнопка сбросить
         binding.resetButton.setOnClickListener {
             viewModel.resetFilter()
-            findNavController().popBackStack()
-        }
-
-        // Кнопка сбросить место работы
-        binding.workPlaceBtn.setOnClickListener {
-            viewModel.resetWorkPlace()
-        }
-
-        // Кнопка сбросить отрасль
-        binding.industryBtn.setOnClickListener {
-            viewModel.resetIndustry()
         }
     }
 
@@ -139,16 +128,28 @@ class FiltrationFragment : Fragment() {
         if (binding.workPlace.text.isNotEmpty()) {
             binding.workPlaceTitle.isVisible = true
             binding.workPlaceBtn.setImageResource(R.drawable.close_24px)
+            binding.workPlaceBtn.setOnClickListener {
+                viewModel.resetWorkPlace()
+            }
         } else {
             binding.workPlaceTitle.isVisible = false
             binding.workPlaceBtn.setImageResource(R.drawable.arrow_forward_24px)
+            binding.workPlaceBtn.setOnClickListener {
+                findNavController().navigate(R.id.action_filtrationFragment_to_selectRegionFragment)
+            }
         }
         if (binding.industry.text.isNotEmpty()) {
             binding.industryTitle.isVisible = true
             binding.industryBtn.setImageResource(R.drawable.close_24px)
+            binding.industryBtn.setOnClickListener {
+                viewModel.resetIndustry()
+            }
         } else {
             binding.industryTitle.isVisible = false
             binding.industryBtn.setImageResource(R.drawable.arrow_forward_24px)
+            binding.industryBtn.setOnClickListener {
+                findNavController().navigate(R.id.action_filtrationFragment_to_industryFragment)
+            }
         }
     }
 

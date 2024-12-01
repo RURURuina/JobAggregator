@@ -52,10 +52,6 @@ class SearchJobViewModel(
         loadVacancies()
     }
 
-    init {
-        getFilter()
-    }
-
     fun clearVacancies() {
         pushVacanciesState(VacanciesState.Start)
         currentPage = 0
@@ -82,23 +78,25 @@ class SearchJobViewModel(
         _vacanciesState.postValue(state)
     }
 
-    private fun loadVacancies() {
-        isLoading = true
-        val params = createParams()
-        if (currentPage == 0) {
-            pushVacanciesState(VacanciesState.Loading)
-        }
-        if (currentQuery.isNotEmpty()) {
-            viewModelScope.launch {
-                isLoading = true
-                try {
-                    hhInteractor.getVacancies(params).collect { result ->
-                        handleResult(result)
-                        isLoading = false
+    fun loadVacancies() {
+        if (currentQuery.isNotBlank()) {
+            isLoading = true
+            val params = createParams()
+            if (currentPage == 0) {
+                pushVacanciesState(VacanciesState.Loading)
+            }
+            if (currentQuery.isNotEmpty()) {
+                viewModelScope.launch {
+                    isLoading = true
+                    try {
+                        hhInteractor.getVacancies(params).collect { result ->
+                            handleResult(result)
+                            isLoading = false
+                        }
+                    } catch (e: SocketTimeoutException) {
+                        handleErrorSocketTimeoutException(e)
+                        this.coroutineContext.job.cancel()
                     }
-                } catch (e: SocketTimeoutException) {
-                    handleErrorSocketTimeoutException(e)
-                    this.coroutineContext.job.cancel()
                 }
             }
         }
@@ -124,11 +122,10 @@ class SearchJobViewModel(
             "page" to currentPage.toString(),
             "per_page" to PAGE_SIZE.toString()
         ).apply {
-            val salary = _savedFilter.value?.salary ?: "0"
             if (_savedFilter.value?.apply == true) {
                 _savedFilter.value?.regionId?.let { put("area", it) }
                 _savedFilter.value?.industryId?.let { put("industry", it) }
-                _savedFilter.value?.salary?.let { put("salary", salary) }
+                _savedFilter.value?.salary?.let { put("salary", it) }
                 _savedFilter.value?.onlySalaryFlag?.let { put("only_with_salary", it.toString()) }
             }
         }

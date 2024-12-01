@@ -15,6 +15,9 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
         set(value) {
             _filterState.value = value
             field = value
+            viewModelScope.launch {
+                filterInteractor.saveFilter(filterShared)
+            }
         }
 
     fun loadSavedFilter() {
@@ -24,6 +27,11 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
     }
 
     fun changeSalary(salary: String?) {
+       val total= if (salary.isNullOrEmpty()){
+            null
+        }else{
+            salary
+        }
         filterShared = FilterShared(
             countryName = filterShared?.countryName,
             countryId = filterShared?.countryId,
@@ -31,9 +39,9 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             regionId = filterShared?.regionId,
             industryName = filterShared?.industryName,
             industryId = filterShared?.countryId,
-            salary = salary,
+            salary = total,
             onlySalaryFlag = filterShared?.onlySalaryFlag,
-            apply = filterShared?.apply
+            apply = null
         )
     }
 
@@ -47,21 +55,16 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             industryId = filterShared?.countryId,
             salary = filterShared?.salary,
             onlySalaryFlag = onlySalaryFlag,
-            apply = filterShared?.apply
+            apply = null
         )
     }
 
     fun saveFilter() {
-        viewModelScope.launch {
-            filterInteractor.saveFilter(filterShared?.copy(apply = true))
-        }
+        filterShared = filterShared?.copy(apply = true)
     }
 
     fun resetFilter() {
         filterShared = null
-        viewModelScope.launch {
-            filterInteractor.saveFilter(filterShared)
-        }
     }
 
     fun resetWorkPlace() {

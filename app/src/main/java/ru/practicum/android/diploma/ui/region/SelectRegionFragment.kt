@@ -35,6 +35,11 @@ class SelectRegionFragment : Fragment() {
         viewModel.getFilter()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getFilter()
+    }
+
     private fun fillAreaLayout(areaName: String?) {
         binding.area.text = areaName
         binding.areaTitle.isVisible = areaName != null
@@ -54,7 +59,6 @@ class SelectRegionFragment : Fragment() {
                 findNavController().navigate(R.id.action_selectRegionFragment_to_citySelectFragment)
             }
         }
-        binding.selectButton.isVisible = true
     }
 
     private fun observeVieModel() {
@@ -63,7 +67,10 @@ class SelectRegionFragment : Fragment() {
                 is SelectRegionFragmentState.Content -> {
                     fillCountryLayout(state.countryName)
                     fillAreaLayout(state.areaName)
+                    binding.selectButton.isVisible =
+                        state.countryName.isNullOrBlank() != true || state.areaName.isNullOrBlank() != true
                 }
+
                 SelectRegionFragmentState.Exit -> {
                     findNavController().popBackStack()
                 }
@@ -71,7 +78,7 @@ class SelectRegionFragment : Fragment() {
         }
     }
 
-    private fun fillCountryLayout(countryName: String?,) {
+    private fun fillCountryLayout(countryName: String?) {
         binding.country.text = countryName
         binding.countryTitle.isVisible = countryName != null
         binding.countryBtn.setImageResource(
@@ -90,7 +97,6 @@ class SelectRegionFragment : Fragment() {
                 findNavController().navigate(R.id.action_selectRegionFragment_to_selectCountryFragment)
             }
         }
-        binding.selectButton.isVisible = true
     }
 
     private fun prepareButtons() {

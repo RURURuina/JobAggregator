@@ -54,6 +54,7 @@ class SearchJobFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.getFilter()
+        viewModel.loadVacancies()
     }
 
     private fun prepareFilterButton() {
@@ -150,12 +151,12 @@ class SearchJobFragment : Fragment() {
                     keyBoardVisibility(false)
                     binding.bottomProgressBar.isVisible = false
                     binding.messageChip.isVisible = true
-                    state.totalCount?.let {
+                    state.totalCount?.let {count ->
                         binding.messageChip.text =
                             requireContext().resources.getQuantityString(
                                 R.plurals.plurals_vacancies,
-                                state.totalCount,
-                                state.totalCount
+                                count,
+                                count
                             )
                     }
                 }
