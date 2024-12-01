@@ -152,7 +152,7 @@ class SearchJobFragment : Fragment() {
                     binding.messageChip.isVisible = true
                     state.totalCount?.let {
                         binding.messageChip.text =
-                            context?.resources?.getQuantityString(
+                            requireContext().resources.getQuantityString(
                                 R.plurals.plurals_vacancies,
                                 state.totalCount,
                                 state.totalCount
