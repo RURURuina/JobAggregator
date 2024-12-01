@@ -7,29 +7,31 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.filter.FilterInteractor
 import ru.practicum.android.diploma.domain.models.entity.FilterShared
+import ru.practicum.android.diploma.util.debounce
 
 class FiltrationViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
     private val _filterState = MutableLiveData<FilterShared?>()
     val filterState: LiveData<FilterShared?> = _filterState
     private var filterShared: FilterShared? = null
-        set(value) {
-            _filterState.value = value
-            field = value
-            viewModelScope.launch {
-                filterInteractor.saveFilter(filterShared)
-            }
-        }
+    val salaryDebounce = debounce<String?>(
+        DEBOUNCE_SALARY_INPUT,
+        viewModelScope,
+        true
+    ) { string ->
+        changeSalary(string)
+    }
 
     fun loadSavedFilter() {
         viewModelScope.launch {
             filterShared = filterInteractor.getFilter()
+            _filterState.value = filterShared
         }
     }
 
-    fun changeSalary(salary: String?) {
-       val total= if (salary.isNullOrEmpty()){
+   private fun changeSalary(salary: String?) {
+        val total = if (salary.isNullOrEmpty()) {
             null
-        }else{
+        } else {
             salary
         }
         filterShared = FilterShared(
@@ -41,7 +43,9 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             industryId = filterShared?.countryId,
             salary = total,
             onlySalaryFlag = filterShared?.onlySalaryFlag,
+            apply = null
         )
+        _filterState.value = filterShared
     }
 
     fun checkingOnlySalaryFlag(onlySalaryFlag: Boolean) {
@@ -54,15 +58,23 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             industryId = filterShared?.countryId,
             salary = filterShared?.salary,
             onlySalaryFlag = onlySalaryFlag,
+            apply = null
         )
+        _filterState.value = filterShared
     }
 
     fun saveFilter() {
-        filterShared = filterShared
+        filterShared = filterShared?.copy(apply = true)
+        viewModelScope.launch {
+            filterInteractor.saveFilter(filterShared)
+        }
     }
 
     fun resetFilter() {
         filterShared = null
+        viewModelScope.launch {
+            filterInteractor.saveFilter(filterShared)
+        }
     }
 
     fun resetWorkPlace() {
@@ -75,7 +87,12 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             industryId = filterShared?.countryId,
             salary = filterShared?.salary,
             onlySalaryFlag = filterShared?.onlySalaryFlag,
+            apply = filterShared?.apply
         )
+        viewModelScope.launch {
+            filterInteractor.saveFilter(filterShared)
+        }
+        _filterState.value = filterShared
     }
 
     fun resetIndustry() {
@@ -88,7 +105,15 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             industryName = null,
             salary = filterShared?.salary,
             onlySalaryFlag = filterShared?.onlySalaryFlag,
+            apply = filterShared?.apply
         )
+        viewModelScope.launch {
+            filterInteractor.saveFilter(filterShared)
+        }
+        _filterState.value = filterShared
     }
 
+    private companion object {
+        const val DEBOUNCE_SALARY_INPUT = 600L
+    }
 }

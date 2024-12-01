@@ -9,4 +9,5 @@ data class FilterShared(
     val industryId: String?,
     val salary: String?,
     val onlySalaryFlag: Boolean?,
+    val apply: Boolean?
 )

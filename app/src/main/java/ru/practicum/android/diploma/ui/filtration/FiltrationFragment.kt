@@ -32,10 +32,10 @@ class FiltrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navBarVisible(false)
         // Загрузка сохраненного фильтра
-        viewModel.loadSavedFilter()
         setupObservers()
         setupListeners()
         prepareButtons()
+        viewModel.loadSavedFilter()
     }
 
     private fun setupObservers() {
@@ -73,7 +73,7 @@ class FiltrationFragment : Fragment() {
     private fun setupListeners() {
         // Слушатель изменения зарплаты
         binding.etInputSalary.doAfterTextChanged { text ->
-            viewModel.changeSalary(text.toString())
+            viewModel.salaryDebounce(text.toString())
             binding.clearSalaryButton.isVisible = text?.isBlank() != true
             binding.hintTitle.isActivated = text?.isBlank() != true
         }

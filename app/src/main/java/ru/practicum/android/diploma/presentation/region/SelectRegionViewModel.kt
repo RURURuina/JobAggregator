@@ -16,27 +16,25 @@ class SelectRegionViewModel(
     private val _state = MutableLiveData<SelectRegionFragmentState>()
     val state: LiveData<SelectRegionFragmentState> = _state
     private var filterShared: FilterShared? = null
-        set(value) {
-            pushState(
-                SelectRegionFragmentState.Content(
-                    value?.countryName,
-                    value?.regionName,
-                    value?.countryId
-                )
-            )
-            field = value
-        }
 
     fun getFilter() {
         viewModelScope.launch {
             if (firstStart) {
                 firstStart = false
                 filterShared = filterInteractor.getFilter()
+
                 filterInteractor.saveTempFilter(filterShared)
             } else {
                 firstStart = false
                 filterShared = filterInteractor.getTempFilter()
             }
+            pushState(
+                SelectRegionFragmentState.Content(
+                    filterShared?.countryName,
+                    filterShared?.regionName,
+                    filterShared?.countryId
+                )
+            )
         }
     }
 
@@ -44,26 +42,43 @@ class SelectRegionViewModel(
         filterShared = filterShared?.copy(
             countryName = null,
             countryId = null,
+            regionId = null,
+            regionName = null,
+            apply = null
         )
         viewModelScope.launch {
             filterInteractor.saveTempFilter(filterShared)
         }
+        pushState(
+            SelectRegionFragmentState.Content(
+                filterShared?.countryName,
+                filterShared?.regionName,
+                filterShared?.countryId
+            )
+        )
     }
 
     fun clearArea() {
         filterShared = filterShared?.copy(
             regionId = null,
             regionName = null,
+            apply = null
         )
         viewModelScope.launch {
             filterInteractor.saveTempFilter(filterShared)
         }
+        pushState(
+            SelectRegionFragmentState.Content(
+                filterShared?.countryName,
+                filterShared?.regionName,
+                filterShared?.countryId
+            )
+        )
     }
 
     fun saveExit() {
         viewModelScope.launch {
-            filterInteractor.saveTempFilter(null)
-            filterInteractor.saveFilter(filterShared)
+            filterInteractor.saveFilter(filterShared?.copy(apply = null))
             pushState(SelectRegionFragmentState.Exit)
         }
     }

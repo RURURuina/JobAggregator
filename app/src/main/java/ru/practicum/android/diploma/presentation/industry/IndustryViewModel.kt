@@ -25,7 +25,7 @@ class IndustryViewModel(
     private val _industriesState = MutableLiveData<IndustryFragmentState>()
     val industries: LiveData<IndustryFragmentState> = _industriesState
     private var selectedIndustry: IndustryNested? = null
-     val filterDebounce = debounce<String>(
+    val filterDebounce = debounce<String>(
         delayMillis = DEBOUNCE_FILTER_TIME,
         coroutineScope = viewModelScope,
         useLastParam = true
@@ -50,6 +50,7 @@ class IndustryViewModel(
                     industryId = selectedIndustry?.id,
                     salary = filterShared?.salary,
                     onlySalaryFlag = filterShared?.onlySalaryFlag,
+                    apply = null
                 )
             )
         }
@@ -125,7 +126,7 @@ class IndustryViewModel(
         _industriesState.value = state
     }
 
-    private companion object{
-        const val DEBOUNCE_FILTER_TIME= 1000L
+    private companion object {
+        const val DEBOUNCE_FILTER_TIME = 1000L
     }
 }

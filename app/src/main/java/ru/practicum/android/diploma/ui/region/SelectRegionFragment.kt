@@ -93,6 +93,7 @@ class SelectRegionFragment : Fragment() {
                 binding.country.text = null
                 // то что сохранит во вьюмодели
                 viewModel.clearCountry()
+                viewModel.clearArea()
             } else {
                 findNavController().navigate(R.id.action_selectRegionFragment_to_selectCountryFragment)
             }
