@@ -35,24 +35,17 @@ class SelectCountryViewModel(
 
     private fun saveToFilter(country: Country) {
         viewModelScope.launch {
-            filterShared?.let { filterShared ->
-                filterInteractor.saveFilter(
-                    filterShared.copy(
-                        countryId = country.id,
-                        countryName = country.name,
-                    )
-                )
-            } ?: filterInteractor.saveFilter(
+            filterInteractor.saveTempFilter(
                 FilterShared(
                     countryId = country.id,
                     countryName = country.name,
                     regionId = null,
                     regionName = null,
-                    industryName = null,
-                    industryId = null,
-                    salary = null,
-                    onlySalaryFlag = false,
-                    apply = null
+                    industryName = filterShared?.industryName,
+                    industryId = filterShared?.industryId,
+                    salary = filterShared?.salary,
+                    onlySalaryFlag = filterShared?.onlySalaryFlag,
+                    apply = filterShared?.apply
                 )
             )
             renderState(CountrySelectState.Exit)

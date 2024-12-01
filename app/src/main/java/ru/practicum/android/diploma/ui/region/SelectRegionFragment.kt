@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.bundle.Bundle
-import androidx.core.bundle.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -14,7 +13,6 @@ import ru.practicum.android.diploma.databinding.FragmentSelectRegionBinding
 import ru.practicum.android.diploma.presentation.region.SelectRegionViewModel
 import ru.practicum.android.diploma.ui.region.model.SelectRegionFragmentState
 import ru.practicum.android.diploma.ui.root.RootActivity
-import ru.practicum.android.diploma.ui.root.RootActivity.Companion.COUNTRY_TRANSFER_KEY
 
 class SelectRegionFragment : Fragment() {
     private val viewModel: SelectRegionViewModel by viewModel()
@@ -37,8 +35,7 @@ class SelectRegionFragment : Fragment() {
         viewModel.getFilter()
     }
 
-    private fun fillAreaLayout(areaName: String?, countryId: String?) {
-        val bundle = bundleOf(COUNTRY_TRANSFER_KEY to countryId.toString())
+    private fun fillAreaLayout(areaName: String?) {
         binding.area.text = areaName
         binding.areaTitle.isVisible = areaName != null
         binding.areaButton.setImageResource(
@@ -53,12 +50,11 @@ class SelectRegionFragment : Fragment() {
                 binding.area.text = null
                 // то что сохранит во вьюмодели
                 viewModel.clearArea()
+            } else {
+                findNavController().navigate(R.id.action_selectRegionFragment_to_citySelectFragment)
             }
-            binding.selectButton.isVisible = true
         }
-        binding.regionLayout.setOnClickListener {
-            findNavController().navigate(R.id.action_selectRegionFragment_to_citySelectFragment, bundle)
-        }
+        binding.selectButton.isVisible = true
     }
 
     private fun observeVieModel() {
@@ -66,9 +62,8 @@ class SelectRegionFragment : Fragment() {
             when (state) {
                 is SelectRegionFragmentState.Content -> {
                     fillCountryLayout(state.countryName)
-                    fillAreaLayout(state.areaName, state.countryId)
+                    fillAreaLayout(state.areaName)
                 }
-
                 SelectRegionFragmentState.Exit -> {
                     findNavController().popBackStack()
                 }
@@ -76,7 +71,7 @@ class SelectRegionFragment : Fragment() {
         }
     }
 
-    private fun fillCountryLayout(countryName: String?) {
+    private fun fillCountryLayout(countryName: String?,) {
         binding.country.text = countryName
         binding.countryTitle.isVisible = countryName != null
         binding.countryBtn.setImageResource(
@@ -94,8 +89,8 @@ class SelectRegionFragment : Fragment() {
             } else {
                 findNavController().navigate(R.id.action_selectRegionFragment_to_selectCountryFragment)
             }
-            binding.selectButton.isVisible = true
         }
+        binding.selectButton.isVisible = true
     }
 
     private fun prepareButtons() {
@@ -105,15 +100,18 @@ class SelectRegionFragment : Fragment() {
         binding.countryLayout.setOnClickListener {
             findNavController().navigate(R.id.action_selectRegionFragment_to_selectCountryFragment)
         }
-
         binding.backLay.setOnClickListener {
             findNavController().popBackStack()
         }
-
         binding.backBtn.setOnClickListener {
             findNavController().popBackStack()
         }
-
+        binding.countryBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_selectRegionFragment_to_selectCountryFragment)
+        }
+        binding.areaButton.setOnClickListener {
+            findNavController().navigate(R.id.action_selectRegionFragment_to_citySelectFragment)
+        }
         binding.selectButton.setOnClickListener {
             viewModel.saveExit()
         }
