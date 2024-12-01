@@ -40,7 +40,7 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             regionName = filterShared?.regionName,
             regionId = filterShared?.regionId,
             industryName = filterShared?.industryName,
-            industryId = filterShared?.countryId,
+            industryId = filterShared?.industryId,
             salary = total,
             onlySalaryFlag = filterShared?.onlySalaryFlag,
         )
@@ -54,7 +54,7 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             regionName = filterShared?.regionName,
             regionId = filterShared?.regionId,
             industryName = filterShared?.industryName,
-            industryId = filterShared?.countryId,
+            industryId = filterShared?.industryId,
             salary = filterShared?.salary,
             onlySalaryFlag = onlySalaryFlag,
         )
@@ -81,7 +81,7 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
             regionId = null,
             regionName = null,
             industryName = filterShared?.industryName,
-            industryId = filterShared?.countryId,
+            industryId = filterShared?.industryId,
             salary = filterShared?.salary,
             onlySalaryFlag = filterShared?.onlySalaryFlag,
         )
