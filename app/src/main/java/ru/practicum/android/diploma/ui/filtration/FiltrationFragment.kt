@@ -66,7 +66,7 @@ class FiltrationFragment : Fragment() {
     }
 
     private fun setApplyResetButtonsVis(isAnyFieldFilled: Boolean) {
-        binding.submitButton.isVisible = true
+        binding.submitButton.isVisible = isAnyFieldFilled
         binding.resetButton.isVisible = isAnyFieldFilled
     }
 
