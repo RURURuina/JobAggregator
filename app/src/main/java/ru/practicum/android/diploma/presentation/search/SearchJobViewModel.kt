@@ -82,9 +82,7 @@ class SearchJobViewModel(
         if (currentQuery.isNotBlank()) {
             isLoading = true
             val params = createParams()
-            if (currentPage == 0) {
                 pushVacanciesState(VacanciesState.Loading)
-            }
             viewModelScope.launch {
                 isLoading = true
                 try {
