@@ -28,6 +28,9 @@ class SelectCountryViewModel(
 
     init {
         getCountries()
+        viewModelScope.launch {
+            filterShared = filterInteractor.getTempFilter()
+        }
     }
 
     fun chooseCountry() = { country: Area ->
