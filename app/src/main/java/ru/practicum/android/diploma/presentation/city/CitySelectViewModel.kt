@@ -177,7 +177,6 @@ class CitySelectViewModel(
         }
     }
 
-
     private companion object {
         private const val DEBOUNCE_FILTER_TIME = 2000L
     }
