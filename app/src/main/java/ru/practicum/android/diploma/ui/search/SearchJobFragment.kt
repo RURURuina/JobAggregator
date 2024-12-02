@@ -115,7 +115,6 @@ class SearchJobFragment : Fragment() {
                         val itemsCount = vacancyAdapter.itemCount
                         if (pos >= itemsCount - 1) {
                             viewModel.loadNextPage()
-                            binding.bottomProgressBar.isVisible = true
                         }
                     }
                 }
@@ -140,16 +139,15 @@ class SearchJobFragment : Fragment() {
                 }
 
                 is VacanciesState.Error -> {
-                    hideCentralProgressBar()
+                    hideProgressBar()
                     showError(state.responseState)
                     keyBoardVisibility(false)
                 }
 
                 is VacanciesState.Success -> {
-                    hideCentralProgressBar()
+                    hideProgressBar()
                     updateRecyclerView(state.vacancies)
                     keyBoardVisibility(false)
-                    binding.bottomProgressBar.isVisible = false
                     binding.messageChip.isVisible = true
                     state.totalCount?.let { count ->
                         binding.messageChip.text =
@@ -162,7 +160,7 @@ class SearchJobFragment : Fragment() {
                 }
 
                 VacanciesState.Empty -> {
-                    hideCentralProgressBar()
+                    hideProgressBar()
                     showEmptyState()
                     keyBoardVisibility(false)
                     binding.messageChip.isVisible = true
@@ -208,8 +206,10 @@ class SearchJobFragment : Fragment() {
         binding.vacanciesRecyclerView.visibility = View.GONE
     }
 
-    private fun hideCentralProgressBar() {
+    private fun hideProgressBar() {
         binding.progressBar.visibility = View.GONE
+        binding.bottomProgressBar.isVisible = false
+
     }
 
     private fun showError(responseState: ResponseStatusCode?) {
