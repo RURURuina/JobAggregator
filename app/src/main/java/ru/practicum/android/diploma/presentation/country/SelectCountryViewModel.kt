@@ -73,8 +73,9 @@ class SelectCountryViewModel(
                             if (resource.data.isNullOrEmpty()) {
                                 renderState(CountrySelectState.Empty)
                             } else {
-                                countriesList.addAll(resource.data)
-                                renderState(CountrySelectState.Success(resource.data))
+                                val sortedCountryList = resource.data.sortedBy { it.id == OTHERS_REGIONS_ID }
+                                countriesList.addAll(sortedCountryList)
+                                renderState(CountrySelectState.Success(sortedCountryList))
                             }
                         }
                     }
@@ -89,5 +90,9 @@ class SelectCountryViewModel(
 
     private fun renderState(state: CountrySelectState) {
         _countrySelectState.postValue(state)
+    }
+
+    companion object {
+        private const val OTHERS_REGIONS_ID = "1001"
     }
 }
