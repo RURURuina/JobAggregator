@@ -12,6 +12,7 @@ import ru.practicum.android.diploma.domain.api.hh.HhInteractor
 import ru.practicum.android.diploma.domain.models.entity.Area
 import ru.practicum.android.diploma.domain.models.entity.FilterShared
 import ru.practicum.android.diploma.ui.country.model.CountrySelectState
+import ru.practicum.android.diploma.ui.root.RootActivity.Companion.NOT_DESIRED_AREA_KEY
 import ru.practicum.android.diploma.util.Resource
 import ru.practicum.android.diploma.util.ResponseStatusCode
 import java.net.SocketTimeoutException
@@ -74,7 +75,7 @@ class SelectCountryViewModel(
                             if (resource.data.isNullOrEmpty()) {
                                 renderState(CountrySelectState.Empty)
                             } else {
-                                val sortedCountryList = resource.data.sortedBy { it.id == OTHERS_REGIONS_ID }
+                                val sortedCountryList = resource.data.sortedBy { it.id == NOT_DESIRED_AREA_KEY }
                                 countriesList.addAll(sortedCountryList)
                                 renderState(CountrySelectState.Success(sortedCountryList))
                             }
@@ -91,9 +92,5 @@ class SelectCountryViewModel(
 
     private fun renderState(state: CountrySelectState) {
         _countrySelectState.postValue(state)
-    }
-
-    companion object {
-        private const val OTHERS_REGIONS_ID = "1001"
     }
 }
