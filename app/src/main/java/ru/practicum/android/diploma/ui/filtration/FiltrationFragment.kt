@@ -45,7 +45,7 @@ class FiltrationFragment : Fragment() {
                 ", $regionName"
             }.orEmpty()
             val countryName = filter?.countryName.orEmpty()
-            binding.workPlace.text = "$countryName$regionName"
+            binding.workPlace.text = getString(R.string.work_place_mask, countryName, regionName)
 
             binding.industry.text = filter?.industryName.orEmpty()
             if (binding.etInputSalary.text.toString() != filter?.salary.orEmpty()) {
