@@ -52,7 +52,7 @@ class FiltrationViewModel(private val filterInteractor: FilterInteractor) : View
     }
 
     fun checkingOnlySalaryFlag(onlySalaryFlag: Boolean) {
-        val salary =  if (!onlySalaryFlag) {
+        val salary = if (!onlySalaryFlag) {
             null
         } else {
             onlySalaryFlag

@@ -173,6 +173,12 @@ class SearchJobViewModel(
             val filter = filterInteractor.getFilter()
             _savedFilter.value = filter
             if (filter?.apply == true) {
+                pushVacanciesState(VacanciesState.Start)
+                currentPage = 0
+                maxPage = 0
+                isLastPage = false
+                isLoading = false
+                vacanciesList.clear()
                 loadVacancies()
                 filterInteractor.saveFilter(filter.copy(apply = null))
             }
