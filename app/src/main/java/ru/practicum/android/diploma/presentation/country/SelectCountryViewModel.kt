@@ -58,6 +58,7 @@ class SelectCountryViewModel(
 
     private fun getCountries() {
         viewModelScope.launch {
+            renderState(CountrySelectState.Loading)
             try {
                 hhInteractor.searchCountries().collect { resource ->
                     when (resource) {

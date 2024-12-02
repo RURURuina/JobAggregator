@@ -35,6 +35,7 @@ class CitySelectViewModel(
 
     fun getAreas() {
         viewModelScope.launch {
+            pushState(CitySelectState.Loading)
             filterShared = filterInteractor.getTempFilter()
             val filterCountryId = filterShared?.countryId
             if (filterCountryId != null) {
