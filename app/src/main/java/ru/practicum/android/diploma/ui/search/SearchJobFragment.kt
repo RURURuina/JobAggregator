@@ -78,7 +78,7 @@ class SearchJobFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 updateSearchIcon(s.isNullOrEmpty())
-                if (!s.isNullOrBlank()) {
+                if (!s.isNullOrEmpty()) {
                     viewModel.searchDebounce(s.toString())
                 }
             }

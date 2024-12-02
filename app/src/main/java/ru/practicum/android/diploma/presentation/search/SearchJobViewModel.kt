@@ -99,7 +99,7 @@ class SearchJobViewModel(
     }
 
     fun searchDebounce(changedText: String?) {
-        if (changedText != null) {
+        if (!changedText.isNullOrBlank()) {
             searchDebounce.invoke(changedText)
         }
     }
