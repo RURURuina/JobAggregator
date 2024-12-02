@@ -88,7 +88,9 @@ class CitySelectViewModel(
                                 pushState(CitySelectState.Empty)
                             } else {
                                 areasList.addAll(resource.data)
-                                pushState(CitySelectState.Content(areasList))
+                                pushState(CitySelectState.Content(areasList.sortedBy { area: Area ->
+                                    area.id
+                                }))
                             }
                         }
 
@@ -124,7 +126,11 @@ class CitySelectViewModel(
                                 pushState(CitySelectState.Empty)
                             } else {
                                 areasList.addAll(resource.data)
-                                pushState(CitySelectState.Content(areasList))
+                                pushState(
+                                    CitySelectState.Content(areasList.sortedBy { area: Area ->
+                                        area.id
+                                    })
+                                )
                             }
                         }
 
@@ -164,10 +170,13 @@ class CitySelectViewModel(
             )
         } else {
             pushState(
-                CitySelectState.Content(filteredRegions)
+                CitySelectState.Content(filteredRegions.sortedBy { area: Area ->
+                    area.id
+                })
             )
         }
     }
+
 
     private companion object {
         private const val DEBOUNCE_FILTER_TIME = 2000L
