@@ -79,7 +79,7 @@ class SearchJobFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 updateSearchIcon(s.isNullOrEmpty())
                 if (!s.isNullOrEmpty()) {
-                    viewModel.searchDebounce(s.toString())
+                    viewModel.searchDebounced(s.toString().trim())
                 }
             }
 
@@ -87,7 +87,6 @@ class SearchJobFragment : Fragment() {
                 if (s?.isEmpty() == true) {
                     viewModel.clearVacancies()
                 }
-                binding.searchLayout.isVisible = s.isNullOrEmpty()
             }
         })
 
@@ -183,6 +182,7 @@ class SearchJobFragment : Fragment() {
 
     private fun clearRecyclerView() {
         updateRecyclerView(emptyList())
+        binding.vacanciesRecyclerView.isVisible = false
         showHiddenState()
     }
 

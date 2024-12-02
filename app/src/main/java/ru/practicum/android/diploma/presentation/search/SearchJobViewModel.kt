@@ -79,10 +79,10 @@ class SearchJobViewModel(
     }
 
     private fun loadVacancies() {
-        if (currentQuery.isNotBlank()) {
+        if (currentQuery.trim().isNotEmpty()) {
             isLoading = true
             val params = createParams()
-                pushVacanciesState(VacanciesState.Loading)
+            pushVacanciesState(VacanciesState.Loading)
             viewModelScope.launch {
                 isLoading = true
                 try {
@@ -98,15 +98,15 @@ class SearchJobViewModel(
         }
     }
 
-    fun searchDebounce(changedText: String?) {
-        if (!changedText.isNullOrBlank()) {
-            searchDebounce.invoke(changedText)
+    fun searchDebounced(changedText: String?) {
+        if (!changedText.isNullOrEmpty()) {
+            searchDebounce(changedText)
         }
     }
 
     // Ф-ия для Fragment для загрузки следующей страницы
     fun loadNextPage() {
-        if (!isLoading && !isLastPage && currentQuery.isNotBlank()) {
+        if (!isLoading && !isLastPage && currentQuery.isNotEmpty()) {
             isLoading = true
             loadPerPageDebounce(currentPage)
         }
