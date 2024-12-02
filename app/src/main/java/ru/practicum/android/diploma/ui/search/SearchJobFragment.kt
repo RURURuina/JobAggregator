@@ -132,9 +132,9 @@ class SearchJobFragment : Fragment() {
                         binding.bottomProgressBar.isVisible = true
                     } else {
                         showTopProgressBar()
+                        binding.messageChip.isVisible = false
                     }
                     keyBoardVisibility(false)
-                    binding.messageChip.isVisible = false
                 }
 
                 is VacanciesState.Error -> {
