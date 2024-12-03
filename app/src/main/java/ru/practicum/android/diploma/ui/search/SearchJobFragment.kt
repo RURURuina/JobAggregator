@@ -102,7 +102,6 @@ class SearchJobFragment : Fragment() {
         binding.vacanciesRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = vacancyAdapter
-
             scrollListener?.let { removeOnScrollListener(it) }
             scrollListener = object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
