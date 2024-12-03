@@ -192,7 +192,7 @@ class SearchJobFragment : Fragment() {
 
     private fun updateSearchIcon(isEmpty: Boolean) {
         binding.clearSearchButton.setImageResource(
-            if (isEmpty) R.drawable.search_24px else R.drawable.close_24px
+            if (isEmpty) R.drawable.search_24px else R.drawable.close
         )
     }
 
