@@ -18,7 +18,6 @@ import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.presentation.details.DetailsFragmentViewModel
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
 import ru.practicum.android.diploma.ui.root.RootActivity
-import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
 import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.fillBy
 import ru.practicum.android.diploma.util.format
@@ -70,7 +69,7 @@ class DetailsFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel.getVacancy(arguments?.getString(VACANCY_TRANSFER_KEY))
+        viewModel.getVacancy("arguments?.getString(VACANCY_TRANSFER_KEY)")
         progressBarVisible(true)
     }
 
@@ -85,12 +84,17 @@ class DetailsFragment : Fragment() {
             is DetailsFragmentState.Content -> {
                 showContent(state.vacancy)
                 this.binding.errorServer.isVisible = false
-                this.binding.errorLayout.isVisible = false
+                this.binding.errorLayoutEmpty.isVisible = false
             }
 
-            is DetailsFragmentState.ERROR -> {
+            is DetailsFragmentState.Error -> {
                 progressBarVisible(false)
                 renderError(state.errState)
+            }
+
+            DetailsFragmentState.Empty -> {
+                this.binding.errorLayoutEmpty.isVisible = true
+                this.binding.content.isVisible = false
             }
         }
     }
@@ -108,7 +112,7 @@ class DetailsFragment : Fragment() {
             }
 
             ResponseStatusCode.Ok -> {
-                this.binding.errorLayout.isVisible = true
+                this.binding.errorLayoutEmpty.isVisible = true
                 this.binding.content.isVisible = false
             }
 

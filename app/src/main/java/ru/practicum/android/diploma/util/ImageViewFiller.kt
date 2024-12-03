@@ -14,8 +14,6 @@ fun ImageView.fillBy(
 ): ViewTarget<ImageView, Drawable> {
     return Glide.with(context)
         .load(uri)
-        .diskCacheStrategy(DiskCacheStrategy.NONE)
-        .skipMemoryCache(true)
         .placeholder(R.drawable.placeholder_recycleview)
         .fitCenter()
         .into(this)
