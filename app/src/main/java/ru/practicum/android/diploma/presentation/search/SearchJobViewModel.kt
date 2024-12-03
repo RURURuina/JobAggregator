@@ -66,7 +66,7 @@ class SearchJobViewModel(
     // эта ф-ия берет запрос из EditText и запрашивает данные с сервека через hhInteractor
     private fun searchVacancies(query: String) {
         if (currentQuery != query) {
-            println("current: $currentQuery, query: $query")
+            pushVacanciesState(VacanciesState.Start)
             currentPage = 0
             maxPage = 0
             isLastPage = false
@@ -77,7 +77,7 @@ class SearchJobViewModel(
     }
 
     private fun pushVacanciesState(state: VacanciesState) {
-        _vacanciesState.postValue(state)
+        _vacanciesState.value = state
     }
 
     private fun loadVacancies() {
@@ -173,7 +173,6 @@ class SearchJobViewModel(
             val filter = filterInteractor.getFilter()
             _savedFilter.value = filter
             if (filter?.apply == true) {
-                pushVacanciesState(VacanciesState.Start)
                 currentPage = 0
                 maxPage = 0
                 isLastPage = false

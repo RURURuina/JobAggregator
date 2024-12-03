@@ -127,6 +127,7 @@ class SearchJobFragment : Fragment() {
         viewModel.vacanciesState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 VacanciesState.Loading -> {
+                    binding.searchLayout.isVisible = false
                     val itemsCount = binding.vacanciesRecyclerView.childCount
                     if (itemsCount > 0) {
                         binding.bottomProgressBar.isVisible = true
@@ -166,7 +167,7 @@ class SearchJobFragment : Fragment() {
                     binding.messageChip.text = context?.getString(R.string.no_such_vacancies)
                 }
 
-                is VacanciesState.Start -> {
+                 VacanciesState.Start -> {
                     clearRecyclerView()
                     binding.messageChip.isVisible = false
                 }
@@ -181,7 +182,6 @@ class SearchJobFragment : Fragment() {
     }
 
     private fun clearRecyclerView() {
-        updateRecyclerView(emptyList())
         binding.vacanciesRecyclerView.isVisible = false
         showHiddenState()
     }
@@ -193,17 +193,18 @@ class SearchJobFragment : Fragment() {
     }
 
     private fun showHiddenState() {
-        binding.searchLayout.visibility = View.VISIBLE
         binding.errorLayout.visibility = View.GONE
         binding.noJobsLayout.visibility = View.GONE
+        binding.vacanciesRecyclerView.isVisible = false
+        binding.searchLayout.visibility = View.VISIBLE
     }
 
     private fun showTopProgressBar() {
-        binding.progressBar.visibility = View.VISIBLE
-        binding.searchLayout.visibility = View.GONE
+        binding.searchLayout.isVisible = false
         binding.errorLayout.visibility = View.GONE
         binding.noJobsLayout.visibility = View.GONE
         binding.vacanciesRecyclerView.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
     }
 
     private fun hideProgressBar() {
