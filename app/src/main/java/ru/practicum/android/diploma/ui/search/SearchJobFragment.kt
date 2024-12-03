@@ -132,6 +132,11 @@ class SearchJobFragment : Fragment() {
                     if (itemsCount > 0) {
                         binding.bottomProgressBar.isVisible = true
                     } else {
+                        binding.vacanciesRecyclerView.visibility = View.GONE
+                        vacancyAdapter.run {
+                            submitList(null)
+                            notifyDataSetChanged()
+                        }
                         showTopProgressBar()
                         binding.messageChip.isVisible = false
                     }
@@ -167,7 +172,7 @@ class SearchJobFragment : Fragment() {
                     binding.messageChip.text = context?.getString(R.string.no_such_vacancies)
                 }
 
-                 VacanciesState.Start -> {
+                VacanciesState.Start -> {
                     clearRecyclerView()
                     binding.messageChip.isVisible = false
                 }
