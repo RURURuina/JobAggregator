@@ -52,7 +52,6 @@ class IndustryFragment : Fragment() {
     private fun setupUI() {
         binding.back.setOnClickListener {
             findNavController().popBackStack()
-            // viewModel.saveFilter() // в части изменения логики экрана надо будет поправить
         }
 
         binding.backBtn.setOnClickListener {
