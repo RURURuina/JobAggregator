@@ -18,6 +18,7 @@ import ru.practicum.android.diploma.domain.models.entity.Vacancy
 import ru.practicum.android.diploma.presentation.details.DetailsFragmentViewModel
 import ru.practicum.android.diploma.ui.details.models.DetailsFragmentState
 import ru.practicum.android.diploma.ui.root.RootActivity
+import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
 import ru.practicum.android.diploma.util.ResponseStatusCode
 import ru.practicum.android.diploma.util.fillBy
 import ru.practicum.android.diploma.util.format
@@ -69,7 +70,7 @@ class DetailsFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel.getVacancy("arguments?.getString(VACANCY_TRANSFER_KEY)")
+        viewModel.getVacancy(arguments?.getString(VACANCY_TRANSFER_KEY))
         progressBarVisible(true)
     }
 
