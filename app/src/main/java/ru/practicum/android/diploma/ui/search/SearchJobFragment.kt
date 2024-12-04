@@ -85,6 +85,7 @@ class SearchJobFragment : Fragment() {
                 if (s?.isEmpty() == true) {
                     viewModel.clearVacancies()
                 }
+                binding.vacanciesRecyclerView.scrollToPosition(0)
             }
         })
 
@@ -93,7 +94,6 @@ class SearchJobFragment : Fragment() {
             binding.progressBar.isVisible = false
             binding.bottomProgressBar.isVisible = false
             viewModel.clearVacancies()
-            binding.vacanciesRecyclerView.scrollToPosition(0)
         }
     }
 
