@@ -90,6 +90,7 @@ class SearchJobFragment : Fragment() {
 
         binding.clearSearchButton.setOnClickListener {
             binding.searchEditText.text?.clear()
+            binding.searchEditText.clearFocus()
             binding.progressBar.isVisible = false
             binding.bottomProgressBar.isVisible = false
             binding.vacanciesRecyclerView.scrollToPosition(0)
