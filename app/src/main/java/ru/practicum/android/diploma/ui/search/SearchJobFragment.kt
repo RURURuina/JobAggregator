@@ -78,9 +78,7 @@ class SearchJobFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 updateSearchIcon(s.isNullOrEmpty())
-                if (!s.isNullOrEmpty()) {
                     viewModel.searchDebounced(s.toString().trim())
-                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -95,6 +93,7 @@ class SearchJobFragment : Fragment() {
             binding.progressBar.isVisible = false
             binding.bottomProgressBar.isVisible = false
             viewModel.clearVacancies()
+            binding.vacanciesRecyclerView.scrollToPosition(0)
         }
     }
 
