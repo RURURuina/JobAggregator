@@ -194,6 +194,7 @@ class SearchJobFragment : Fragment() {
         binding.clearSearchButton.setImageResource(
             if (isEmpty) R.drawable.search_24px else R.drawable.close
         )
+        binding.searchLayout.isVisible = isEmpty
     }
 
     private fun showHiddenState() {
