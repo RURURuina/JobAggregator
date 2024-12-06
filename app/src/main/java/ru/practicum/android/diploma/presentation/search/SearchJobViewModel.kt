@@ -169,6 +169,7 @@ class SearchJobViewModel(
 
     fun getFilter() {
         viewModelScope.launch {
+            pushVacanciesState(VacanciesState.Error(ResponseStatusCode.Ok))
             val filter = filterInteractor.getFilter()
             _savedFilter.value = filter
             if (filter?.apply == true) {
@@ -180,7 +181,6 @@ class SearchJobViewModel(
                 loadVacancies()
                 filterInteractor.saveFilter(filter.copy(apply = null))
             }
-            pushVacanciesState(VacanciesState.Error(ResponseStatusCode.Ok))
         }
     }
 

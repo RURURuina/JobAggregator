@@ -44,17 +44,13 @@ class SearchJobFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel.getFilter()
         super.onViewCreated(view, savedInstanceState)
         initEditText()
         initRecyclerView()
         observeViewModel()
         prepareOnItemClick()
         prepareFilterButton()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getFilter()
     }
 
     private fun prepareFilterButton() {
