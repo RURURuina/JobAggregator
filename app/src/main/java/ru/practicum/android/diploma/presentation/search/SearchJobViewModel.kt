@@ -180,6 +180,7 @@ class SearchJobViewModel(
                 loadVacancies()
                 filterInteractor.saveFilter(filter.copy(apply = null))
             }
+            pushVacanciesState(VacanciesState.Error(ResponseStatusCode.Ok))
         }
     }
 
