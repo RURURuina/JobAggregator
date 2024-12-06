@@ -25,7 +25,6 @@ import ru.practicum.android.diploma.presentation.search.SearchJobViewModel
 import ru.practicum.android.diploma.ui.root.RootActivity.Companion.VACANCY_TRANSFER_KEY
 import ru.practicum.android.diploma.ui.search.models.VacanciesState
 import ru.practicum.android.diploma.util.ResponseStatusCode
-import ru.practicum.android.diploma.util.isNetworkAvailable
 
 class SearchJobFragment : Fragment() {
     private var _binding: FragmentSearchJobBinding? = null
@@ -239,9 +238,7 @@ class SearchJobFragment : Fragment() {
             ResponseStatusCode.NoInternet -> {
                 val recycleVieVisible = binding.vacanciesRecyclerView.isVisible
                 if (recycleVieVisible) {
-                    if (!isNetworkAvailable(requireContext())) {
-                        showNoInternetToast()
-                    }
+                    showNoInternetToast()
                 } else {
                     binding.messageChip.isVisible = false
                     binding.searchLayout.visibility = View.GONE
