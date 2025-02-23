@@ -41,7 +41,7 @@ JDK 11+
 
 Клонируйте репозиторий:
 
-git clone https://github.com/your-repo/JobAggregator.git
+git clone https://github.com/RURURuina/practicum-android-diploma
 
 Откройте проект в Android Studio.
 
